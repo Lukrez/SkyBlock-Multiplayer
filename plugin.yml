@@ -1,12 +1,9 @@
-name: MultipleSurvivalIslands
-main: me.lukas.MultipleSurvivalIslands.MultipleSurvivalIslands
+name: SkyblockMultiplayer
+main: me.lukas.SkyblockMultiplayer.SkyblockMultiplayer
 version: 1.0
 
 commands:
      skyblock:
-          description:
-          usage: /<command>
-     create:
           description:
           usage: /<command>
           
