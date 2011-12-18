@@ -1,0 +1,12 @@
+name: MultipleSurvivalIslands
+main: me.lukas.MultipleSurvivalIslands.MultipleSurvivalIslands
+version: 1.0
+
+commands:
+     skyblock:
+          description:
+          usage: /<command>
+     create:
+          description:
+          usage: /<command>
+          
