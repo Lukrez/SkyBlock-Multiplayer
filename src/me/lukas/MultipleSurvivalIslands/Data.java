@@ -8,7 +8,8 @@ public class Data {
 	
 	public static ItemStack[] itemsChest;
 	public static ArrayList<PlayerInfo> players = new ArrayList<PlayerInfo>();
-	public static String[] mods;
+	public static String[] mods = new String[0];
+	public static int AnzahlPlayers;
 	
 	public static void addMod(String pname){
 		String mods = MultipleSurvivalIslands.sconf.getString("mods");

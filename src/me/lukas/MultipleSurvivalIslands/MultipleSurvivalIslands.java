@@ -33,6 +33,7 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 	PlayerBreackBlockListener breakBlock;
 	PlayerPlaceBlockListener placeBlock;
 	PlayerUseBucketListener useBucket;
+	EntityDeath deathListener;
 
 	protected FileConfiguration config;
 	private static World worldIslands = null;
@@ -54,12 +55,13 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 		breakBlock = new PlayerBreackBlockListener();
 		placeBlock = new PlayerPlaceBlockListener();
 		useBucket = new PlayerUseBucketListener();
+		deathListener = new EntityDeath();
 		manager = this.getServer().getPluginManager();
 
 		manager.registerEvent(Type.BLOCK_BREAK, breakBlock , Priority.Normal, this);
 		manager.registerEvent(Type.BLOCK_PLACE, placeBlock, Priority.Normal, this);
 		manager.registerEvent(Type.PLAYER_BUCKET_EMPTY, useBucket , Priority.Normal, this);
-		//manager.registerEvent(arg0, arg1, arg2, arg3)
+		manager.registerEvent(Type.ENTITY_DEATH, this.deathListener, Priority.Normal, this);
 
 		log.info(pluginFile.getName() + " Version " + pluginFile.getVersion() + " enabled!");
 
@@ -76,6 +78,7 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 			alitemsChest.add(new ItemStack(Material.MELON,3));
 			alitemsChest.add(new ItemStack(Material.CACTUS,1));
 			alitemsChest.add(new ItemStack(Material.LAVA_BUCKET,1));
+			alitemsChest.add(new ItemStack(Material.PUMPKIN,1));
 
 			ItemStack[] itemsChest = new ItemStack[alitemsChest.size()]; 
 
@@ -142,6 +145,8 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 			
 			// Lade die Mods
 			Data.mods = config.getString("mods").split(" ");
+
+			
 		}
 
 		MultipleSurvivalIslands.getWorldIslands();
@@ -188,6 +193,9 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 
 		if(cmd.getName().equalsIgnoreCase("skyblock")){
 			if(args.length == 0){
+				if (player.getWorld().equals(MultipleSurvivalIslands.getWorldIslands())){
+					return true;
+				}
 				int PlayerNr = this.findPlayer(player.getName()); // Suche Spieler
 				if (PlayerNr == -1){ // Falls der Spieler nicht in der Liste ist, füge ihn hinzu
 					Data.players.add(new PlayerInfo(player));
@@ -214,12 +222,28 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 					PlayerNr = this.findPlayer(player.getName());
 				}
 				if(Data.players.get(PlayerNr).getHasIsland()){ // Hat bereits eine Insel
-					player.sendMessage(ChatColor.RED + "Du hattest bereits eine Insel und hast Mist gebaut - heul den Eventmanager voll, vielleicht gibt er dir eine neue Insel.");
+					if (Data.players.get(PlayerNr).getDead()){
+						player.sendMessage(ChatColor.RED + "Du hattest bereits eine Insel und hast Mist gebaut - heul den Eventmanager voll, vielleicht gibt er dir eine neue Insel.");
+						return true;
+					}
+					// Spieler teleportieren
+					player.teleport(Data.players.get(PlayerNr).getIslandLocation());
+					player.sendMessage(ChatColor.GREEN + "Willkommen zurück.");
 					return true;
+					
 				} else {
-					new CreateNewIsland(player);
+					// Erstelle eine neue Insel für einen neuen Spieler
+					CreateNewIsland isl = new CreateNewIsland(player);
+					Data.players.get(PlayerNr).setIslandLocation(isl.Islandlocation);
 					Data.players.get(PlayerNr).setHasIslandToTrue();
+					Data.AnzahlPlayers++;
+					// Nachricht an alle
+					for (PlayerInfo pinfo: Data.players){
+						pinfo.getPlayer().sendMessage(ChatColor.GREEN + "Der Spieler " + player.getName() + " spielt mit. Damit sind es " + Data.AnzahlPlayers  + " Spieler.");
+					}
 					player.sendMessage(ChatColor.GREEN + "Fall nicht runter, und mach kein Obsidian :-)");
+					
+					return true;
 				}										
 			}
 
@@ -227,10 +251,18 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 				int PlayerNr = this.findPlayer(player.getName());
 				if (PlayerNr == -1){
 					player.setHealth(0);
+					return true;
 				}
+				
+				boolean ismepty = this.checkIfPlayerInventoryEmpty(player);	
+				if(!ismepty){
+					player.sendMessage(ChatColor.RED + "Es ist nicht erlaubt mit Inhalt im Inventar diese Welt zu verlassen! (Außer du stirbst.)");
+					return true;
+				}
+
 				Location l = Data.players.get(PlayerNr).getOldPlayerLocation();
 				player.teleport(l);
-				player.sendMessage(ChatColor.GREEN + "Du hast die Welt Skyblock verlassen und (vielleicht) zurück auf sicherem Boden. Achte auf den Creeper hinter dir.");
+				player.sendMessage(ChatColor.GREEN + "Du hast die Welt Skyblock verlassen und bist (vielleicht) zurück auf sicherem Boden. Achte auf den Creeper hinter dir.");
 				return true;
 			}
 
@@ -252,6 +284,8 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 					return true;
 				}
 				Player tp = Data.players.get(playerNr).getPlayer();
+				Data.players.get(playerNr).setDeadToFalse();
+				Data.AnzahlPlayers++;
 				new  CreateNewIsland(tp);
 				player.sendMessage("Der Spieler "+tp.getName() + " wurde auf eine neue Insel teleportiert.");
 				return true;
@@ -276,7 +310,51 @@ public class MultipleSurvivalIslands extends JavaPlugin {
 				}
 				
 				Data.addMod(args[1]);
-				player.sendMessage(args[1] + " wurde zu der Liste der Mods hinzugefügt.");
+				player.sendMessage(ChatColor.GREEN + args[1] + " wurde zu der Liste der Mods hinzugefügt.");
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("reset")){
+				if (!this.isMod(player)){
+					player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
+					return true;
+				}
+				// Suche entfernteste Insel
+				// erstelle Insel
+				CreateNewIsland isl = new CreateNewIsland();
+				Location l = isl.getIslandPosition(CreateNewIsland.ISLANDNR);
+				// Suche höchste Koordinate
+				int delete;
+				if (Math.abs(l.getBlockX()) > Math.abs(l.getBlockZ())){
+					delete = Math.abs(l.getBlockX());
+				} else {
+					delete = Math.abs(l.getBlockZ());
+				}
+				delete += 50;
+				if (delete > 1000){
+					player.sendMessage("Die Welt ist zu groß zum Reset, bitte lösche den Welt-Ordner manuell.");
+					return true;
+				} else {
+					player.sendMessage("Die Welt wird in einem Radius von " + delete + " Blöcken gelöscht.");
+				}
+				
+				for (int x=-delete;x<=delete;x++){
+					for (int z=-delete;z<=delete;z++){
+						for (int y=0;y<=128;y++){
+							if (Math.abs(x) > 20 || Math.abs(z) > 20){
+								MultipleSurvivalIslands.getWorldIslands().getBlockAt(x, y, z).setType(Material.AIR);
+							}
+						}
+					}
+				}
+				// Erstelle den Spawntower
+				//MultipleSurvivalIslands.CreateSpawnTower();
+				
+				// Resete die Spielerinfo
+				CreateNewIsland.ISLANDNR = 0;
+				Data.players = new ArrayList<PlayerInfo>();
+				Data.AnzahlPlayers = 0;
+				player.sendMessage("Die Welt wurde zurückgesetzt.");
 				return true;
 			}
 		}

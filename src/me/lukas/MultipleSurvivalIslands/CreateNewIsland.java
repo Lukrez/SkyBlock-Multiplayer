@@ -11,6 +11,7 @@ public class CreateNewIsland {
 	public static int ISLANDNR;
 	public static int IslandDistance;
 	private static int posY = 64;
+	public Location Islandlocation;
 	
 	public CreateNewIsland(Player player) {
 		
@@ -24,6 +25,7 @@ public class CreateNewIsland {
 		
 		player.sendMessage("Du bist auf Inselnr.: "+CreateNewIsland.ISLANDNR);
 		this.createIsland(l);
+		this.Islandlocation = l;
 		// transport player
 		player.teleport(l);
 	}
@@ -41,7 +43,7 @@ public class CreateNewIsland {
 		}
 	}*/
 	
-	private Location getIslandPosition(int N){
+	public Location getIslandPosition(int N){
 		//System.out.println("Erstelle Inselnr.: "+N);
 		int posX,posZ;
 		// Suche den momentanen Ring
@@ -52,7 +54,7 @@ public class CreateNewIsland {
 		//System.out.println("Die Insel ist im Ring die "+NaufRing+" Insel.");
 		// Bestimmen der Seite auf dem Ring
 		int Seite = (int)(Math.ceil(NaufRing/(double)R));
-		System.out.println("Die Insel befindet sich auf der "+Seite+" Seite.");
+		//System.out.println("Die Insel befindet sich auf der "+Seite+" Seite.");
 		// Bestimme die Position der Insel auf der Seite
 		int PosSeite = NaufRing-(Seite-1)*R-1;
 		//System.out.println("und ist auf der Seite die "+PosSeite+" Insel.");
