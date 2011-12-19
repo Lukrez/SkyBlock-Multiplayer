@@ -38,7 +38,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 	protected FileConfiguration config;
 	private static World worldIslands = null;
-	private static String WORLD_NAME = "worldIslands";
+	private static String WORLD_NAME = "skyblockislands";
 	
 	public static FileConfiguration sconf;
 	public static File sconfFile;
@@ -96,6 +96,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			config.set("islandDistance", 50);
 			config.set("chest.items", items);
 			config.set("mods", "");
+			config.set("skyblockonline", true);
 
 			Data.itemsChest = itemsChest;
 
@@ -141,12 +142,35 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			for(int i = 0;i < itemsChest.length;i++) {
 				itemsChest[i] = alitemsChest.get(i);
 			}
+			
+			alitemsChest = new ArrayList<ItemStack>();
+			alitemsChest.add(new ItemStack(Material.ICE, 2));
+			alitemsChest.add(new ItemStack(Material.SAPLING,5));
+			alitemsChest.add(new ItemStack(Material.MELON,3));
+			alitemsChest.add(new ItemStack(Material.CACTUS,1));
+			alitemsChest.add(new ItemStack(Material.LAVA_BUCKET,1));
+			alitemsChest.add(new ItemStack(Material.PUMPKIN,1));
+			
+			itemsChest = new ItemStack[alitemsChest.size()]; 
 
-			Data.itemsChest = itemsChest;	
+			for(int i = 0;i < itemsChest.length;i++){
+				itemsChest[i] = alitemsChest.get(i);
+			}
+			try{
+				Data.itemsChest = itemsChest;
+			}catch(Exception ex){
+				Data.itemsChest = itemsChest;
+			}
 			
 			// Lade die Mods
 			Data.mods = config.getString("mods").split(" ");
-
+			
+			//Lade Status Skyblock
+			try{
+				Data.skyblockonline = config.getBoolean("skyblockonline");
+			}catch(Exception ex){
+				Data.skyblockonline = true;
+			}
 			
 		}
 
@@ -157,7 +181,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		if (worldIslands == null) {
 			worldIslands = WorldCreator.name(SkyblockMultiplayer.WORLD_NAME).environment(Environment.NORMAL).generator(new WorldIslandsdChunkGenerator()).createWorld();
 			SkyblockMultiplayer.CreateSpawnTower();
-			worldIslands.setSpawnLocation(0, SkyblockMultiplayer.getWorldIslands().getHighestBlockYAt(0, 0), 0);
+			worldIslands.setSpawnLocation(1, SkyblockMultiplayer.getWorldIslands().getHighestBlockYAt(1, 1), 1);
 		}
 
 		return worldIslands;
@@ -247,8 +271,10 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				
 				boolean ismepty = this.checkIfPlayerInventoryEmpty(player);	
 				if(!ismepty){
-					player.sendMessage(ChatColor.RED + "Es ist nicht erlaubt mit Inhalt im Inventar diese Welt zu verlassen! (Außer du stirbst.)");
-					return true;
+					if(Data.players.get(PlayerNr).getHasIsland()){
+						player.sendMessage(ChatColor.RED + "Es ist nicht erlaubt mit Inhalt im Inventar diese Welt zu verlassen! (Ausser du stirbst.)");
+						return true;	
+					}										
 				}
 
 				Location l = Data.players.get(PlayerNr).getOldPlayerLocation();
@@ -258,10 +284,11 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			}
 
 			if(args[0].equalsIgnoreCase("newisland")){
-				
-				if (!this.isMod(player)){
-					player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
-					return true;
+				if(!player.isOp()){
+					if (!this.isMod(player)){
+						player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
+						return true;
+					}
 				}
 				
 				if(args.length == 1){
@@ -283,9 +310,11 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			}
 			
 			if(args[0].equalsIgnoreCase("addmod")){
-				if (!this.isMod(player)){
-					player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
-					return true;
+				if(!player.isOp()){
+					if (!this.isMod(player)){
+						player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
+						return true;
+					}
 				}
 				
 				if(args.length == 1){
@@ -301,15 +330,18 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				}
 				
 				Data.addMod(args[1]);
-				player.sendMessage(ChatColor.GREEN + args[1] + " wurde zu der Liste der Mods hinzugefügt.");
+				player.sendMessage(ChatColor.GREEN + "Der Spieler "+ args[1] + " wurde zu der Liste der Mods hinzugefügt.");
 				return true;
 			}
 			
 			if(args[0].equalsIgnoreCase("reset")){
-				if (!this.isMod(player)){
-					player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
-					return true;
+				if(!player.isOp()){
+					if (!this.isMod(player)){
+						player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
+						return true;
+					}
 				}
+				
 				// Suche entfernteste Insel
 				// erstelle Insel
 				CreateNewIsland isl = new CreateNewIsland();
@@ -346,6 +378,34 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				Data.players = new ArrayList<PlayerInfo>();
 				Data.AnzahlPlayers = 0;
 				player.sendMessage("Die Welt wurde zurückgesetzt.");
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("offline")){
+				if(!player.isOp()){
+					if (!this.isMod(player)){
+						player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
+						return true;
+					}
+				}
+				
+				Data.skyblockonline = false;
+				Data.setStatus(false);
+				player.sendMessage(ChatColor.GREEN + "Skyblock für Multiplayer ist nun offline!");
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("online")){
+				if(!player.isOp()){
+					if (!this.isMod(player)){
+						player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
+						return true;
+					}
+				}
+				
+				Data.skyblockonline = true;
+				Data.setStatus(true);
+				player.sendMessage(ChatColor.GREEN + "Skyblock für Multiplayer ist nun online!");
 				return true;
 			}
 		}
@@ -485,24 +545,23 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				for (int y=0;y<yStart;y++){
 					SkyblockMultiplayer.makeBlock(x, y, z, Material.AIR);
 				}
-				SkyblockMultiplayer.makeBlock(x, yStart, z, Material.getMaterial(43));
-				
+				SkyblockMultiplayer.makeBlock(x, yStart, z, Material.getMaterial(43));				
 			}
 		}
 		
-		/*//Mache Schilder
-		SkyblockMultiplayer.getWorldIslands().getBlockAt(0, yEnde-1, -1).setType(Material.WALL_SIGN);
-		Sign s1 = (Sign) SkyblockMultiplayer.getWorldIslands().getBlockAt(0, yEnde-1, -1).getState();
+		//Mache Schilder
+		SkyblockMultiplayer.getWorldIslands().getBlockAt(1, yEnde-1, 2).setType(Material.SIGN_POST);
+		Sign s1 = (Sign) SkyblockMultiplayer.getWorldIslands().getBlockAt(1, yEnde-1, 2).getState();
+		s1.getBlock().setData((byte) 8);
 		s1.setLine(0, "Willkommen auf");
 		s1.setLine(1, "SkyBlock-");
 		s1.setLine(2, "Multiplayer!");
-		SkyblockMultiplayer.getWorldIslands().getBlockAt(1, yEnde-1, -1).setType(Material.WALL_SIGN);
-		Sign s2 = (Sign) SkyblockMultiplayer.getWorldIslands().getBlockAt(1, yEnde-1, -1).getState();
+		SkyblockMultiplayer.getWorldIslands().getBlockAt(0, yEnde-1, 2).setType(Material.SIGN_POST);
+		Sign s2 = (Sign) SkyblockMultiplayer.getWorldIslands().getBlockAt(0, yEnde-1, 2).getState();
+		s2.getBlock().setData((byte) 8);
 		s2.setLine(0, "Befehle");
 		s2.setLine(1, "/SkyBlock start");
 		s2.setLine(2, "/SkyBlock leave");
-		s2.setLine(1, "Viel Erfolg!");*/
+		s2.setLine(3, "Viel Erfolg!");
 	}
-	
-	
 }

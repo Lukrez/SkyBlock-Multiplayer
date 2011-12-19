@@ -10,10 +10,12 @@ public class Data {
 	public static ArrayList<PlayerInfo> players = new ArrayList<PlayerInfo>();
 	public static String[] mods = new String[0];
 	public static int AnzahlPlayers;
+	public static boolean skyblockonline;
 	
 	public static void addMod(String pname){
 		String mods = SkyblockMultiplayer.sconf.getString("mods");
 		mods+=" "+pname;
+		mods = mods.trim();
 		Data.mods = mods.split(" ");
 		
 		//Speichere in Datei
@@ -25,5 +27,15 @@ public class Data {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}	
+	}
+	
+	public static void setStatus(boolean b){
+		SkyblockMultiplayer.sconf.set("skyblockonline", b);
+		try {
+			SkyblockMultiplayer.sconf.save(SkyblockMultiplayer.sconfFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
