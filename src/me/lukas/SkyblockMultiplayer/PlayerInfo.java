@@ -20,6 +20,9 @@ public class PlayerInfo {
 	public void setHasIslandToTrue(){
 		this.hasIsland = true;
 	}
+	public void setHasIslandToFalse(){
+		this.hasIsland = false;
+	}
 	public boolean getHasIsland(){
 		return this.hasIsland;
 	}

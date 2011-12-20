@@ -1,6 +1,7 @@
 package me.lukas.SkyblockMultiplayer;
 
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -29,7 +30,7 @@ public class EntityDeath extends EntityListener {
 				   }
 				   
 				   for(PlayerInfo pinfo: Data.players){
-					   pinfo.getPlayer().sendMessage("Spieler " + winner + " hat des Spiel gewonnen.");
+					   pinfo.getPlayer().sendMessage(ChatColor.GREEN + "Spieler " + winner + " hat das Spiel gewonnen.");
 				   }
 				   return;
 			   }
