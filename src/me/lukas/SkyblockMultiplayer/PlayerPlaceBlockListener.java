@@ -5,11 +5,11 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PlayerPlaceBlockListener extends BlockListener {
-	
-	public void onBlockPlace(BlockPlaceEvent event){
-		if(event.getPlayer().getWorld().equals(SkyblockMultiplayer.getWorldIslands())){ // Prüfe ob der Spieler in der Welt SkyblockMutiplayer ist
-			if(event.getBlock().getLocation().getBlockX() >= -20 && event.getBlock().getLocation().getBlockX() <= 20){
-				if(event.getBlock().getLocation().getBlockZ() >= -20 && event.getBlock().getLocation().getBlockZ() <= 20 ){
+
+	public void onBlockPlace(BlockPlaceEvent event) {
+		if (event.getPlayer().getWorld().equals(SkyblockMultiplayer.getWorldIslands())) { // Prüfe ob der Spieler in der Welt SkyblockMultiplayer ist
+			if (event.getBlock().getLocation().getBlockX() >= -20 && event.getBlock().getLocation().getBlockX() <= 20) {
+				if (event.getBlock().getLocation().getBlockZ() >= -20 && event.getBlock().getLocation().getBlockZ() <= 20) {
 					event.setCancelled(true);
 					event.getPlayer().sendMessage(ChatColor.RED + "You can not place a block here!");
 					return;

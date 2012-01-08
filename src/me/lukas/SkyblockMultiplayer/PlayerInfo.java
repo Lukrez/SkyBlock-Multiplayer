@@ -9,55 +9,63 @@ public class PlayerInfo {
 	private Player player;
 	private Location oldlocation;
 	private boolean isDead;
-	
-	public PlayerInfo(Player p){
+
+	public PlayerInfo(Player p) {
 		this.player = p;
 		this.hasIsland = false;
 		this.oldlocation = p.getLocation();
 		this.isDead = false;
 	}
-	
-	public void setHasIslandToTrue(){
+
+	public void setHasIslandToTrue() {
 		this.hasIsland = true;
 	}
-	public void setHasIslandToFalse(){
+
+	public void setHasIslandToFalse() {
 		this.hasIsland = false;
 	}
-	public boolean getHasIsland(){
+
+	public boolean getHasIsland() {
 		return this.hasIsland;
 	}
-	
-	public Location getOldPlayerLocation(){
+
+	public Location getOldPlayerLocation() {
 		return this.oldlocation;
 	}
-	
-	public void setPlayer(Player p){
-		this.player = p;
+
+	public void setOldPlayerLocation(Location l) {
+		this.oldlocation = l;
 	}
-	
-	public String getPlayerName(){
-		return this.player.getName();
-	}
-	
-	public Player getPlayer(){
+
+	public Player getPlayer() {
 		return this.player;
 	}
-	
-	public void setDeadToTrue(){
+
+	public void setPlayer(Player p) {
+		this.player = p;
+	}
+
+	public String getPlayerName() {
+		return this.player.getName();
+	}
+
+	public void setDeadToTrue() {
 		this.isDead = true;
 	}
-	public void setDeadToFalse(){
+
+	public void setDeadToFalse() {
 		this.isDead = false;
 	}
-	public boolean getDead(){
+
+	public boolean getDead() {
 		return this.isDead;
 	}
-	
-	public Location getIslandLocation(){
+
+	public Location getIslandLocation() {
 		return this.islandLocation;
 	}
-	
-	public void setIslandLocation(Location l){
+
+	public void setIslandLocation(Location l) {
 		this.islandLocation = l;
 	}
 }
