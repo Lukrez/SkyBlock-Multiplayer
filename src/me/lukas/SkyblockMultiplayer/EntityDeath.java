@@ -1,4 +1,4 @@
-package me.lukas.SkyblockMultiplayer;
+package me.lukas.skyblockmultiplayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -7,6 +7,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
 
 public class EntityDeath extends EntityListener {
+
+	SkyblockMultiplayer plugin;
+
+	public EntityDeath(SkyblockMultiplayer instance) {
+		this.plugin = instance;
+	}
+
 	public void onEntityDeath(EntityDeathEvent event) {
 		Entity ent = event.getEntity();
 		if (ent instanceof Player) {
@@ -17,33 +24,33 @@ public class EntityDeath extends EntityListener {
 				return;
 			}
 
-			Data.players.get(PlayerNr).setDeadToTrue();
+			Data.PLAYERS.get(PlayerNr).setDeadToTrue();
 
-			Data.AnzahlPlayers--;
-			if (Data.AnzahlPlayers == 1) {
+			Data.PLAYERS_NUMBER--;
+			if (Data.PLAYERS_NUMBER == 1) {
 				String winner = "";
-				for (PlayerInfo pinfo : Data.players) {
+				for (PlayerInfo pinfo : Data.PLAYERS) {
 					if (pinfo.getDead() == false) {
 						winner = pinfo.getPlayerName();
 					}
 				}
 
-				for (PlayerInfo pinfo : Data.players) {
+				for (PlayerInfo pinfo : Data.PLAYERS) {
 					pinfo.getPlayer().sendMessage(ChatColor.GREEN + "Spieler " + winner + " hat das Spiel gewonnen.");
 				}
 				return;
 			}
 
-			for (PlayerInfo pinfo : Data.players) {
-				pinfo.getPlayer().sendMessage("Jetzt sind (nur) noch " + Data.AnzahlPlayers + " Spieler übrig!");
+			for (PlayerInfo pinfo : Data.PLAYERS) {
+				pinfo.getPlayer().sendMessage("Jetzt sind (nur) noch " + Data.PLAYERS_NUMBER + " Spieler übrig!");
 
 			}
 		}
 	}
 
 	public int findPlayer(String playername) {
-		for (int i = 0; i < Data.players.size(); i++) {
-			if (Data.players.get(i).getPlayerName().equalsIgnoreCase(playername)) {
+		for (int i = 0; i < Data.PLAYERS.size(); i++) {
+			if (Data.PLAYERS.get(i).getPlayerName().equalsIgnoreCase(playername)) {
 				return i;
 			}
 		}

@@ -1,9 +1,8 @@
 name: SkyblockMultiplayer
-main: me.lukas.SkyblockMultiplayer.SkyblockMultiplayer
-version: 1.0
+main: me.lukas.skyblockmultiplayer.SkyblockMultiplayer
+version: 0.3 alpha
 
 commands:
      skyblock:
           description:
           usage: /<command>
-          

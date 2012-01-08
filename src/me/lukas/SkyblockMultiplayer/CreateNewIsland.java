@@ -1,4 +1,4 @@
-package me.lukas.SkyblockMultiplayer;
+package me.lukas.skyblockmultiplayer;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,22 +8,20 @@ import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 
 public class CreateNewIsland {
-	public static int ISLANDNR;
-	public static int IslandDistance;
 	private static int posY = 64;
 	public Location Islandlocation;
 
 	public CreateNewIsland(Player player) {
 
-		CreateNewIsland.ISLANDNR += 1;
-		Location l = getIslandPosition(CreateNewIsland.ISLANDNR);
+		Data.ISLAND_NUMBER += 1;
+		Location l = getIslandPosition(Data.ISLAND_NUMBER);
 
 		while (this.checkIfOcupied(l)) {
-			CreateNewIsland.ISLANDNR += 1;
-			l = getIslandPosition(CreateNewIsland.ISLANDNR);
+			Data.ISLAND_NUMBER += 1;
+			l = getIslandPosition(Data.ISLAND_NUMBER);
 		}
 
-		player.sendMessage("Du bist auf Inselnr.: " + CreateNewIsland.ISLANDNR);
+		player.sendMessage("Du bist auf Inselnr.: " + Data.ISLAND_NUMBER);
 		this.createIsland(l);
 		this.Islandlocation = l;
 		// transport player
@@ -51,24 +49,24 @@ public class CreateNewIsland {
 		//System.out.println("Die Inseldistanz ist "+CreateNewIsland.IslandDistance);
 		// Berechne die Positionen
 		if (Seite == 1) {
-			posX = (PosSeite - R) * CreateNewIsland.IslandDistance;
-			posZ = -PosSeite * CreateNewIsland.IslandDistance;
+			posX = (PosSeite - R) * Data.ISLAND_DISTANCE;
+			posZ = -PosSeite * Data.ISLAND_DISTANCE;
 
 		} else if (Seite == 2) {
-			posX = PosSeite * CreateNewIsland.IslandDistance;
-			posZ = (PosSeite - R) * CreateNewIsland.IslandDistance;
+			posX = PosSeite * Data.ISLAND_DISTANCE;
+			posZ = (PosSeite - R) * Data.ISLAND_DISTANCE;
 		} else if (Seite == 3) {
-			posX = (R - PosSeite) * CreateNewIsland.IslandDistance;
-			posZ = PosSeite * CreateNewIsland.IslandDistance;
+			posX = (R - PosSeite) * Data.ISLAND_DISTANCE;
+			posZ = PosSeite * Data.ISLAND_DISTANCE;
 		} else {
-			posX = -PosSeite * CreateNewIsland.IslandDistance;
-			posZ = (R - PosSeite) * CreateNewIsland.IslandDistance;
+			posX = -PosSeite * Data.ISLAND_DISTANCE;
+			posZ = (R - PosSeite) * Data.ISLAND_DISTANCE;
 		}
 		//System.out.println("Die Insel befindet sich auf "+posX+" in X-Richtung.");
 		//System.out.println("Die Insel befindet sich auf "+posZ+" in Z-Richtung.");
 
 		// Erstelle Location
-		return new Location(SkyblockMultiplayer.getWorldIslands(), posX, CreateNewIsland.posY, posZ);
+		return new Location(SkyblockMultiplayer.getWorldIslands(), posX, posY, posZ);
 	}
 
 	private void createIsland(Location l) {
@@ -91,9 +89,9 @@ public class CreateNewIsland {
 		Chest chest = (Chest) block.getState();
 		chest.getBlock().setData((byte) 2);
 
-		for (int i = 0; i < Data.itemsChest.length; i++) {
+		for (int i = 0; i < Data.ITEMSCHEST.length; i++) {
 			try {
-				chest.getInventory().addItem(Data.itemsChest[i]);
+				chest.getInventory().addItem(Data.ITEMSCHEST[i]);
 			} catch (Exception ex) {
 				System.out.println(ex.getMessage());
 			}

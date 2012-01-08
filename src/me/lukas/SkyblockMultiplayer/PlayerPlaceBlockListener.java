@@ -1,10 +1,16 @@
-package me.lukas.SkyblockMultiplayer;
+package me.lukas.skyblockmultiplayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PlayerPlaceBlockListener extends BlockListener {
+
+	SkyblockMultiplayer plugin;
+
+	public PlayerPlaceBlockListener(SkyblockMultiplayer instance) {
+		this.plugin = instance;
+	}
 
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.getPlayer().getWorld().equals(SkyblockMultiplayer.getWorldIslands())) { // Prüfe ob der Spieler in der Welt SkyblockMultiplayer ist

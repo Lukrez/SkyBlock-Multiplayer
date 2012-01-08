@@ -1,4 +1,4 @@
-package me.lukas.SkyblockMultiplayer;
+package me.lukas.skyblockmultiplayer;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
