@@ -77,6 +77,9 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		this.file = new File(this.getDataFolder(), "config.yml");
 		SkyblockMultiplayer.sfile = new File(this.getDataFolder(), "config.yml");
 
+	}
+
+	public void loadConfig() {
 		ArrayList<ItemStack> alitemsChest = new ArrayList<ItemStack>();
 		alitemsChest.add(new ItemStack(Material.ICE, 2));
 		alitemsChest.add(new ItemStack(Material.SAPLING, 5));
@@ -207,8 +210,14 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				if (args[0].equalsIgnoreCase("reset")) {
 					return this.resetSkyblock(sender);
 				}
+				if (args[0].equalsIgnoreCase("reloadconfig")) {
+					return this.reloadConfig(sender);
+				}
+
+				sender.sendMessage(this.pName + "Da ist kein Argument mit diesen Namen.");
+				return true;
 			}
-			return true;
+			return false;
 		}
 
 		Player player = (Player) sender;
@@ -340,61 +349,6 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				}
 			}
 
-			/*if(args[0].equalsIgnoreCase("reset")){
-				if(!player.isOp()){
-					if (!this.isMod(player)){
-						player.sendMessage(ChatColor.RED + "Du bist nicht autorisiert!");
-						return true;
-					}
-				}
-				
-				// Suche entfernteste Insel
-				// erstelle Insel
-				CreateNewIsland isl = new CreateNewIsland();
-				Location l = isl.getIslandPosition(Data.PLAYERS_NUMBER);
-				// Suche höchste Koordinate
-				int delete = 0;
-				try{
-					delete = Integer.parseInt(args[1]);
-				}catch(Exception ex){
-					player.sendMessage(ChatColor.RED + "Du musst einen Wert angeben!");
-				}
-				
-				if (Math.abs(l.getBlockX()) > Math.abs(l.getBlockZ())){
-					delete += Math.abs(l.getBlockX());
-				} else {
-					delete += Math.abs(l.getBlockZ());
-				}
-				delete += 50;
-				if (delete > 1000){
-					player.sendMessage("Die Welt ist zu groß zum Reset, bitte lösche den Welt-Ordner manuell.");
-					return true;
-				} else {
-					player.sendMessage("Die Welt wird in einem Radius von " + delete + " Blöcken gelöscht.");
-				}
-				
-				for (int x=-delete;x<=delete;x++){
-					for (int z=-delete;z<=delete;z++){
-						for (int y=0;y<=128;y++){
-							if(!SkyblockMultiplayer.getWorldIslands().getBlockAt(x, y, z).getType().equals(Material.AIR)){
-								if (Math.abs(x) > 20 || Math.abs(z) > 20){
-									SkyblockMultiplayer.getWorldIslands().getBlockAt(x, y, z).setType(Material.AIR);
-								}
-							}
-						}
-					}
-				}
-				// Erstelle den Spawntower
-				//MultipleSurvivalIslands.CreateSpawnTower();
-				
-				// Resete die Spielerinfo
-				CreateNewIsland.ISLANDNR = 0;
-				Data.players = new ArrayList<PlayerInfo>();
-				Data.AnzahlPlayers = 0;
-				player.sendMessage("Die Welt wurde zurückgesetzt.");
-				return true;
-			}*/
-
 			if (args[0].equalsIgnoreCase("offline")) {
 				return this.setSkyblockOffline(player);
 			}
@@ -405,7 +359,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 			if (args[0].equalsIgnoreCase("help")) {
 				for (String s : this.getListCommands().split("\n")) {
-					player.sendMessage(ChatColor.GREEN + s);
+					player.sendMessage(ChatColor.AQUA + s);
 				}
 				return true;
 			}
@@ -414,11 +368,15 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				return this.resetSkyblock(sender);
 			}
 
-			//reset
+			if (args[0].equalsIgnoreCase("reloadconfig")) {
+				return this.reloadConfig(sender);
+			}
 
+			player.sendMessage(this.pNameChat + ChatColor.RED + "Da ist kein Argument mit diesen Namen.");
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	public boolean setSkyblockOffline(CommandSender sender) {
@@ -454,9 +412,9 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				Data.PLAYERS_NUMBER = 0;
 
 				if (sender instanceof Player) {
-					sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Skyblock für Multiplayer ist nun offline. Um die Welt zu resten lösche den Ordner " + SkyblockMultiplayer.WORLD_NAME);
+					sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Skyblock für Multiplayer ist nun offline. Um die Welt zu resten, lösche den Ordner " + SkyblockMultiplayer.WORLD_NAME);
 				} else {
-					sender.sendMessage(this.pName + "Skyblock für Multiplayer ist nun offline. Um die Welt zu resten lösche den Ordner " + SkyblockMultiplayer.WORLD_NAME);
+					sender.sendMessage(this.pName + "Skyblock für Multiplayer ist nun offline. Um die Welt zu resten, lösche den Ordner " + SkyblockMultiplayer.WORLD_NAME);
 				}
 				return true;
 
@@ -531,24 +489,14 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		}
 
 		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.WHITE + "Unloading Skyblock...");
+			sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Reseting Skyblock...");
 		} else {
-			sender.sendMessage(this.pName + "Unloading Skyblock...");
+			sender.sendMessage(this.pName + "Reseting Skyblock...");
 		}
+
 		this.getServer().unloadWorld(SkyblockMultiplayer.WORLD_NAME, true);
-		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.WHITE + "Unloading Skyblock - finished");
-		} else {
-			sender.sendMessage(this.pName + "Unloading Skyblock - finished");
-		}
 
-		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.WHITE + "Deleting Skyblock...");
-		} else {
-			sender.sendMessage(this.pName + "Deleting Skyblock...");
-		}
-
-		//get Files
+		//Get Files and delete them
 		this.sfiles = new ArrayList<File>();
 		this.getAllFilesAndDirectories(SkyblockMultiplayer.WORLD_NAME);
 
@@ -556,26 +504,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			f.delete();
 		}
 
-		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.WHITE + "Deleting Skyblock - finished");
-		} else {
-			sender.sendMessage(this.pName + "Deleting Skyblock - finished");
-		}
-
 		//Create Skyblock
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.WHITE + "Create Skyblock...");
-		} else {
-			sender.sendMessage(this.pNameChat + "Create Skyblock...");
-		}
-
-		sender.sendMessage(this.pNameChat + ChatColor.WHITE + "Create Skyblock...");
 		SkyblockMultiplayer.worldIslands = null;
 		SkyblockMultiplayer.getWorldIslands();
 
@@ -585,13 +514,29 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		Data.PLAYERS_NUMBER = 0;
 
 		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.WHITE + "Create Skyblock - finished.");
-			sender.sendMessage(this.pNameChat + ChatColor.AQUA + "World Skyblock wurde resetet.");
+			sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Skyblock wurde resetet.");
 		} else {
-			sender.sendMessage(this.pName + "Create Skyblock - finished.");
-			sender.sendMessage(this.pName + "World Skyblock wurde resetet.");
+			sender.sendMessage(this.pName + "Skyblock wurde resetet.");
+		}
+		return true;
+	}
+
+	public boolean reloadConfig(CommandSender sender) {
+		if (!sender.hasPermission("skyblock.reloadconfig")) {
+			if (sender instanceof Player) {
+				sender.sendMessage(this.pNameChat + ChatColor.RED + "Du bist nicht autorisiert!");
+			} else {
+				sender.sendMessage(this.pName + "Du bist nicht autorisiert!");
+			}
+			return true;
 		}
 
+		this.loadConfig();
+		if (sender instanceof Player) {
+			sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Config-Datei wurde neu geladen.");
+		} else {
+			sender.sendMessage(this.pName + "Config-Datei wurde neu geladen.");
+		}
 		return true;
 	}
 
