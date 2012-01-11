@@ -449,120 +449,84 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	public boolean setSkyblockOffline(CommandSender sender) {
-		if (sender.hasPermission("skyblock.offline")) {
-			try {
-				if (sender instanceof Player) {
-					sender.sendMessage(this.pNameChat + ChatColor.WHITE + "Stoppe Skyblock...");
-				} else {
-					sender.sendMessage(this.pName + "Stoppe Skyblock...");
-				}
-
-				//Checke Spieler ob keiner mehr in Welt Skyblock ist					
-				Player[] playerList = this.getServer().getOnlinePlayers();
-				for (Player p : playerList) {
-					if (p.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
-						if (sender instanceof Player) {
-							sender.sendMessage(this.pNameChat + ChatColor.RED + "Es sind Spieler in der Welt Skyblock. Skyblock kann nicht deaktviert werden!");
-						} else {
-							sender.sendMessage(this.pName + "Es sind Spieler in der Welt Skyblock. Skyblock kann nicht deaktviert werden!");
-						}
-						return true;
-					}
-				}
-
-				this.getServer().unloadWorld(SkyblockMultiplayer.WORLD_NAME, true);
-				SkyblockMultiplayer.skyblockIslands = null;
-				Data.SKYBLOCK_ONLINE = false;
-				this.setStringbyPath(this.config, this.file, "options.skyblockonline", false);
-
-				// Resete die Spielerinfo
-				Data.ISLAND_NUMBER = 0;
-				Data.PLAYERS.clear();
-				Data.PLAYERS_NUMBER = 0;
-
-				if (sender instanceof Player) {
-					sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Skyblock für Multiplayer ist nun offline. Um die Welt zu resten, lösche den Ordner " + SkyblockMultiplayer.WORLD_NAME);
-				} else {
-					sender.sendMessage(this.pName + "Skyblock für Multiplayer ist nun offline. Um die Welt zu resten, lösche den Ordner " + SkyblockMultiplayer.WORLD_NAME);
-				}
-				return true;
-
-			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
-				if (sender instanceof Player) {
-					sender.sendMessage(this.pNameChat + ChatColor.RED + "Error orccured! Error-Message posted in Server Konsole.");
-				} else {
-					sender.sendMessage(this.pName + "Error orccured! Error-Message posted in Server Konsole.");
-				}
-				return true;
-			}
+		String msg = "";
+		if (sender instanceof Player) {
+			msg = this.pNameChat + ChatColor.AQUA;
 		} else {
-			if (sender instanceof Player) {
-				sender.sendMessage(this.pNameChat + ChatColor.RED + "Du bist nicht autorisiert!");
-			} else {
-				sender.sendMessage(this.pName + "Du bist nicht autorisiert!");
+			msg = this.pNameChat;
+		}
+
+		if (!sender.hasPermission("skyblock.offline")) {
+			sender.sendMessage(msg + "Du bist nicht autorisiert!");
+			return true;
+		}
+
+		try {
+			sender.sendMessage(msg + "Stoppe Skyblock...");
+
+			//Checke Spieler ob keiner mehr in Welt Skyblock ist					
+			Player[] playerList = this.getServer().getOnlinePlayers();
+			for (Player p : playerList) {
+				if (p.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+					sender.sendMessage(msg + "Es sind Spieler in der Welt Skyblock. Skyblock kann nicht deaktviert werden!");
+					return true;
+				}
 			}
+
+			this.getServer().unloadWorld(SkyblockMultiplayer.WORLD_NAME, true);
+			SkyblockMultiplayer.skyblockIslands = null;
+			Data.SKYBLOCK_ONLINE = false;
+			this.setStringbyPath(this.config, this.file, "options.skyblockonline", false);
+			sender.sendMessage(msg + "Skyblock für Multiplayer ist nun offline. Um die Welt zu resten, lösche den Ordner " + SkyblockMultiplayer.WORLD_NAME);
+			return true;
+
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			sender.sendMessage(msg + "Error orccured! Error-Message posted in Server Konsole.");
 			return true;
 		}
 	}
 
 	public boolean setSkyblockOnline(CommandSender sender) {
-		if (sender.hasPermission("skyblock.online")) {
-			if (sender instanceof Player) {
-				sender.sendMessage("Starte Skyblock...");
-			} else {
-				sender.sendMessage("Starte Skyblock...");
-			}
-			SkyblockMultiplayer.skyblockIslands = null;
-			SkyblockMultiplayer.getSkyblockIslands();
-			Data.SKYBLOCK_ONLINE = true;
-			this.setStringbyPath(this.config, this.file, "options.skyblockonline", true);
-
-			// Resete die Spielerinfo
-			Data.ISLAND_NUMBER = 0;
-			Data.PLAYERS.clear();
-			Data.PLAYERS_NUMBER = 0;
-			if (sender instanceof Player) {
-				sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Skyblock für Multiplayer ist nun online!");
-			} else {
-				sender.sendMessage(this.pName + "Skyblock für Multiplayer ist nun online!");
-			}
-			return true;
+		String msg = "";
+		if (sender instanceof Player) {
+			msg = this.pNameChat + ChatColor.AQUA;
 		} else {
-			if (sender instanceof Player) {
-				sender.sendMessage(this.pNameChat + ChatColor.RED + "Du bist nicht autorisiert!");
-			} else {
-				sender.sendMessage(this.pName + "Du bist nicht autorisiert!");
-			}
+			msg = this.pName;
+		}
+		if (!sender.hasPermission("skyblock.online")) {
+			sender.sendMessage(msg + ChatColor.RED + "Du bist nicht autorisiert!");
 			return true;
 		}
+
+		sender.sendMessage(msg + "Starte Skyblock...");
+		SkyblockMultiplayer.skyblockIslands = null;
+		SkyblockMultiplayer.getSkyblockIslands();
+		Data.SKYBLOCK_ONLINE = true;
+		this.setStringbyPath(this.config, this.file, "options.skyblockonline", true);
+		sender.sendMessage(msg + "Skyblock für Multiplayer ist nun online!");
+		return true;
 	}
 
 	public boolean resetSkyblock(CommandSender sender) {
+		String msg = "";
+		if (sender instanceof Player) {
+			msg = this.pNameChat + ChatColor.AQUA;
+		} else {
+			msg = this.pName;
+		}
+
 		if (!sender.hasPermission("skyblock.reset")) {
-			if (sender instanceof Player) {
-				sender.sendMessage(this.pNameChat + ChatColor.RED + "Du bist nicht autorisiert!");
-			} else {
-				sender.sendMessage(this.pName + "Du bist nicht autorisiert!");
-			}
+			sender.sendMessage(msg + "Du bist nicht autorisiert!");
 			return true;
 		}
 
 		if (Data.SKYBLOCK_ONLINE) {
-			if (sender instanceof Player) {
-				sender.sendMessage(this.pNameChat + ChatColor.RED + "Skyblock muss offline sein bevor, du es reseten kannst!");
-			} else {
-				sender.sendMessage(this.pName + "Skyblock muss offline sein bevor, du es reseten kannst!");
-			}
+			sender.sendMessage(msg + ChatColor.RED + "Skyblock muss offline sein bevor, du es reseten kannst!");
 			return true;
 		}
 
-		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Reseting Skyblock...");
-		} else {
-			sender.sendMessage(this.pName + "Reseting Skyblock...");
-		}
-
+		sender.sendMessage(msg + "Reseting Skyblock...");
 		this.getServer().unloadWorld(SkyblockMultiplayer.WORLD_NAME, true);
 
 		//Get Files and delete them
@@ -580,34 +544,30 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		SkyblockMultiplayer.getSkyblockIslands();
 
 		//Resete die Spielerinfo
-		Data.ISLAND_DISTANCE = 0;
+		Data.ISLAND_DISTANCE = 50;
 		Data.PLAYERS.clear();
+		Data.PLAYERS = new ArrayList<PlayerInfo>();
 		Data.PLAYERS_NUMBER = 0;
+		Data.ISLAND_NUMBER = 0;
 
-		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Skyblock wurde resetet.");
-		} else {
-			sender.sendMessage(this.pName + "Skyblock wurde resetet.");
-		}
+		sender.sendMessage(msg + "Skyblock wurde resetet.");
 		return true;
 	}
 
 	public boolean reloadConfig(CommandSender sender) {
+		String msg = "";
+		if (sender instanceof Player) {
+			msg = this.pNameChat + ChatColor.AQUA;
+		} else {
+			msg = this.pName;
+		}
 		if (!sender.hasPermission("skyblock.reloadconfig")) {
-			if (sender instanceof Player) {
-				sender.sendMessage(this.pNameChat + ChatColor.RED + "Du bist nicht autorisiert!");
-			} else {
-				sender.sendMessage(this.pName + "Du bist nicht autorisiert!");
-			}
+			sender.sendMessage(msg + "Du bist nicht autorisiert!");
 			return true;
 		}
 
 		this.loadConfig();
-		if (sender instanceof Player) {
-			sender.sendMessage(this.pNameChat + ChatColor.AQUA + "Config-Datei wurde neu geladen.");
-		} else {
-			sender.sendMessage(this.pName + "Config-Datei wurde neu geladen.");
-		}
+		sender.sendMessage(msg + "Config-Datei wurde neu geladen.");
 		return true;
 	}
 
@@ -615,7 +575,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		if (Data.SKYBLOCK_ONLINE) {
 			sender.sendMessage("Status: Online");
 		} else {
-			this.log.info("Status: Offline");
+			sender.sendMessage("Status: Offline");
 		}
 		sender.sendMessage("Anzahl der Inseln: " + Data.ISLAND_NUMBER);
 		sender.sendMessage("Anzahl der Spieler: " + Data.PLAYERS.size());
@@ -627,7 +587,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			}
 			players += Data.PLAYERS.get(i).getPlayerName();
 		}
-		this.log.info("Spieler: " + players);
+		sender.sendMessage("Spieler: " + players);
 
 		return true;
 	}
