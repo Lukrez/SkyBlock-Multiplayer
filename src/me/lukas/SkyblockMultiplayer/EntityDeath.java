@@ -24,13 +24,13 @@ public class EntityDeath extends EntityListener {
 				return;
 			}
 
-			Data.PLAYERS.get(PlayerNr).setDeadToTrue();
+			Data.PLAYERS.get(PlayerNr).setDead(true);
 
 			Data.PLAYERS_NUMBER--;
 			if (Data.PLAYERS_NUMBER == 1) {
 				String winner = "";
 				for (PlayerInfo pinfo : Data.PLAYERS) {
-					if (pinfo.getDead() == false) {
+					if (pinfo.isDead() == false) {
 						winner = pinfo.getPlayerName();
 					}
 				}

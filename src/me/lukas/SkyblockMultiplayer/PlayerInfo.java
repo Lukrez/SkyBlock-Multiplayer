@@ -9,20 +9,23 @@ public class PlayerInfo {
 	private Player player;
 	private Location oldlocation;
 	private boolean isDead;
+	private SkyblockMultiplayer plugin;
 
-	public PlayerInfo(Player p) {
+	public PlayerInfo(Player p, SkyblockMultiplayer instance) {
+		this.plugin = instance;
 		this.player = p;
 		this.hasIsland = false;
-		this.oldlocation = p.getLocation();
-		this.isDead = false;
+		if (this.oldlocation == null) {
+			if (!p.getLocation().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+				this.setOldPlayerLocation(p.getLocation());
+			}
+		}
+		this.setDead(false);
 	}
 
-	public void setHasIslandToTrue() {
-		this.hasIsland = true;
-	}
-
-	public void setHasIslandToFalse() {
-		this.hasIsland = false;
+	public void setHasIsland(boolean b) {
+		this.hasIsland = b;
+		this.plugin.setStringbyPath(this.plugin.playerconfig, this.plugin.playerfile, "players." + this.getPlayerName() + ".hasIsland", b);
 	}
 
 	public boolean getHasIsland() {
@@ -35,29 +38,23 @@ public class PlayerInfo {
 
 	public void setOldPlayerLocation(Location l) {
 		this.oldlocation = l;
+		this.plugin.setStringbyPath(this.plugin.playerconfig, this.plugin.playerfile, "players." + this.getPlayerName() + ".oldLocation", this.plugin.getStringLocation(l));
 	}
 
 	public Player getPlayer() {
 		return this.player;
 	}
 
-	public void setPlayer(Player p) {
-		this.player = p;
-	}
-
 	public String getPlayerName() {
 		return this.player.getName();
 	}
 
-	public void setDeadToTrue() {
-		this.isDead = true;
+	public void setDead(boolean b) {
+		this.isDead = b;
+		this.plugin.setStringbyPath(this.plugin.playerconfig, this.plugin.playerfile, "players." + this.getPlayerName() + ".isDead", b);
 	}
 
-	public void setDeadToFalse() {
-		this.isDead = false;
-	}
-
-	public boolean getDead() {
+	public boolean isDead() {
 		return this.isDead;
 	}
 
@@ -67,5 +64,6 @@ public class PlayerInfo {
 
 	public void setIslandLocation(Location l) {
 		this.islandLocation = l;
+		this.plugin.setStringbyPath(this.plugin.playerconfig, this.plugin.playerfile, "players." + this.getPlayerName() + ".islandLocation", this.plugin.getStringLocation(l));
 	}
 }

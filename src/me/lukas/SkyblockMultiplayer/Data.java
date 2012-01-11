@@ -1,6 +1,5 @@
 package me.lukas.skyblockmultiplayer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,13 +11,4 @@ public class Data {
 	public static boolean SKYBLOCK_ONLINE;
 	public static int ISLAND_DISTANCE;
 	public static int ISLAND_NUMBER;
-
-	public static void setStatus(boolean b) {
-		SkyblockMultiplayer.sconfig.set("skyblockonline", b);
-		try {
-			SkyblockMultiplayer.sconfig.save(SkyblockMultiplayer.sfile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

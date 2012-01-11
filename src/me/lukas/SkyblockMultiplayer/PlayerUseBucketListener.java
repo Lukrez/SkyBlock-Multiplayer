@@ -13,7 +13,7 @@ public class PlayerUseBucketListener extends PlayerListener {
 	}
 
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-		if (event.getPlayer().getWorld().equals(SkyblockMultiplayer.getWorldIslands())) { // Prüfe ob der Spieler in der Welt SkyblockMultiplayer ist
+		if (event.getPlayer().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) { // Prüfe ob der Spieler in der Welt SkyblockMultiplayer ist
 			if (event.getPlayer().getLocation().getBlockX() >= -20 && event.getPlayer().getLocation().getBlockX() <= 20) {
 				if (event.getPlayer().getLocation().getBlockZ() >= -20 && event.getPlayer().getLocation().getBlockZ() <= 20) {
 					event.setCancelled(true);

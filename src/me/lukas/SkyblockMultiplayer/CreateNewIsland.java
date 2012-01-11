@@ -66,7 +66,7 @@ public class CreateNewIsland {
 		//System.out.println("Die Insel befindet sich auf "+posZ+" in Z-Richtung.");
 
 		// Erstelle Location
-		return new Location(SkyblockMultiplayer.getWorldIslands(), posX, posY, posZ);
+		return new Location(SkyblockMultiplayer.getSkyblockIslands(), posX, posY, posZ);
 	}
 
 	private void createIsland(Location l) {
@@ -77,14 +77,14 @@ public class CreateNewIsland {
 		// Ersetze Erde durch Sand
 		for (int x = 2; x <= 4; x++) {
 			for (int z = -1; z <= 1; z++) {
-				SkyblockMultiplayer.getWorldIslands().getBlockAt(x + l.getBlockX(), 62, z + l.getBlockZ()).setType(Material.SAND);
+				SkyblockMultiplayer.getSkyblockIslands().getBlockAt(x + l.getBlockX(), 62, z + l.getBlockZ()).setType(Material.SAND);
 			}
 		}
 		//Erstelle oberste Grassebene
 		createLayer(l, 63, Material.GRASS);
 
 		// Erstelle Chest		
-		Block block = SkyblockMultiplayer.getWorldIslands().getBlockAt(0 + l.getBlockX(), 64, 4 + l.getBlockZ());
+		Block block = SkyblockMultiplayer.getSkyblockIslands().getBlockAt(0 + l.getBlockX(), 64, 4 + l.getBlockZ());
 		block.setType(Material.CHEST);
 		Chest chest = (Chest) block.getState();
 		chest.getBlock().setData((byte) 2);
@@ -98,22 +98,22 @@ public class CreateNewIsland {
 		}
 
 		//Erstelle Baum
-		SkyblockMultiplayer.getWorldIslands().generateTree(new Location(SkyblockMultiplayer.getWorldIslands(), 5 + l.getBlockX(), 64, l.getBlockZ()), TreeType.TREE);
+		SkyblockMultiplayer.getSkyblockIslands().generateTree(new Location(SkyblockMultiplayer.getSkyblockIslands(), 5 + l.getBlockX(), 64, l.getBlockZ()), TreeType.TREE);
 
 		// Setze Bedrock
-		SkyblockMultiplayer.getWorldIslands().getBlockAt(l.getBlockX(), l.getBlockY() - 3, l.getBlockZ()).setType(Material.BEDROCK);
+		SkyblockMultiplayer.getSkyblockIslands().getBlockAt(l.getBlockX(), l.getBlockY() - 3, l.getBlockZ()).setType(Material.BEDROCK);
 
 	}
 
 	private void createLayer(Location l, int y, Material m) {
 		for (int x = -1; x <= 6; x++) {
 			for (int z = -1; z <= 1; z++) {
-				SkyblockMultiplayer.getWorldIslands().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
+				SkyblockMultiplayer.getSkyblockIslands().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
 			}
 		}
 		for (int x = -1; x <= 1; x++) {
 			for (int z = 2; z <= 4; z++) {
-				SkyblockMultiplayer.getWorldIslands().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
+				SkyblockMultiplayer.getSkyblockIslands().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
 			}
 		}
 	}
@@ -122,7 +122,7 @@ public class CreateNewIsland {
 		for (int x = -5; x <= 5; x++) {
 			for (int y = -5; y <= 5; y++) {
 				for (int z = -5; z <= 5; z++) {
-					if (!SkyblockMultiplayer.getWorldIslands().getBlockAt(l.getBlockX() + x, l.getBlockY() + y, l.getBlockZ() + z).getType().equals(Material.AIR)) {
+					if (!SkyblockMultiplayer.getSkyblockIslands().getBlockAt(l.getBlockX() + x, l.getBlockY() + y, l.getBlockZ() + z).getType().equals(Material.AIR)) {
 						return true;
 					}
 				}

@@ -13,7 +13,7 @@ public class PlayerBreackBlockListener extends BlockListener {
 	}
 
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (event.getPlayer().getWorld().equals(SkyblockMultiplayer.getWorldIslands())) { // Prüfe ob der Spieler in SkyblockMultiplayer ist
+		if (event.getPlayer().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) { // Prüfe ob der Spieler in SkyblockMultiplayer ist
 			if (event.getBlock().getLocation().getBlockX() >= -20 && event.getBlock().getLocation().getBlockX() <= 20) {
 				if (event.getBlock().getLocation().getBlockZ() >= -20 && event.getBlock().getLocation().getBlockZ() <= 20) {
 					event.setCancelled(true);
