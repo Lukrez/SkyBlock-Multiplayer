@@ -39,9 +39,6 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	FileConfiguration playerconfig;
 	File playerfile;
 
-	static FileConfiguration sconfig;
-	static File sfile;
-
 	String pName;
 	String pNameChat;
 
@@ -63,14 +60,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		//Register Events
 		this.registerEvents();
 		
-		try {
-			this.config = this.getConfig();
-			SkyblockMultiplayer.sconfig = this.getConfig();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 		this.file = new File(this.getDataFolder(), "config.yml");
-		SkyblockMultiplayer.sfile = new File(this.getDataFolder(), "config.yml");
 		this.loadConfig();
 
 		this.playerconfig = new YamlConfiguration();
