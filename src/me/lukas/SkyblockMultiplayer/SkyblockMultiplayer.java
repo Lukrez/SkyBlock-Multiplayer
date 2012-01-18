@@ -59,7 +59,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 		//Register Events
 		this.registerEvents();
-		
+
+		this.config = this.getConfig();
 		this.file = new File(this.getDataFolder(), "config.yml");
 		this.loadConfig();
 
@@ -73,7 +74,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		PlayerPlaceBlockListener placeBlock = new PlayerPlaceBlockListener(this);
 		PlayerUseBucketListener useBucket = new PlayerUseBucketListener(this);
 		EntityDeath deathListener = new EntityDeath(this);
-		
+
 		this.manager = this.getServer().getPluginManager();
 		this.manager.registerEvent(Type.BLOCK_BREAK, breakBlock, Priority.Normal, this);
 		this.manager.registerEvent(Type.BLOCK_PLACE, placeBlock, Priority.Normal, this);
@@ -460,7 +461,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			msg = this.pNameChat;
 		}
 
-		if (!sender.hasPermission("skyblock.offline")) {
+		if (!Permissions.SKYBLOCK_OFFLINE.has(sender)) {
 			sender.sendMessage(msg + "Du bist nicht autorisiert!");
 			return true;
 		}
@@ -468,7 +469,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		try {
 			sender.sendMessage(msg + "Stoppe Skyblock...");
 
-			//Checke Spieler ob keiner mehr in Welt Skyblock ist					
+			//Checke Spieler ob keiner mehr in Welt Skyblock ist	
 			Player[] playerList = this.getServer().getOnlinePlayers();
 			for (Player p : playerList) {
 				if (p.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
@@ -498,7 +499,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		} else {
 			msg = this.pName;
 		}
-		if (!sender.hasPermission("skyblock.online")) {
+		if (!Permissions.SKYBLOCK_ONLINE.has(sender)) {
 			sender.sendMessage(msg + ChatColor.RED + "Du bist nicht autorisiert!");
 			return true;
 		}
@@ -520,7 +521,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			msg = this.pName;
 		}
 
-		if (!sender.hasPermission("skyblock.reset")) {
+		if (!Permissions.SKYBLOCK_RESET.has(sender)) {
 			sender.sendMessage(msg + "Du bist nicht autorisiert!");
 			return true;
 		}
@@ -565,7 +566,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		} else {
 			msg = this.pName;
 		}
-		if (!sender.hasPermission("skyblock.reload.config")) {
+		if (Permissions.SKYBLOCK_RELOAD_CONFIG.has(sender)) {
 			sender.sendMessage(msg + "Du bist nicht autorisiert!");
 			return true;
 		}
@@ -600,7 +601,6 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			players += Data.PLAYERS.get(i).getPlayerName();
 		}
 		sender.sendMessage("Spieler: " + players);
-
 		return true;
 	}
 
