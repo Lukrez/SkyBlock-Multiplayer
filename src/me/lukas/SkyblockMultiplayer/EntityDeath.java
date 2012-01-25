@@ -18,9 +18,17 @@ public class EntityDeath extends EntityListener {
 		Entity ent = event.getEntity();
 		if (ent instanceof Player) {
 			Player p = ((Player) ent).getPlayer();
-			int PlayerNr = this.findPlayer(p.getName());
+			int PlayerNr = plugin.findPlayer(p.getName());
 
 			if (PlayerNr == -1) {
+				return;
+			}
+
+			if (!Data.PLAYERS.get(PlayerNr).getHasIsland()) {
+				return;
+			}
+
+			if (!Data.PLAYERS.get(PlayerNr).getPlayer().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
 				return;
 			}
 
@@ -46,14 +54,5 @@ public class EntityDeath extends EntityListener {
 
 			}
 		}
-	}
-
-	public int findPlayer(String playername) {
-		for (int i = 0; i < Data.PLAYERS.size(); i++) {
-			if (Data.PLAYERS.get(i).getPlayerName().equalsIgnoreCase(playername)) {
-				return i;
-			}
-		}
-		return -1;
 	}
 }

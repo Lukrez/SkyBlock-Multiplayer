@@ -26,21 +26,20 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SkyblockMultiplayer extends JavaPlugin {
-	PluginDescriptionFile pluginFile;
-	Logger log;
-	PluginManager manager;
+	private PluginDescriptionFile pluginFile;
+	private Logger log;
 
-	private static World skyblockIslands = null;
-	private static String WORLD_NAME = "skyblockislands";
+	static World skyblockIslands = null;
+	static String WORLD_NAME = "skyblockislands";
 
-	FileConfiguration config;
-	File file;
+	private FileConfiguration config;
+	private File file;
 
-	FileConfiguration playerconfig;
-	File playerfile;
+	FileConfiguration playerConfig;
+	File playerFile;
 
-	String pName;
-	String pNameChat;
+	private String pName;
+	private String pNameChat;
 
 	@Override
 	public void onDisable() {
@@ -64,8 +63,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		this.file = new File(this.getDataFolder(), "config.yml");
 		this.loadConfig();
 
-		this.playerconfig = new YamlConfiguration();
-		this.playerfile = new File(this.getDataFolder(), "players.yml");
+		this.playerConfig = new YamlConfiguration();
+		this.playerFile = new File(this.getDataFolder(), "players.yml");
 		this.loadPlayerConfig();
 	}
 
@@ -75,11 +74,11 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		PlayerUseBucketListener useBucket = new PlayerUseBucketListener(this);
 		EntityDeath deathListener = new EntityDeath(this);
 
-		this.manager = this.getServer().getPluginManager();
-		this.manager.registerEvent(Type.BLOCK_BREAK, breakBlock, Priority.Normal, this);
-		this.manager.registerEvent(Type.BLOCK_PLACE, placeBlock, Priority.Normal, this);
-		this.manager.registerEvent(Type.PLAYER_BUCKET_EMPTY, useBucket, Priority.Normal, this);
-		this.manager.registerEvent(Type.ENTITY_DEATH, deathListener, Priority.Normal, this);
+		PluginManager manager = this.getServer().getPluginManager();
+		manager.registerEvent(Type.BLOCK_BREAK, breakBlock, Priority.Normal, this);
+		manager.registerEvent(Type.BLOCK_PLACE, placeBlock, Priority.Normal, this);
+		manager.registerEvent(Type.PLAYER_BUCKET_EMPTY, useBucket, Priority.Normal, this);
+		manager.registerEvent(Type.ENTITY_DEATH, deathListener, Priority.Normal, this);
 	}
 
 	public void loadConfig() {
@@ -158,12 +157,12 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	public void loadPlayerConfig() {
-		if (!this.playerfile.exists()) {
+		if (!this.playerFile.exists()) {
 			return;
 		}
 
 		try {
-			this.playerconfig.load(this.playerfile);
+			this.playerConfig.load(this.playerFile);
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
@@ -211,26 +210,26 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		return l.getWorld().getName() + ":" + l.getBlockX() + ":" + l.getBlockY() + ":" + l.getBlockZ();
 	}
 
-	public void addPlayer(PlayerInfo pi) {
+	/*public void addPlayer(PlayerInfo pi) {
 		String path = "players." + pi.getPlayerName() + ".";
 		this.setStringbyPath(this.playerconfig, this.playerfile, path + "hasIsland", pi.getHasIsland());
 		this.setStringbyPath(this.playerconfig, this.playerfile, path + "isDead", pi.isDead());
 		this.setStringbyPath(this.playerconfig, this.playerfile, path + "islandLocation", this.getStringLocation(pi.getIslandLocation()));
 		this.setStringbyPath(this.playerconfig, this.playerfile, path + "oldLocation", this.getStringLocation(pi.getOldPlayerLocation()));
-	}
+	}*/
 
 	public PlayerInfo getPlayer(Player p) {
 		PlayerInfo pi = new PlayerInfo(p, this);
-		if (!this.playerconfig.contains("players." + p.getName())) {
+		if (!this.playerConfig.contains("players." + p.getName())) {
 			return null;
 		}
 
 		String path = "players." + p.getName() + ".";
-		pi.setHasIsland(Boolean.parseBoolean(this.getStringbyPath(this.playerconfig, path + "hasIsland", false)));
-		pi.setDead(Boolean.parseBoolean(this.getStringbyPath(this.playerconfig, path + "isDead", false)));
-		pi.setIslandLocation(this.getLocationString(this.getStringbyPath(this.playerconfig, path + "islandLocation", "")));
-		this.log.info(this.getStringbyPath(this.playerconfig, path + "oldLocation", null));
-		pi.setOldPlayerLocation(this.getLocationString(this.getStringbyPath(this.playerconfig, path + "oldLocation", null)));
+		pi.setHasIsland(Boolean.parseBoolean(this.getStringbyPath(this.playerConfig, path + "hasIsland", false)));
+		pi.setDead(Boolean.parseBoolean(this.getStringbyPath(this.playerConfig, path + "isDead", false)));
+		pi.setIslandLocation(this.getLocationString(this.getStringbyPath(this.playerConfig, path + "islandLocation", "")));
+		this.log.info(this.getStringbyPath(this.playerConfig, path + "oldLocation", null));
+		pi.setOldPlayerLocation(this.getLocationString(this.getStringbyPath(this.playerConfig, path + "oldLocation", null)));
 		return pi;
 	}
 
@@ -373,7 +372,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 				int playerNr = this.findPlayer(player.getName());
 				if (playerNr == -1) {
-					player.setHealth(0);
+					player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
+					player.sendMessage(this.pNameChat + ChatColor.WHITE + "Du hast die Welt Skyblock verlassen und bist (vielleicht) zurück auf sicherem Boden. Achte auf den Creeper hinter dir :-)");
 					return true;
 				}
 
@@ -392,33 +392,32 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			}
 
 			if (args[0].equalsIgnoreCase("newisland")) {
-				if (player.hasPermission("skyblock.newisland")) {
-					if (!Data.SKYBLOCK_ONLINE) {
-						player.sendMessage(this.pNameChat + ChatColor.WHITE + "Skyblock ist offline.");
-						return true;
-					}
-
-					if (args.length == 1) {
-						player.sendMessage(this.pNameChat + ChatColor.WHITE + "Du musst einen Spielernamen angeben!");
-						return true;
-					}
-
-					int playerNr = this.findPlayer(args[1]);
-					if (playerNr == -1) {
-						player.sendMessage(this.pNameChat + ChatColor.WHITE + "Es gibt keinen Spieler mit diesem Namen.");
-						return true;
-					}
-					Player tp = Data.PLAYERS.get(playerNr).getPlayer();
-					Data.PLAYERS.get(playerNr).setDead(false);
-					Data.PLAYERS.get(playerNr).setHasIsland(false);
-					Data.PLAYERS_NUMBER--;
-					player.sendMessage(this.pNameChat + ChatColor.WHITE + "Der Spieler " + tp.getName() + " hat eine neue Insel bekommen.");
-					Data.PLAYERS.get(playerNr).getPlayer().sendMessage(ChatColor.GREEN + "Du hast eine neue Insel von EventManger " + player.getName() + " bekommen. Benutze '/skyblock start' um dorthin zu kommen.");
-					return true;
-				} else {
+				if (!Permissions.SKYBLOCK_NEWISLAND.has(player)) {
 					player.sendMessage(this.pNameChat + ChatColor.RED + "Du bist nicht autorisiert!");
 					return true;
 				}
+				if (!Data.SKYBLOCK_ONLINE) {
+					player.sendMessage(this.pNameChat + ChatColor.WHITE + "Skyblock ist offline.");
+					return true;
+				}
+
+				if (args.length == 1) {
+					player.sendMessage(this.pNameChat + ChatColor.WHITE + "Du musst einen Spielernamen angeben!");
+					return true;
+				}
+
+				int playerNr = this.findPlayer(args[1]);
+				if (playerNr == -1) {
+					player.sendMessage(this.pNameChat + ChatColor.WHITE + "Es gibt keinen Spieler mit diesem Namen.");
+					return true;
+				}
+				Player tp = Data.PLAYERS.get(playerNr).getPlayer();
+				Data.PLAYERS.get(playerNr).setDead(false);
+				Data.PLAYERS.get(playerNr).setHasIsland(false);
+				Data.PLAYERS_NUMBER--;
+				player.sendMessage(this.pNameChat + ChatColor.WHITE + "Der Spieler " + tp.getName() + " hat eine neue Insel bekommen.");
+				Data.PLAYERS.get(playerNr).getPlayer().sendMessage(ChatColor.GREEN + "Du hast eine neue Insel von EventManger " + player.getName() + " bekommen. Benutze '/skyblock start' um dorthin zu kommen.");
+				return true;
 			}
 
 			if (args[0].equalsIgnoreCase("offline")) {
@@ -535,7 +534,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		this.getServer().unloadWorld(SkyblockMultiplayer.WORLD_NAME, true);
 
 		//Get Files and delete them
-		this.playerfile.delete();
+		this.playerFile.delete();
 
 		this.sfiles = new ArrayList<File>();
 		this.getAllFilesAndDirectories(SkyblockMultiplayer.WORLD_NAME);
@@ -613,25 +612,30 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		String sb_offline = "/skyblock offline - Deaktiviert Skyblock, damit diese Option geht darf kein Spieler mehr in Skyblock sein\n";
 		String sb_online = "/skyblock online - Aktiviert Skyblock und erstellt die Welt neu, wenn nicht vorhanden\n";
 		String sb_reset = "/skyblock reset - Resetet die Welt Skyblock und die Spielerinfos\n";
+		String sb_reload_config = "/skyblock reload config - Lädt die Konfigdatei neu\n";
 		String sb_status = "/skyblock status - Zeigt einige Informationen zu Skyblock\n";
 
 		String ret = "";
 		ret += sb_help + sb + sb_start + sb_leave + sb_status;
-		if (sender.hasPermission("skyblock.newisland")) {
+		if (Permissions.SKYBLOCK_NEWISLAND.has(sender)) {
 			ret += sb_newisland;
 		}
-		if (sender.hasPermission("skyblock.online")) {
+		if (Permissions.SKYBLOCK_ONLINE.has(sender)) {
 			ret += sb_online;
 		}
-		if (sender.hasPermission("skyblock.offline")) {
+		if (Permissions.SKYBLOCK_OFFLINE.has(sender)) {
 			ret += sb_offline;
 		}
-		if (sender.hasPermission("skyblock.reset")) {
+		if (Permissions.SKYBLOCK_RESET.has(sender)) {
 			ret += sb_reset;
+		}
+		if (Permissions.SKYBLOCK_RELOAD_CONFIG.has(sender)) {
+			ret += sb_reload_config;
 		}
 
 		for (String s : ret.split("\n")) {
-			sender.sendMessage(s);
+			if (!s.trim().equals(""))
+				sender.sendMessage(s);
 		}
 		return true;
 	}
