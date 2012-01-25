@@ -3,10 +3,11 @@ package me.lukas.skyblockmultiplayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
 
-public class EntityDeath extends EntityListener {
+public class EntityDeath implements Listener {
 
 	SkyblockMultiplayer plugin;
 
@@ -14,6 +15,7 @@ public class EntityDeath extends EntityListener {
 		this.plugin = instance;
 	}
 
+	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		Entity ent = event.getEntity();
 		if (ent instanceof Player) {

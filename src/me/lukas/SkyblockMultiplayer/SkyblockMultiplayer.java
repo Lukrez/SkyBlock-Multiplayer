@@ -18,8 +18,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -75,10 +73,10 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		EntityDeath deathListener = new EntityDeath(this);
 
 		PluginManager manager = this.getServer().getPluginManager();
-		manager.registerEvent(Type.BLOCK_BREAK, breakBlock, Priority.Normal, this);
-		manager.registerEvent(Type.BLOCK_PLACE, placeBlock, Priority.Normal, this);
-		manager.registerEvent(Type.PLAYER_BUCKET_EMPTY, useBucket, Priority.Normal, this);
-		manager.registerEvent(Type.ENTITY_DEATH, deathListener, Priority.Normal, this);
+		manager.registerEvents(breakBlock, this);
+		manager.registerEvents(placeBlock, this);
+		manager.registerEvents(useBucket, this);
+		manager.registerEvents(deathListener, this);
 	}
 
 	public void loadConfig() {

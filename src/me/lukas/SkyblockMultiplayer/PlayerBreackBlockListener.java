@@ -1,10 +1,11 @@
 package me.lukas.skyblockmultiplayer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 
-public class PlayerBreackBlockListener extends BlockListener {
+public class PlayerBreackBlockListener implements Listener {
 
 	SkyblockMultiplayer plugin;
 
@@ -12,6 +13,7 @@ public class PlayerBreackBlockListener extends BlockListener {
 		this.plugin = instance;
 	}
 
+	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.getPlayer().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) { // Prüfe ob der Spieler in SkyblockMultiplayer ist
 			if (event.getBlock().getLocation().getBlockX() >= -20 && event.getBlock().getLocation().getBlockX() <= 20) {
