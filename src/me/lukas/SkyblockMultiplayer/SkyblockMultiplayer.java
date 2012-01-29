@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
+import org.bukkit.WorldType;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,7 +28,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	private PluginDescriptionFile pluginFile;
 	private Logger log;
 
-	static World skyblockIslands = null;
+	private static World skyblockIslands = null;
 	static String WORLD_NAME = "skyblockislands";
 
 	private FileConfiguration config;
@@ -52,7 +53,6 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 		this.pName = "[" + this.pluginFile.getName() + "] ";
 		this.pNameChat = ChatColor.WHITE + "[" + ChatColor.GREEN + this.pluginFile.getName() + ChatColor.WHITE + "] ";
-		this.log.info(this.pName + "v" + pluginFile.getVersion() + " enabled.");
 
 		//Register Events
 		this.registerEvents();
@@ -64,6 +64,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		this.playerConfig = new YamlConfiguration();
 		this.playerFile = new File(this.getDataFolder(), "players.yml");
 		this.loadPlayerConfig();
+
+		this.log.info(this.pName + "v" + pluginFile.getVersion() + " enabled.");
 	}
 
 	public void registerEvents() {
@@ -71,12 +73,14 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		PlayerPlaceBlockListener placeBlock = new PlayerPlaceBlockListener(this);
 		PlayerUseBucketListener useBucket = new PlayerUseBucketListener(this);
 		EntityDeath deathListener = new EntityDeath(this);
+		PlayerJoin lPlayerJoin = new PlayerJoin(this);
 
 		PluginManager manager = this.getServer().getPluginManager();
 		manager.registerEvents(breakBlock, this);
 		manager.registerEvents(placeBlock, this);
 		manager.registerEvents(useBucket, this);
 		manager.registerEvents(deathListener, this);
+		manager.registerEvents(lPlayerJoin, this);
 	}
 
 	public void loadConfig() {
@@ -190,6 +194,9 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	public Location getLocationString(String s) {
+		if (s == null || s.trim() == "") {
+			return null;
+		}
 		String[] parts = s.split(":");
 		if (parts.length == 4) {
 			World w = this.getServer().getWorld(parts[0]);
@@ -233,7 +240,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 	public static World getSkyblockIslands() {
 		if (skyblockIslands == null) {
-			skyblockIslands = WorldCreator.name(SkyblockMultiplayer.WORLD_NAME).environment(Environment.NORMAL).generator(new SkyblockChunkGenerator()).createWorld();
+			long seed = 89125;
+			skyblockIslands = WorldCreator.name(SkyblockMultiplayer.WORLD_NAME).type(WorldType.NORMAL).seed(seed).environment(Environment.NORMAL).generator(new SkyblockChunkGenerator()).createWorld();
 			SkyblockMultiplayer.CreateSpawnTower();
 			skyblockIslands.setSpawnLocation(1, SkyblockMultiplayer.getSkyblockIslands().getHighestBlockYAt(1, 1), 1);
 		}
@@ -258,6 +266,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		if (!(sender instanceof Player)) {
 			if (cmd.getName().equalsIgnoreCase("skyblock")) {
 				if (args.length == 0) {
+					sender.sendMessage("SkyblockMultiplayer v" + this.pluginFile.getVersion());
+					sender.sendMessage("Gib /skyblock help ein für weitere Informationen");
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("offline")) {
@@ -294,6 +304,12 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 		if (cmd.getName().equalsIgnoreCase("skyblock")) {
 			if (args.length == 0) {
+				sender.sendMessage(this.pNameChat + "SkyblockMultiplayer v" + this.pluginFile.getVersion());
+				sender.sendMessage(this.pNameChat + "Gib '/skyblock help' für weitere Informationen ein.");
+				return true;
+			}
+
+			if (args[0].equalsIgnoreCase("join")) {
 				if (!Data.SKYBLOCK_ONLINE) {
 					player.sendMessage(this.pNameChat + ChatColor.WHITE + "Skyblock ist offline.");
 					return true;
@@ -310,8 +326,16 @@ public class SkyblockMultiplayer extends JavaPlugin {
 					//Refreshe OldLocation vom Spieler
 					Data.PLAYERS.get(playerNr).setOldPlayerLocation(player.getLocation());
 				}
+
+				int islands = 0;
+				for (PlayerInfo p : Data.PLAYERS) {
+					if (p.getHasIsland()) {
+						islands++;
+					}
+				}
+
 				player.teleport(SkyblockMultiplayer.getSkyblockIslands().getSpawnLocation()); // Teleportiere Spieler zum Spawntower in der Mitte
-				player.sendMessage(this.pNameChat + ChatColor.WHITE + "Willkommen auf der Welt SkyBlock für Multiplayer! Es gibt momentan " + Data.ISLAND_NUMBER + " Inseln und " + Data.PLAYERS_NUMBER + " Spieler. Gib '/skyblock start' ein um eine eigene Insel zu bekommen.");
+				player.sendMessage(this.pNameChat + ChatColor.WHITE + "Willkommen auf der Welt SkyBlock für Multiplayer! Es gibt momentan " + islands + " Inseln und " + Data.PLAYERS_NUMBER + " Spieler. Gib '/skyblock start' ein um eine eigene Insel zu bekommen.");
 				return true;
 			}
 
@@ -354,11 +378,10 @@ public class SkyblockMultiplayer extends JavaPlugin {
 					Data.PLAYERS_NUMBER++;
 
 					// Nachricht an alle
-					for (PlayerInfo pinfo : Data.PLAYERS) {
-						pinfo.getPlayer().sendMessage(this.pNameChat + ChatColor.WHITE + "Der Spieler " + player.getName() + " spielt mit. Damit sind es " + Data.PLAYERS_NUMBER + " Spieler.");
+					for (PlayerInfo pi : Data.PLAYERS) {
+						pi.getPlayer().sendMessage(this.pNameChat + ChatColor.WHITE + "Der Spieler " + player.getName() + " spielt mit. Damit sind es " + Data.PLAYERS_NUMBER + " Spieler.");
 					}
 					player.sendMessage(this.pNameChat + ChatColor.WHITE + "Fall nicht runter, und mach kein Obsidian :-)");
-
 					return true;
 				}
 			}
@@ -412,17 +435,19 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				Player tp = Data.PLAYERS.get(playerNr).getPlayer();
 				Data.PLAYERS.get(playerNr).setDead(false);
 				Data.PLAYERS.get(playerNr).setHasIsland(false);
-				Data.PLAYERS_NUMBER--;
+				if (!(Data.PLAYERS_NUMBER - 1 < 0)) {
+					Data.PLAYERS_NUMBER--;
+				}
 				player.sendMessage(this.pNameChat + ChatColor.WHITE + "Der Spieler " + tp.getName() + " hat eine neue Insel bekommen.");
 				Data.PLAYERS.get(playerNr).getPlayer().sendMessage(ChatColor.GREEN + "Du hast eine neue Insel von EventManger " + player.getName() + " bekommen. Benutze '/skyblock start' um dorthin zu kommen.");
 				return true;
 			}
 
 			if (args[0].equalsIgnoreCase("offline")) {
-				return this.setSkyblockOffline(player);
+				return this.setSkyblockOffline(sender);
 			}
 			if (args[0].equalsIgnoreCase("online")) {
-				return this.setSkyblockOnline(player);
+				return this.setSkyblockOnline(sender);
 			}
 			if (args[0].equalsIgnoreCase("help")) {
 				return this.getListCommands(sender);
@@ -443,7 +468,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				return this.getStatus(sender);
 			}
 
-			player.sendMessage(this.pNameChat + ChatColor.RED + "Da ist kein Argument mit diesen Namen.");
+			player.sendMessage(this.pNameChat + "Da ist kein Argument mit diesen Namen.");
 			return true;
 		}
 
@@ -455,7 +480,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		if (sender instanceof Player) {
 			msg = this.pNameChat + ChatColor.WHITE;
 		} else {
-			msg = this.pNameChat;
+			msg = this.pName;
 		}
 
 		if (!Permissions.SKYBLOCK_OFFLINE.has(sender)) {
@@ -524,7 +549,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		}
 
 		if (Data.SKYBLOCK_ONLINE) {
-			sender.sendMessage(msg + ChatColor.RED + "Skyblock muss offline sein bevor, du es reseten kannst!");
+			sender.sendMessage(msg + ChatColor.RED + "Skyblock muss offline sein bevor, du es reseten kannst.");
 			return true;
 		}
 
@@ -589,21 +614,18 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 		sender.sendMessage("Anzahl der Inseln: " + islands);
 		sender.sendMessage("Anzahl der Spieler: " + Data.PLAYERS.size());
-
-		String players = "";
-		for (int i = 0; i < Data.PLAYERS.size(); i++) {
-			if (i != 0) {
-				players += ", ";
-			}
-			players += Data.PLAYERS.get(i).getPlayerName();
-		}
-		sender.sendMessage("Spieler: " + players);
 		return true;
 	}
 
 	public boolean getListCommands(CommandSender sender) {
-		String sb_help = "/skyblock help - Liste alle Kommandos nach Rechten gefiltert auf\n";
-		String sb = "/skyblock - Die Welt Skyblock betreten\n";
+		String sb_info = "";
+		if (sender instanceof Player) {
+			sb_info = "-----" + this.pNameChat + "v" + this.pluginFile.getVersion() + "-----\n";
+		} else {
+			sb_info = "-----" + this.pName + "v" + this.pluginFile.getVersion() + "-----\n";
+		}
+		String sb_help = "/skyblock help - Listet alle Kommandos nach Rechten gefiltert auf\n";
+		String sb = "/skyblock join - Die Welt Skyblock betreten\n";
 		String sb_start = "/skyblock start - Bei Skyblock mitspielen\n";
 		String sb_leave = "/skyblock leave - Zur alten Position in der alten Welt zurückkehren\n";
 		String sb_newisland = "/skyblock newisland [player] - Einem Spieler die Möglichkeit geben einer neuen Insel zu joinen\n";
@@ -611,9 +633,10 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		String sb_online = "/skyblock online - Aktiviert Skyblock und erstellt die Welt neu, wenn nicht vorhanden\n";
 		String sb_reset = "/skyblock reset - Resetet die Welt Skyblock und die Spielerinfos\n";
 		String sb_reload_config = "/skyblock reload config - Lädt die Konfigdatei neu\n";
-		String sb_status = "/skyblock status - Zeigt einige Informationen zu Skyblock\n";
+		String sb_status = "/skyblock status - Zeigt Informationen zu Skyblock an\n";
 
 		String ret = "";
+		ret += sb_info;
 		ret += sb_help + sb + sb_start + sb_leave + sb_status;
 		if (Permissions.SKYBLOCK_NEWISLAND.has(sender)) {
 			ret += sb_newisland;

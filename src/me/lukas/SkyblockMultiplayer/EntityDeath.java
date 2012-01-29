@@ -36,7 +36,9 @@ public class EntityDeath implements Listener {
 
 			Data.PLAYERS.get(PlayerNr).setDead(true);
 
-			Data.PLAYERS_NUMBER--;
+			if (!(Data.PLAYERS_NUMBER - 1 < 0)) {
+				Data.PLAYERS_NUMBER--;
+			}
 			if (Data.PLAYERS_NUMBER == 1) {
 				String winner = "";
 				for (PlayerInfo pinfo : Data.PLAYERS) {
@@ -53,7 +55,6 @@ public class EntityDeath implements Listener {
 
 			for (PlayerInfo pinfo : Data.PLAYERS) {
 				pinfo.getPlayer().sendMessage("Jetzt sind (nur) noch " + Data.PLAYERS_NUMBER + " Spieler übrig!");
-
 			}
 		}
 	}
