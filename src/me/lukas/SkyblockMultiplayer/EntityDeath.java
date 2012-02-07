@@ -1,6 +1,5 @@
 package me.lukas.skyblockmultiplayer;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,7 +47,7 @@ public class EntityDeath implements Listener {
 				}
 
 				for (PlayerInfo pinfo : Data.PLAYERS) {
-					pinfo.getPlayer().sendMessage(ChatColor.GREEN + "Spieler " + winner + " hat das Spiel gewonnen.");
+					pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
 				}
 				return;
 			}

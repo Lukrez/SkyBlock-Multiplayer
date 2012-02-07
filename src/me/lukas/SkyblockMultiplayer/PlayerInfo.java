@@ -27,7 +27,7 @@ public class PlayerInfo {
 
 	public void setHasIsland(boolean b) {
 		this.hasIsland = b;
-		this.plugin.setStringbyPath(this.plugin.playerConfig, this.plugin.playerFile, "players." + this.getPlayerName() + ".hasIsland", b);
+		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".hasIsland", b);
 	}
 
 	public boolean getHasIsland() {
@@ -40,7 +40,7 @@ public class PlayerInfo {
 
 	public void setOldPlayerLocation(Location l) {
 		this.oldlocation = l;
-		this.plugin.setStringbyPath(this.plugin.playerConfig, this.plugin.playerFile, "players." + this.getPlayerName() + ".oldLocation", this.plugin.getStringLocation(l));
+		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".oldLocation", this.plugin.getStringLocation(l));
 	}
 
 	public Player getPlayer() {
@@ -53,7 +53,7 @@ public class PlayerInfo {
 
 	public void setDead(boolean b) {
 		this.isDead = b;
-		this.plugin.setStringbyPath(this.plugin.playerConfig, this.plugin.playerFile, "players." + this.getPlayerName() + ".isDead", b);
+		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".isDead", b);
 	}
 
 	public boolean isDead() {
@@ -66,6 +66,6 @@ public class PlayerInfo {
 
 	public void setIslandLocation(Location l) {
 		this.islandLocation = l;
-		this.plugin.setStringbyPath(this.plugin.playerConfig, this.plugin.playerFile, "players." + this.getPlayerName() + ".islandLocation", this.plugin.getStringLocation(l));
+		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".islandLocation", this.plugin.getStringLocation(l));
 	}
 }

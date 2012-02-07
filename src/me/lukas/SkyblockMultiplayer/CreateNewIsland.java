@@ -16,7 +16,7 @@ public class CreateNewIsland {
 		Data.ISLAND_NUMBER += 1;
 		Location l = getIslandPosition(Data.ISLAND_NUMBER);
 
-		while (this.checkIfOcupied(l)) {
+		while (this.checkIfOccupied(l)) {
 			Data.ISLAND_NUMBER += 1;
 			l = getIslandPosition(Data.ISLAND_NUMBER);
 		}
@@ -97,7 +97,7 @@ public class CreateNewIsland {
 			}
 		}
 
-		//Erstelle Baum
+		// Erstelle Baum
 		SkyblockMultiplayer.getSkyblockIslands().generateTree(new Location(SkyblockMultiplayer.getSkyblockIslands(), 5 + l.getBlockX(), 64, l.getBlockZ()), TreeType.TREE);
 
 		// Setze Bedrock
@@ -118,7 +118,7 @@ public class CreateNewIsland {
 		}
 	}
 
-	private boolean checkIfOcupied(Location l) {
+	private boolean checkIfOccupied(Location l) {
 		for (int x = -5; x <= 5; x++) {
 			for (int y = -5; y <= 5; y++) {
 				for (int z = -5; z <= 5; z++) {

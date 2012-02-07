@@ -1,6 +1,5 @@
 package me.lukas.skyblockmultiplayer;
 
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -19,7 +18,6 @@ public class PlayerUseBucketListener implements Listener {
 			if (event.getPlayer().getLocation().getBlockX() >= -20 && event.getPlayer().getLocation().getBlockX() <= 20) {
 				if (event.getPlayer().getLocation().getBlockZ() >= -20 && event.getPlayer().getLocation().getBlockZ() <= 20) {
 					event.setCancelled(true);
-					event.getPlayer().sendMessage(ChatColor.RED + "You can not use a bucket here!");
 					return;
 				}
 			}

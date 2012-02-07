@@ -3,11 +3,10 @@ package me.lukas.skyblockmultiplayer;
 import org.bukkit.command.CommandSender;
 
 public enum Permissions {
-	SKYBLOCK_ONLINE("skyblock.online"),
-	SKYBLOCK_OFFLINE("skyblock.offline"),
+	SKYBLOCK_SET("skyblock.set"),
 	SKYBLOCK_RESET("skyblock.reset"),
 	SKYBLOCK_NEWISLAND("skyblock.newisland"),
-	SKYBLOCK_RELOAD_CONFIG("skyblock.reload.config");
+	SKYBLOCK_RELOAD("skyblock.reload");
 
 	private final String node;
 
@@ -17,9 +16,5 @@ public enum Permissions {
 
 	public boolean has(CommandSender sender) {
 		return sender.hasPermission(this.node);
-	}
-	
-	public String toString(){
-		return this.node;
 	}
 }
