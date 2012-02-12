@@ -11,6 +11,6 @@ public class Data {
 	public static boolean SKYBLOCK_ONLINE;
 	public static int ISLAND_DISTANCE;
 	public static int ISLAND_NUMBER;
-	public static boolean HARDCOREMODE = false;
+	public static boolean PVP = false;
 	public static String LANGUAGE = "english";
 }

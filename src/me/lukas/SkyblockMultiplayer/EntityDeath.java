@@ -18,10 +18,15 @@ public class EntityDeath implements Listener {
 	public void onEntityDeath(EntityDeathEvent event) {
 		Entity ent = event.getEntity();
 		if (ent instanceof Player) {
-			Player p = ((Player) ent).getPlayer();
+			Player p = (Player) ent;
+			System.out.println(p.getName() + " died");
 			int PlayerNr = plugin.findPlayer(p.getName());
 
 			if (PlayerNr == -1) {
+				return;
+			}
+
+			if (!Data.PVP) {
 				return;
 			}
 
@@ -53,7 +58,7 @@ public class EntityDeath implements Listener {
 			}
 
 			for (PlayerInfo pinfo : Data.PLAYERS) {
-				pinfo.getPlayer().sendMessage("Jetzt sind (nur) noch " + Data.PLAYERS_NUMBER + " Spieler übrig!");
+				pinfo.getPlayer().sendMessage("Jetzt sind (nur) noch " + Data.PLAYERS_NUMBER + " Spieler übrig.");
 			}
 		}
 	}

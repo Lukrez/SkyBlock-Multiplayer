@@ -68,7 +68,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		this.loadPlayerConfig();
 
 		this.configLanguage = new YamlConfiguration();
-		this.fileLanguage = new File(this.getDataFolder(), "language" + File.separator + Data.LANGUAGE);
+		this.fileLanguage = new File(this.getDataFolder() + File.separator + "language", Data.LANGUAGE + ".yml");
 		this.loadLanguageConfig();
 
 		this.log.info(this.pName + "v" + pluginFile.getVersion() + " enabled.");
@@ -115,10 +115,10 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			Data.ITEMSCHEST = itemsChest;
 			Data.SKYBLOCK_ONLINE = true;
 
-			this.setStringbyPath(this.configPlugin, this.fileConfig, "options." + "islandDistance", 50);
-			this.setStringbyPath(this.configPlugin, this.fileConfig, "options." + "chest.items", items);
-			this.setStringbyPath(this.configPlugin, this.fileConfig, "options." + "skyblockonline", true);
-			this.setStringbyPath(this.configPlugin, this.fileConfig, "options." + "hardcoremode", false);
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_ISLANDDISTANCE.path, 50);
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_CHESTITEMS.path, items);
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SKYBLOCKONLINE.path, true);
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, false);
 		} else {
 			try {
 				this.configPlugin.load(this.fileConfig);
@@ -157,8 +157,9 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			}
 
 			Data.ITEMSCHEST = itemsChest;
-			Data.SKYBLOCK_ONLINE = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, "options.skyblockonline", true));
-			Data.HARDCOREMODE = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, "option.hardcoremode", false));
+			Data.SKYBLOCK_ONLINE = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SKYBLOCKONLINE.path, true));
+			Data.PVP = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, false));
+			Data.LANGUAGE = this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_LANGUAGE.path, "english");
 		}
 
 		SkyblockMultiplayer.getSkyblockIslands();
@@ -184,6 +185,10 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	private void loadLanguageConfig() {
+		if (!new File(this.getDataFolder() + File.separator + "language").exists()) {
+			new File(this.getDataFolder() + File.separator + "language").mkdirs();
+		}
+
 		if (!this.fileLanguage.exists()) {
 			try {
 				this.fileLanguage.createNewFile(); //create file
@@ -318,208 +323,31 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player)) {
-			if (cmd.getName().equalsIgnoreCase("skyblock")) {
-				if (args.length == 0) {
-					sender.sendMessage("SkyblockMultiplayer v" + this.pluginFile.getVersion());
-					sender.sendMessage(Language.MSGS_SKYBLOCK.sentence);
-					return true;
-				}
-
-				if (args[0].equalsIgnoreCase("set")) {
-
-					if (args[1].equalsIgnoreCase("offline")) {
-						return this.setSkyblockOffline(sender);
-					}
-					if (args[1].equalsIgnoreCase("online")) {
-						return this.setSkyblockOnline(sender);
-					}
-
-					if (args.length <= 3) {
-						sender.sendMessage(this.pName + Language.MSGS_WRONGARGS.sentence);
-						return true;
-					}
-
-					if (args[1].equalsIgnoreCase("language")) {
-						
-					}
-				}
-				if (args[0].equalsIgnoreCase("reset")) {
-					return this.resetSkyblock(sender);
-				}
-				if (args[0].equalsIgnoreCase("reload")) {
-					if (args.length < 2) {
-						return true;
-					}
-					if (args[1].equalsIgnoreCase("config")) {
-						return this.reloadConfig(sender);
-					}
-					if (args[1].equalsIgnoreCase("language")) {
-						return this.reloadLanguage(sender);
-					}
-				}
-				if (args[0].equalsIgnoreCase("status")) {
-					return this.getStatus(sender);
-				}
-				if (args[0].equalsIgnoreCase("help")) {
-					return this.getListCommands(sender);
-				}
-
-				sender.sendMessage(this.pNameChat + Language.MSGS_WRONGARGS.sentence);
-				return true;
-			}
-			return false;
-		}
-
-		Player player = (Player) sender;
-
 		if (cmd.getName().equalsIgnoreCase("skyblock")) {
 			if (args.length == 0) {
-				sender.sendMessage(this.pNameChat + "SkyblockMultiplayer v" + this.pluginFile.getVersion());
-				sender.sendMessage(this.pNameChat + Language.MSGS_SKYBLOCK.sentence);
+				sender.sendMessage("SkyblockMultiplayer v" + this.pluginFile.getVersion());
+				sender.sendMessage(Language.MSGS_SKYBLOCK.sentence);
 				return true;
 			}
 
-			if (args[0].equalsIgnoreCase("join")) {
-				if (!Data.SKYBLOCK_ONLINE) {
-					player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
+			if (args[0].equalsIgnoreCase("set")) {
+				if (args.length < 2) {
+					sender.sendMessage(this.pName + Language.MSGS_WRONGARGS.sentence);
 					return true;
 				}
-
-				if (player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+				if (args[1].equalsIgnoreCase("offline")) {
+					return this.setSkyblockOffline(sender);
+				}
+				if (args[1].equalsIgnoreCase("online")) {
+					return this.setSkyblockOnline(sender);
+				}
+				if (args.length < 3) {
+					sender.sendMessage(this.pName + Language.MSGS_WRONGARGS.sentence);
 					return true;
 				}
-
-				int playerNr = this.findPlayer(player.getName()); // search player
-				if (playerNr == -1) { // if player not in list, add him
-					Data.PLAYERS.add(new PlayerInfo(player, this));
-				} else {
-					//Refreshe OldLocation of the player
-					Data.PLAYERS.get(playerNr).setOldPlayerLocation(player.getLocation());
+				if (args[1].equalsIgnoreCase("language")) {
+					return this.setLanguage(sender, args[2]);
 				}
-
-				int islands = 0;
-				for (PlayerInfo p : Data.PLAYERS) {
-					if (p.getHasIsland()) {
-						islands++;
-					}
-				}
-
-				player.teleport(SkyblockMultiplayer.getSkyblockIslands().getSpawnLocation()); // Teleportiere Spieler zum Spawntower in der Mitte
-				player.sendMessage(this.pNameChat + Language.MSGS_WELCOME1.sentence + islands + Language.MSGS_WELCOME2.sentence + Data.PLAYERS_NUMBER + Language.MSGS_WELCOME3.sentence);
-				return true;
-			}
-
-			if (args[0].equalsIgnoreCase("start")) {
-				if (!Data.SKYBLOCK_ONLINE) {
-					player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
-					return true;
-				}
-
-				if (!(player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands()))) {
-					return true;
-				}
-
-				boolean ismepty = this.checkIfPlayerInventoryEmpty(player);
-				if (!ismepty) {
-					player.sendMessage(this.pNameChat + ChatColor.RED + "Es ist nicht erlaubt mit Inhalt im Inventar mitzuspielen!");
-					return true;
-				}
-
-				int playerNr = this.findPlayer(player.getName()); // search player
-				if (playerNr == -1) { // if player not in list, add him
-					Data.PLAYERS.add(new PlayerInfo(player, this));
-					playerNr = this.findPlayer(player.getName());
-				}
-				if (Data.PLAYERS.get(playerNr).getHasIsland()) { // had already a island
-					if (Data.PLAYERS.get(playerNr).isDead()) {
-						player.sendMessage(this.pNameChat + Language.MSGS_HADAISLAND.sentence);
-						return true;
-					}
-					// teleport player
-					player.teleport(Data.PLAYERS.get(playerNr).getIslandLocation());
-					player.sendMessage(this.pNameChat + Language.MSGS_WELCOMEBACK.sentence + player.getName() + ".");
-					return true;
-				} else {
-					// create a new island for the player
-					CreateNewIsland isl = new CreateNewIsland(player);
-					Data.PLAYERS.get(playerNr).setIslandLocation(isl.Islandlocation);
-					Data.PLAYERS.get(playerNr).setHasIsland(true);
-					Data.PLAYERS_NUMBER++;
-
-					// Nachricht an alle
-					for (PlayerInfo pi : Data.PLAYERS) {
-						pi.getPlayer().sendMessage(this.pNameChat + Language.MSGS_WELCOMEBROADCAST1.sentence + player.getName() + Language.MSGS_WELCOMEBROADCAST2.sentence);
-					}
-					player.sendMessage(this.pNameChat + Language.MSGS_TONEWPLAYER.sentence);
-					return true;
-				}
-			}
-
-			if (args[0].equalsIgnoreCase("leave")) {
-				if (!player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
-					return true;
-				}
-
-				int playerNr = this.findPlayer(player.getName());
-				if (playerNr == -1) {
-					player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
-					player.sendMessage(this.pNameChat + Language.MSGS_LEFTSKYBLOCK.sentence);
-					return true;
-				}
-
-				boolean ismepty = this.checkIfPlayerInventoryEmpty(player);
-				if (!ismepty) {
-					if (Data.PLAYERS.get(playerNr).getHasIsland()) {
-						player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORY.sentence);
-						return true;
-					}
-				}
-
-				Location l = Data.PLAYERS.get(playerNr).getOldPlayerLocation();
-				player.teleport(l);
-				player.sendMessage(this.pNameChat + Language.MSGS_LEFTSKYBLOCK.sentence);
-				return true;
-			}
-
-			if (args[0].equalsIgnoreCase("newisland")) {
-				if (!Permissions.SKYBLOCK_NEWISLAND.has(player)) {
-					this.notAuthorized((Player) sender);
-				}
-				if (!Data.SKYBLOCK_ONLINE) {
-					player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
-					return true;
-				}
-
-				if (args.length == 1) {
-					player.sendMessage(this.pNameChat + Language.MSGS_WRONGARGS.sentence);
-					return true;
-				}
-
-				int playerNr = this.findPlayer(args[1]);
-				if (playerNr == -1) {
-					player.sendMessage(this.pNameChat + Language.MSGS_WRONEPLAYERNAME.sentence);
-					return true;
-				}
-				Player tp = Data.PLAYERS.get(playerNr).getPlayer();
-				Data.PLAYERS.get(playerNr).setDead(false);
-				Data.PLAYERS.get(playerNr).setHasIsland(false);
-				if (!(Data.PLAYERS_NUMBER - 1 < 0)) {
-					Data.PLAYERS_NUMBER--;
-				}
-				player.sendMessage(this.pNameChat + Language.MSGS_NEWISLANDPLAYER1.sentence + tp.getName() + Language.MSGS_NEWISLANDPLAYER2.sentence);
-				Data.PLAYERS.get(playerNr).getPlayer().sendMessage(this.pNameChat + Language.MSGS_GOTNEWISLAND1.sentence + player.getName() + Language.MSGS_GOTNEWISLAND2.sentence);
-				return true;
-			}
-
-			if (args[0].equalsIgnoreCase("offline")) {
-				return this.setSkyblockOffline(sender);
-			}
-			if (args[0].equalsIgnoreCase("online")) {
-				return this.setSkyblockOnline(sender);
-			}
-			if (args[0].equalsIgnoreCase("help")) {
-				return this.getListCommands(sender);
 			}
 			if (args[0].equalsIgnoreCase("reset")) {
 				return this.resetSkyblock(sender);
@@ -531,8 +359,47 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				if (args[1].equalsIgnoreCase("config")) {
 					return this.reloadConfig(sender);
 				}
+				if (args[1].equalsIgnoreCase("language")) {
+					return this.reloadLanguage(sender);
+				}
+			}
+			if (args[0].equalsIgnoreCase("status")) {
+				return this.getStatus(sender);
+			}
+			if (args[0].equalsIgnoreCase("help")) {
+				return this.getListCommands(sender);
 			}
 
+			if (!(sender instanceof Player)) {
+				return true;
+			}
+
+			Player player = (Player) sender;
+
+			if (args[0].equalsIgnoreCase("help")) {
+				return this.getListCommands(sender);
+			}
+			if (args[0].equalsIgnoreCase("join")) {
+				return this.playerJoin(player);
+			}
+			if (args[0].equalsIgnoreCase("start")) {
+				return this.playerStart(player);
+			}
+			if (args[0].equalsIgnoreCase("leave")) {
+				return this.playerLeave(player);
+			}
+			if (args[0].equalsIgnoreCase("newIsland")) {
+				String s = "";
+				if (args.length < 2) {
+					s = "";
+				} else {
+					s = args[1];
+				}
+				return this.playerNewIsland(player, s);
+			}
+			if (args[0].equalsIgnoreCase("reset")) {
+				return this.resetSkyblock(sender);
+			}
 			if (args[0].equalsIgnoreCase("status")) {
 				return this.getStatus(sender);
 			}
@@ -540,25 +407,13 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			player.sendMessage(this.pNameChat + Language.MSGS_WRONGARGS.sentence);
 			return true;
 		}
-
 		return false;
-	}
-
-	private boolean reloadLanguage(CommandSender sender) {
-		this.loadLanguageConfig();
-		sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGERELOADED.sentence);
-		return true;
-	}
-
-	public boolean notAuthorized(Player p) {
-		p.sendMessage(this.pNameChat + Language.MSGS_notAuthorized.sentence);
-		return true;
 	}
 
 	public boolean setSkyblockOffline(CommandSender sender) {
 		String msg = "";
 		if (sender instanceof Player) {
-			msg = this.pNameChat + ChatColor.WHITE;
+			msg = this.pNameChat;
 		} else {
 			msg = this.pName;
 		}
@@ -582,7 +437,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			this.getServer().unloadWorld(SkyblockMultiplayer.WORLD_NAME, true);
 			SkyblockMultiplayer.skyblockIslands = null;
 			Data.SKYBLOCK_ONLINE = false;
-			this.setStringbyPath(this.configPlugin, this.fileConfig, "options.skyblockonline", false);
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SKYBLOCKONLINE.path, false);
 			sender.sendMessage(msg + Language.MSGS_ISNOWOFFLINE.sentence);
 			return true;
 
@@ -608,8 +463,215 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		SkyblockMultiplayer.skyblockIslands = null;
 		SkyblockMultiplayer.getSkyblockIslands();
 		Data.SKYBLOCK_ONLINE = true;
-		this.setStringbyPath(this.configPlugin, this.fileConfig, "options.skyblockonline", true);
+		this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SKYBLOCKONLINE.path, true);
 		sender.sendMessage(msg + Language.MSGS_ISNOWONLINE.sentence);
+		return true;
+	}
+
+	private boolean playerNewIsland(Player player, String s) {
+		if (!Data.PVP) {
+			if (!Data.SKYBLOCK_ONLINE) {
+				player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
+				return true;
+			}
+
+			int playerNr = this.findPlayer(player.getName());
+			if (playerNr == -1) {
+				player.sendMessage(this.pNameChat + Language.MSGS_WRONEPLAYERNAME.sentence);
+				return true;
+			}
+
+			PlayerInfo pi = Data.PLAYERS.get(playerNr);
+			pi.setHasIsland(false);
+			player.sendMessage(this.pNameChat + Language.MSGS_NEWISLANDPLAYER1.sentence + pi.getPlayerName() + Language.MSGS_NEWISLANDPLAYER2.sentence);
+			return true;
+		}
+
+		if (!Permissions.SKYBLOCK_NEWISLAND.has(player)) {
+			this.notAuthorized(player);
+		}
+		if (!Data.SKYBLOCK_ONLINE) {
+			player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
+			return true;
+		}
+
+		int playerNr = this.findPlayer(s);
+		if (playerNr == -1) {
+			player.sendMessage(this.pNameChat + Language.MSGS_WRONEPLAYERNAME.sentence);
+			return true;
+		}
+		PlayerInfo pi = Data.PLAYERS.get(playerNr);
+		pi.setDead(false);
+		pi.setHasIsland(false);
+		if (!(Data.PLAYERS_NUMBER - 1 < 0)) {
+			Data.PLAYERS_NUMBER--;
+		}
+		player.sendMessage(this.pNameChat + Language.MSGS_NEWISLANDPLAYER1.sentence + pi.getPlayerName() + Language.MSGS_NEWISLANDPLAYER2.sentence);
+		Data.PLAYERS.get(playerNr).getPlayer().sendMessage(this.pNameChat + Language.MSGS_GOTNEWISLAND1.sentence + player.getName() + Language.MSGS_GOTNEWISLAND2.sentence);
+		return true;
+	}
+
+	private boolean playerLeave(Player player) {
+		if (!player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+			return true;
+		}
+
+		int playerNr = this.findPlayer(player.getName());
+		if (playerNr == -1) {
+			player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
+			player.sendMessage(this.pNameChat + Language.MSGS_LEFTSKYBLOCK.sentence);
+			return true;
+		}
+
+		boolean ismepty = this.checkIfPlayerInventoryEmpty(player);
+		if (!ismepty) {
+			if (Data.PLAYERS.get(playerNr).getHasIsland()) {
+				player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORYLEAVE.sentence);
+				return true;
+			}
+		}
+
+		Location l = Data.PLAYERS.get(playerNr).getOldPlayerLocation();
+		player.teleport(l);
+		player.sendMessage(this.pNameChat + Language.MSGS_LEFTSKYBLOCK.sentence);
+		return true;
+	}
+
+	private boolean playerStart(Player player) {
+		if (!Data.SKYBLOCK_ONLINE) {
+			player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
+			return true;
+		}
+
+		if (!(player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands()))) {
+			return true;
+		}
+
+		boolean ismepty = this.checkIfPlayerInventoryEmpty(player);
+		if (!ismepty) {
+			player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORYSTART.sentence);
+			return true;
+		}
+
+		int playerNr = this.findPlayer(player.getName()); // search player
+		if (playerNr == -1) { // if player not in list, add him
+			Data.PLAYERS.add(new PlayerInfo(player, this));
+			playerNr = this.findPlayer(player.getName());
+		}
+
+		if (!Data.PVP) {
+			PlayerInfo pi = Data.PLAYERS.get(playerNr);
+			if (!pi.getHasIsland()) {
+				CreateNewIsland isl = new CreateNewIsland(player);
+				Data.PLAYERS.get(playerNr).setIslandLocation(isl.Islandlocation);
+				Data.PLAYERS.get(playerNr).setHasIsland(true);
+				Data.PLAYERS_NUMBER++;
+
+				// Nachricht an alle
+				for (PlayerInfo p : Data.PLAYERS) {
+					p.getPlayer().sendMessage(this.pNameChat + Language.MSGS_WELCOMEBROADCAST1.sentence + player.getName() + Language.MSGS_WELCOMEBROADCAST2.sentence);
+				}
+				player.sendMessage(this.pNameChat + Language.MSGS_TONEWPLAYER.sentence);
+				return true;
+			} else {
+				player.teleport(pi.getIslandLocation());
+				player.sendMessage(this.pNameChat + Language.MSGS_WELCOMEBACK.sentence + player.getName() + ".");
+				return true;
+			}
+		}
+
+		if (Data.PLAYERS.get(playerNr).getHasIsland()) { // had already a island
+			if (Data.PLAYERS.get(playerNr).isDead()) {
+				player.sendMessage(this.pNameChat + Language.MSGS_HADAISLAND.sentence);
+				return true;
+			}
+			// teleport player
+			player.teleport(Data.PLAYERS.get(playerNr).getIslandLocation());
+			player.sendMessage(this.pNameChat + Language.MSGS_WELCOMEBACK.sentence + player.getName() + ".");
+			return true;
+		} else {
+			// create a new island for the player
+			CreateNewIsland isl = new CreateNewIsland(player);
+			Data.PLAYERS.get(playerNr).setIslandLocation(isl.Islandlocation);
+			Data.PLAYERS.get(playerNr).setHasIsland(true);
+			Data.PLAYERS_NUMBER++;
+
+			// Nachricht an alle
+			for (PlayerInfo pi : Data.PLAYERS) {
+				pi.getPlayer().sendMessage(this.pNameChat + Language.MSGS_WELCOMEBROADCAST1.sentence + player.getName() + Language.MSGS_WELCOMEBROADCAST2.sentence);
+			}
+			player.sendMessage(this.pNameChat + Language.MSGS_TONEWPLAYER.sentence);
+			return true;
+		}
+	}
+
+	private boolean playerJoin(Player player) {
+		if (!Data.SKYBLOCK_ONLINE) {
+			player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
+			return true;
+		}
+
+		if (player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+			return true;
+		}
+
+		int playerNr = this.findPlayer(player.getName()); // search player
+		if (playerNr == -1) { // if player not in list, add him
+			Data.PLAYERS.add(new PlayerInfo(player, this));
+		} else {
+			//Refreshe OldLocation of the player
+			Data.PLAYERS.get(playerNr).setOldPlayerLocation(player.getLocation());
+		}
+
+		int islands = 0;
+		for (PlayerInfo p : Data.PLAYERS) {
+			if (p.getHasIsland()) {
+				islands++;
+			}
+		}
+
+		player.teleport(SkyblockMultiplayer.getSkyblockIslands().getSpawnLocation()); // Teleportiere Spieler zum Spawntower in der Mitte
+		player.sendMessage(this.pNameChat + Language.MSGS_WELCOME1.sentence + islands + Language.MSGS_WELCOME2.sentence + Data.PLAYERS_NUMBER + Language.MSGS_WELCOME3.sentence);
+		return true;
+	}
+
+	private boolean setLanguage(CommandSender sender, String s) {
+		if (!Data.LANGUAGE.equalsIgnoreCase(s)) {
+			File f = new File(this.getDataFolder() + File.separator + "language", s + ".yml");
+			File sf = this.fileLanguage;
+			if (f.exists()) {
+				try {
+					this.fileLanguage = f;
+					this.configLanguage.load(f);
+					this.loadLanguageConfig();
+					Data.LANGUAGE = s;
+					this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_LANGUAGE.path, s);
+					sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGECHANGED.sentence);
+					return true;
+				} catch (InvalidConfigurationException | IOException ex) {
+					this.fileLanguage = sf;
+					sender.sendMessage(this.pNameChat + Language.MSGS_ERROROCCURED.sentence + ": " + ex.getLocalizedMessage());
+					sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGENOTCHANGED.sentence);
+					return true;
+				}
+			} else {
+				sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGEFILENOTEXISTS.sentence);
+				return true;
+			}
+		} else {
+			sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGENOTCHANGED.sentence);
+			return true;
+		}
+	}
+
+	private boolean reloadLanguage(CommandSender sender) {
+		this.loadLanguageConfig();
+		sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGERELOADED.sentence);
+		return true;
+	}
+
+	public boolean notAuthorized(CommandSender s) {
+		s.sendMessage(this.pNameChat + Language.MSGS_notAuthorized.sentence);
 		return true;
 	}
 
@@ -663,12 +725,12 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	public boolean reloadConfig(CommandSender sender) {
 		String msg = "";
 		if (sender instanceof Player) {
-			msg = this.pNameChat + ChatColor.WHITE;
+			msg = this.pNameChat;
 		} else {
 			msg = this.pName;
 		}
 		if (Permissions.SKYBLOCK_RELOAD.has(sender)) {
-			this.notAuthorized((Player) sender);
+			this.notAuthorized(sender);
 		}
 
 		this.loadConfig();
@@ -706,7 +768,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		String sb_start = Language.MSGS_CMDSTART.sentence + "\n";
 		String sb_leave = Language.MSGS_CMDLEAVE.sentence + "\n";
 		String sb_newisland = Language.MSGS_CMDNEWISLAND.sentence + "\n";
-		String sb_setOffline = Language.MSGS_CMDSETOFFLINE + "\n";
+		String sb_setOffline = Language.MSGS_CMDSETOFFLINE.sentence + "\n";
 		String sb_setOnline = Language.MSGS_CMDSETONLINE.sentence + "\n";
 		String sb_setLanguage = Language.MSGS_CMDSETLANGUAGE.sentence + "\n";
 		String sb_reset = Language.MSGS_CMDRESET.sentence + "\n";
@@ -715,8 +777,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		String sb_status = Language.MSGS_CMDSTATUS.sentence;
 
 		String ret = "";
-		ret += sb_info;
-		ret += sb + sb_start + sb_leave + sb_status;
+		ret += sb_info + sb + sb_start + sb_leave;
 		if (Permissions.SKYBLOCK_NEWISLAND.has(sender)) {
 			ret += sb_newisland;
 		}
@@ -730,6 +791,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			ret += sb_reload_config;
 			ret += sb_reload_language;
 		}
+		ret += sb_status;
 
 		for (String s : ret.split("\n")) {
 			if (!s.trim().equals(""))
@@ -891,15 +953,15 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		SkyblockMultiplayer.getSkyblockIslands().getBlockAt(1, yEnde - 1, 2).setType(Material.SIGN_POST);
 		Sign s1 = (Sign) SkyblockMultiplayer.getSkyblockIslands().getBlockAt(1, yEnde - 1, 2).getState();
 		s1.getBlock().setData((byte) 8);
-		s1.setLine(0, "Willkommen auf");
-		s1.setLine(1, "SkyBlock-");
-		s1.setLine(2, "Multiplayer!");
+		s1.setLine(0, Language.MSGS_SIGN1LINE1.sentence);
+		s1.setLine(1, Language.MSGS_SIGN1LINE2.sentence);
+		s1.setLine(2, Language.MSGS_SIGN1LINE3.sentence);
 		SkyblockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).setType(Material.SIGN_POST);
 		Sign s2 = (Sign) SkyblockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).getState();
 		s2.getBlock().setData((byte) 8);
-		s2.setLine(0, "Für weitere");
-		s2.setLine(1, "Informationen");
-		s2.setLine(2, "</skyblock help>");
-		s2.setLine(3, "Viel Erfolg!");
+		s2.setLine(0, Language.MSGS_SIGN2LINE1.sentence);
+		s2.setLine(1, Language.MSGS_SIGN2LINE2.sentence);
+		s2.setLine(2, Language.MSGS_SIGN2LINE3.sentence);
+		s2.setLine(3, Language.MSGS_SIGN2LINE4.sentence);
 	}
 }

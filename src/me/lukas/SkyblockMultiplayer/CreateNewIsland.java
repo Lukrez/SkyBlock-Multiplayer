@@ -21,7 +21,7 @@ public class CreateNewIsland {
 			l = getIslandPosition(Data.ISLAND_NUMBER);
 		}
 
-		player.sendMessage("Du bist auf Inselnr.: " + Data.ISLAND_NUMBER);
+		player.sendMessage(Language.MSGS_showIslandNumber.sentence + Data.ISLAND_NUMBER);
 		this.createIsland(l);
 		this.Islandlocation = l;
 		// transport player

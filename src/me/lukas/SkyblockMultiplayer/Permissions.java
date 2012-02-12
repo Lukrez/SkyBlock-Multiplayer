@@ -15,6 +15,6 @@ public enum Permissions {
 	}
 
 	public boolean has(CommandSender sender) {
-		return sender.hasPermission(this.node);
+		return sender.hasPermission(this.node) || sender.isOp();
 	}
 }
