@@ -75,18 +75,11 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	public void registerEvents() {
-		PlayerBreackBlockListener breakBlock = new PlayerBreackBlockListener(this);
-		PlayerPlaceBlockListener placeBlock = new PlayerPlaceBlockListener(this);
-		PlayerUseBucketListener useBucket = new PlayerUseBucketListener(this);
-		EntityDeath deathListener = new EntityDeath(this);
-		PlayerJoin lPlayerJoin = new PlayerJoin(this);
-
 		PluginManager manager = this.getServer().getPluginManager();
-		manager.registerEvents(breakBlock, this);
-		manager.registerEvents(placeBlock, this);
-		manager.registerEvents(useBucket, this);
-		manager.registerEvents(deathListener, this);
-		manager.registerEvents(lPlayerJoin, this);
+		manager.registerEvents(new PlayerPlaceBlockListener(this), this);
+		manager.registerEvents(new PlayerUseBucketListener(this), this);
+		manager.registerEvents(new EntityDeath(this), this);
+		manager.registerEvents(new PlayerJoin(this), this);
 	}
 
 	public void loadConfig() {
