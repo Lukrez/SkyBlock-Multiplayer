@@ -128,7 +128,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				Data.ISLAND_DISTANCE = 50;
 			}
 
-			String[] dataItems = this.getStringbyPath(this.configPlugin, this.fileConfig, "chest.items", items).split(";");
+			String[] dataItems = this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_CHESTITEMS.path, items).split(";");
 			if (alitemsChest != null) {
 				alitemsChest.clear();
 			}

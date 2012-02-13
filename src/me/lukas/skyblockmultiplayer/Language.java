@@ -64,7 +64,7 @@ public enum Language {
 	MSGS_PLAYERDIED1("msgs.playerDied1", "Now another "),
 	MSGS_PLAYERDIED2("msgs.playerDied2", " player left."),
 	MSGS_PLAYERWINBROADCAST1("msgs.playerWinBroadcast1", "The player "),
-	MSGS_PLAYERWINBROADCAST2("msgs.playerWinBroadcast2", " won the game. Congratulations");
+	MSGS_PLAYERWINBROADCAST2("msgs.playerWinBroadcast2", " won the game. Congratulations!");
 
 	String path;
 	String sentence;
