@@ -13,6 +13,10 @@ public class PlayerJoin implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (!Data.SKYBLOCK_ONLINE) {
+			return;
+		}		
+		
 		PlayerInfo pi = this.plugin.getPlayer(event.getPlayer());
 		if (pi == null) {
 			return;
