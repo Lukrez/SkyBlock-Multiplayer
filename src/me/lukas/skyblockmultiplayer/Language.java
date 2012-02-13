@@ -2,8 +2,8 @@ package me.lukas.skyblockmultiplayer;
 
 public enum Language {
 
-	MSGS_SKYBLOCK("msgs.skyblock", "Use \"/skyblock help\" for more informations."),
-	MSGS_STOPPING("msgs.stopping", "Stopping skyblock..."),
+	MSGS_SKYBLOCK("msgs.skyblock", "Use \"/skyblock help\" for more information."),
+	MSGS_STOPPING("msgs.stopping", "Stopping Skyblock..."),
 	MSGS_PLAYERSINSB("msgs.playersInSb", "There are players in Skyblock. Skyblock can not be disabled!"),
 	MSGS_ISNOWOFFLINE("msgs.isNowOffline", "Skyblock is now offline."),
 	MSGS_ISOFFLINE("msgs.isOffline", "Skyblock is offline."),
@@ -47,7 +47,7 @@ public enum Language {
 	MSGS_TONEWPLAYER("msgs.toNewPlayer", "Do not fall and make no obsidian :-)."),
 	MSGS_showIslandNumber("msgs.showIslandNumber", "You are on island number "),
 	MSGS_LEFTSKYBLOCK("msgs.leftSkyblock", "You left Skyblock."),
-	MSGS_NOEMPTYINVENTORYLEAVE("msgs.noEmptyInventoryLeave", "You cannot leave skyblock with content in inventory."),
+	MSGS_NOEMPTYINVENTORYLEAVE("msgs.noEmptyInventoryLeave", "You cannot leave skyblock with content in your inventory."),
 	MSGS_NOEMPTYINVENTORYSTART("msgs.noEmptyInventoryStart", "You can not play with content in your inventory."),
 	MSGS_WRONEPLAYERNAME("msgs.wrongPlayerName", "There is no player with that name. Or the player is not in Skyblock."),
 	MSGS_NEWISLANDPLAYER1("msgs.newIslandPlayer1", "The player "),
@@ -57,14 +57,14 @@ public enum Language {
 	MSGS_SIGN1LINE1("msgs.Sign1Line1", "Welcome to"),
 	MSGS_SIGN1LINE2("msgs.Sign1Line2", "Skyblock-"),
 	MSGS_SIGN1LINE3("msgs.Sign1Line3", "Multiplayer"),
-	MSGS_SIGN2LINE1("msgs.Sign2Line1", "Fore more"),
+	MSGS_SIGN2LINE1("msgs.Sign2Line1", "For more"),
 	MSGS_SIGN2LINE2("msgs.Sign2Line2", "informations"),
 	MSGS_SIGN2LINE3("msgs.Sign2Line3", "/skyblock help"),
 	MSGS_SIGN2LINE4("msgs.Sign2Line4", "Good luck!"),
 	MSGS_PLAYERDIED1("msgs.playerDied1", "Now another "),
 	MSGS_PLAYERDIED2("msgs.playerDied2", " player left."),
 	MSGS_PLAYERWINBROADCAST1("msgs.playerWinBroadcast1", "The player "),
-	MSGS_PLAYERWINBROADCAST2("msgs.playerWinBroadcast2", " has win the game. Congratulations");
+	MSGS_PLAYERWINBROADCAST2("msgs.playerWinBroadcast2", " won the game. Congratulations");
 
 	String path;
 	String sentence;
