@@ -45,18 +45,18 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		this.log.info(this.pName + "v" + pluginFile.getVersion() + " disabled.");
+		this.log.info("v" + pluginFile.getVersion() + " disabled.");
 	}
 
 	@Override
 	public void onEnable() {
 		this.pluginFile = this.getDescription();
-		this.log = Logger.getLogger("Minecraft");
+		this.log = this.getLogger();
 
 		this.pName = "[" + this.pluginFile.getName() + "] ";
 		this.pNameChat = ChatColor.WHITE + "[" + ChatColor.GREEN + this.pluginFile.getName() + ChatColor.WHITE + "] ";
 
-		//Register Events
+		// register Events
 		this.registerEvents();
 
 		this.configPlugin = this.getConfig();
@@ -71,22 +71,15 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		this.fileLanguage = new File(this.getDataFolder() + File.separator + "language", Data.LANGUAGE + ".yml");
 		this.loadLanguageConfig();
 
-		this.log.info(this.pName + "v" + pluginFile.getVersion() + " enabled.");
+		this.log.info("v" + pluginFile.getVersion() + " enabled.");
 	}
 
 	public void registerEvents() {
-		PlayerBreackBlockListener breakBlock = new PlayerBreackBlockListener(this);
-		PlayerPlaceBlockListener placeBlock = new PlayerPlaceBlockListener(this);
-		PlayerUseBucketListener useBucket = new PlayerUseBucketListener(this);
-		EntityDeath deathListener = new EntityDeath(this);
-		PlayerJoin lPlayerJoin = new PlayerJoin(this);
-
 		PluginManager manager = this.getServer().getPluginManager();
-		manager.registerEvents(breakBlock, this);
-		manager.registerEvents(placeBlock, this);
-		manager.registerEvents(useBucket, this);
-		manager.registerEvents(deathListener, this);
-		manager.registerEvents(lPlayerJoin, this);
+		manager.registerEvents(new PlayerPlaceBlockListener(this), this);
+		manager.registerEvents(new PlayerUseBucketListener(this), this);
+		manager.registerEvents(new EntityDeath(this), this);
+		manager.registerEvents(new PlayerJoin(this), this);
 	}
 
 	public void loadConfig() {
@@ -412,11 +405,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 	public boolean setSkyblockOffline(CommandSender sender) {
 		String msg = "";
-		if (sender instanceof Player) {
-			msg = this.pNameChat;
-		} else {
-			msg = this.pName;
-		}
+		msg = this.pNameChat;
 
 		if (!Permissions.SKYBLOCK_SET.has(sender)) {
 			this.notAuthorized((Player) sender);
@@ -450,11 +439,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 	public boolean setSkyblockOnline(CommandSender sender) {
 		String msg = "";
-		if (sender instanceof Player) {
-			msg = this.pNameChat;
-		} else {
-			msg = this.pName;
-		}
+		msg = this.pNameChat;
+
 		if (!Permissions.SKYBLOCK_SET.has(sender)) {
 			this.notAuthorized((Player) sender);
 		}
@@ -670,18 +656,14 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
-	public boolean notAuthorized(CommandSender s) {
+	private boolean notAuthorized(CommandSender s) {
 		s.sendMessage(this.pNameChat + Language.MSGS_notAuthorized.sentence);
 		return true;
 	}
 
-	public boolean resetSkyblock(CommandSender sender) {
+	private boolean resetSkyblock(CommandSender sender) {
 		String msg = "";
-		if (sender instanceof Player) {
-			msg = this.pNameChat;
-		} else {
-			msg = this.pName;
-		}
+		msg = this.pNameChat;
 
 		if (!Permissions.SKYBLOCK_RESET.has(sender)) {
 			this.notAuthorized((Player) sender);
@@ -724,11 +706,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 	public boolean reloadConfig(CommandSender sender) {
 		String msg = "";
-		if (sender instanceof Player) {
-			msg = this.pNameChat;
-		} else {
-			msg = this.pName;
-		}
+		msg = this.pNameChat;
+
 		if (Permissions.SKYBLOCK_RELOAD.has(sender)) {
 			this.notAuthorized(sender);
 		}
@@ -759,11 +738,9 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 	public boolean getListCommands(CommandSender sender) {
 		String sb_info = "";
-		if (sender instanceof Player) {
-			sb_info = "-----" + this.pNameChat + "v" + this.pluginFile.getVersion() + "-----\n";
-		} else {
-			sb_info = "-----" + this.pName + "v" + this.pluginFile.getVersion() + "-----\n";
-		}
+
+		sb_info = "-----" + this.pNameChat + "v" + this.pluginFile.getVersion() + "-----\n";
+
 		String sb = Language.MSGS_SKYBLOCK.sentence + "\n";
 		String sb_start = Language.MSGS_CMDSTART.sentence + "\n";
 		String sb_leave = Language.MSGS_CMDLEAVE.sentence + "\n";
