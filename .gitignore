@@ -1,5 +1,6 @@
 #java specific
 *.class
+*.classpath
 
 ## generic files to ignore
 *~
