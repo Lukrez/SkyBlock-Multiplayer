@@ -283,11 +283,10 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		}
 
 		String path = "players." + p.getName() + ".";
-		pi.setHasIsland(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.fileConfig, path + "hasIsland", false)));
-		pi.setDead(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.fileConfig, path + "isDead", false)));
-		pi.setIslandLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.fileConfig, path + "islandLocation", "")));
-		this.log.info(this.getStringbyPath(this.configPlayer, this.fileConfig, path + "oldLocation", null));
-		pi.setOldPlayerLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.fileConfig, path + "oldLocation", null)));
+		pi.setHasIsland(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "hasIsland", false)));
+		pi.setDead(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "isDead", false)));
+		pi.setIslandLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "islandLocation", "")));
+		pi.setOldPlayerLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "oldLocation", null)));
 		return pi;
 	}
 
@@ -340,6 +339,10 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				}
 				if (args[1].equalsIgnoreCase("language")) {
 					return this.setLanguage(sender, args[2]);
+				}
+
+				if (args[1].equalsIgnoreCase("pvp")) {
+					return this.setPVP(sender, args[2]);
 				}
 			}
 			if (args[0].equalsIgnoreCase("reset")) {
@@ -401,6 +404,24 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			return true;
 		}
 		return false;
+	}
+
+	private boolean setPVP(CommandSender sender, String s) {
+		if (!Permissions.SKYBLOCK_SET.has(sender)) {
+			return this.notAuthorized(sender);
+		}
+
+		if (s.equalsIgnoreCase("on")) {
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, true);
+			sender.sendMessage(this.pNameChat + Language.MSGS_PVP_NOW_ON.sentence);
+			return true;
+		} else if (s.equalsIgnoreCase("off")) {
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, false);
+			sender.sendMessage(this.pNameChat + Language.MSGS_PVP_NOW_OFF.sentence);
+			return true;
+		}
+		sender.sendMessage(Language.MSGS_WRONGARGS.sentence);
+		return true;
 	}
 
 	public boolean setSkyblockOffline(CommandSender sender) {
@@ -657,7 +678,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	private boolean notAuthorized(CommandSender s) {
-		s.sendMessage(this.pNameChat + Language.MSGS_notAuthorized.sentence);
+		s.sendMessage(this.pNameChat + Language.MSGS_NOTAUTHORIZED.sentence);
 		return true;
 	}
 
@@ -748,6 +769,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		String sb_setOffline = Language.MSGS_CMDSETOFFLINE.sentence + "\n";
 		String sb_setOnline = Language.MSGS_CMDSETONLINE.sentence + "\n";
 		String sb_setLanguage = Language.MSGS_CMDSETLANGUAGE.sentence + "\n";
+		String sb_setPVP = Language.MSGS_CMDSETPVP.sentence + "\n";
 		String sb_reset = Language.MSGS_CMDRESET.sentence + "\n";
 		String sb_reload_config = Language.MSGS_CMDRELOADCONFIG.sentence + "\n";
 		String sb_reload_language = Language.MSGS_CMDRELOADLANGUAGE.sentence + "\n";
@@ -759,7 +781,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			ret += sb_newisland;
 		}
 		if (Permissions.SKYBLOCK_SET.has(sender)) {
-			ret += sb_setOnline + sb_setOffline + sb_setLanguage;
+			ret += sb_setOnline + sb_setOffline + sb_setLanguage + sb_setPVP;
 		}
 		if (Permissions.SKYBLOCK_RESET.has(sender)) {
 			ret += sb_reset;

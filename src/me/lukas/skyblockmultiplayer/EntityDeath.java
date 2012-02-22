@@ -23,7 +23,6 @@ public class EntityDeath implements Listener {
 		Entity ent = event.getEntity();
 		if (ent instanceof Player) {
 			Player p = (Player) ent;
-			System.out.println(p.getName() + " died");
 			int playerNr = plugin.findPlayer(p.getName());
 
 			if (playerNr == -1) {
