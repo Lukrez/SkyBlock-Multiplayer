@@ -16,28 +16,39 @@ public class EntityDeath implements Listener {
 
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
-		if (!Data.PVP) {
+		Entity ent = event.getEntity();
+		if (!(ent instanceof Player)) {
 			return;
 		}
 
-		Entity ent = event.getEntity();
+		Player p = (Player) ent;
+		int playerNr = plugin.findPlayer(p.getName());
+		PlayerInfo pi = Data.PLAYERS.get(playerNr);
+
+		if (playerNr == -1) {
+			return;
+		}
+
+		if (!Data.PVP) {
+			pi.setIsOnIsland(false);
+			return;
+		}
+
 		if (ent instanceof Player) {
-			Player p = (Player) ent;
-			int playerNr = plugin.findPlayer(p.getName());
 
 			if (playerNr == -1) {
 				return;
 			}
 
-			if (!Data.PLAYERS.get(playerNr).getHasIsland()) {
+			if (!pi.getHasIsland()) {
 				return;
 			}
 
-			if (!Data.PLAYERS.get(playerNr).getPlayer().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+			if (!pi.getPlayer().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
 				return;
 			}
 
-			Data.PLAYERS.get(playerNr).setDead(true);
+			pi.setDead(true);
 
 			if (!(Data.PLAYERS_NUMBER - 1 < 0)) {
 				Data.PLAYERS_NUMBER--;

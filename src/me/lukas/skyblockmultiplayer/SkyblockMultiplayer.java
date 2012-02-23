@@ -29,16 +29,16 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	private Logger log;
 
 	private static World skyblockIslands = null;
-	static String WORLD_NAME = "skyblockislands";
+	public static String WORLD_NAME = "skyblockislands";
 
 	private FileConfiguration configPlugin;
 	private File fileConfig;
 
-	FileConfiguration configPlayer;
-	File filePlayer;
+	public FileConfiguration configPlayer;
+	public File filePlayer;
 
-	FileConfiguration configLanguage;
-	File fileLanguage;
+	public FileConfiguration configLanguage;
+	public File fileLanguage;
 
 	private String pName;
 	private String pNameChat;
@@ -287,6 +287,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		pi.setDead(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "isDead", false)));
 		pi.setIslandLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "islandLocation", "")));
 		pi.setOldPlayerLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "oldLocation", null)));
+		pi.setIsOnIsland(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "isOnIsland", false)));
 		return pi;
 	}
 
@@ -408,7 +409,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 
 	private boolean setPVP(CommandSender sender, String s) {
 		if (!Permissions.SKYBLOCK_SET.has(sender)) {
-			return this.notAuthorized(sender);
+			this.notAuthorized((Player) sender);
 		}
 
 		if (s.equalsIgnoreCase("on")) {
@@ -529,15 +530,17 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			player.sendMessage(this.pNameChat + Language.MSGS_LEFTSKYBLOCK.sentence);
 			return true;
 		}
+		PlayerInfo pi = Data.PLAYERS.get(playerNr);
 
 		boolean ismepty = this.checkIfPlayerInventoryEmpty(player);
-		if (!ismepty) {
-			if (Data.PLAYERS.get(playerNr).getHasIsland()) {
+		if (!ismepty && !pi.getIsOnIsland()) {
+			if (pi.getHasIsland()) {
 				player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORYLEAVE.sentence);
 				return true;
 			}
 		}
 
+		pi.setIsOnIsland(false);
 		Location l = Data.PLAYERS.get(playerNr).getOldPlayerLocation();
 		player.teleport(l);
 		player.sendMessage(this.pNameChat + Language.MSGS_LEFTSKYBLOCK.sentence);
@@ -554,8 +557,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
-		boolean ismepty = this.checkIfPlayerInventoryEmpty(player);
-		if (!ismepty) {
+		boolean isempty = this.checkIfPlayerInventoryEmpty(player);
+		if (!isempty) {
 			player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORYSTART.sentence);
 			return true;
 		}
@@ -566,23 +569,25 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			playerNr = this.findPlayer(player.getName());
 		}
 
+		PlayerInfo pi = Data.PLAYERS.get(playerNr);
 		if (!Data.PVP) {
-			PlayerInfo pi = Data.PLAYERS.get(playerNr);
 			if (!pi.getHasIsland()) {
 				CreateNewIsland isl = new CreateNewIsland(player);
-				Data.PLAYERS.get(playerNr).setIslandLocation(isl.Islandlocation);
-				Data.PLAYERS.get(playerNr).setHasIsland(true);
+				pi.setIslandLocation(isl.Islandlocation);
+				pi.setHasIsland(true);
+				pi.setIsOnIsland(true);
 				Data.PLAYERS_NUMBER++;
 
-				// Nachricht an alle
+				// send message to all
 				for (PlayerInfo p : Data.PLAYERS) {
 					p.getPlayer().sendMessage(this.pNameChat + Language.MSGS_WELCOMEBROADCAST1.sentence + player.getName() + Language.MSGS_WELCOMEBROADCAST2.sentence);
 				}
 				player.sendMessage(this.pNameChat + Language.MSGS_TONEWPLAYER.sentence);
 				return true;
 			} else {
+				pi.setIsOnIsland(true);
 				player.teleport(pi.getIslandLocation());
-				player.sendMessage(this.pNameChat + Language.MSGS_WELCOMEBACK.sentence + player.getName() + ".");
+				player.sendMessage(this.pNameChat + Language.MSGS_WELCOMEBACK.sentence + player.getName());
 				return true;
 			}
 		}
@@ -599,13 +604,13 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		} else {
 			// create a new island for the player
 			CreateNewIsland isl = new CreateNewIsland(player);
-			Data.PLAYERS.get(playerNr).setIslandLocation(isl.Islandlocation);
-			Data.PLAYERS.get(playerNr).setHasIsland(true);
+			pi.setIslandLocation(isl.Islandlocation);
+			pi.setHasIsland(true);
 			Data.PLAYERS_NUMBER++;
 
 			// Nachricht an alle
-			for (PlayerInfo pi : Data.PLAYERS) {
-				pi.getPlayer().sendMessage(this.pNameChat + Language.MSGS_WELCOMEBROADCAST1.sentence + player.getName() + Language.MSGS_WELCOMEBROADCAST2.sentence);
+			for (PlayerInfo p : Data.PLAYERS) {
+				p.getPlayer().sendMessage(this.pNameChat + Language.MSGS_WELCOMEBROADCAST1.sentence + player.getName() + Language.MSGS_WELCOMEBROADCAST2.sentence);
 			}
 			player.sendMessage(this.pNameChat + Language.MSGS_TONEWPLAYER.sentence);
 			return true;

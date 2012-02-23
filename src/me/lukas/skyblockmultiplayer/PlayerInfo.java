@@ -9,6 +9,7 @@ public class PlayerInfo {
 	private Player player;
 	private Location oldlocation;
 	private boolean isDead;
+	private boolean onIsland;
 	private SkyblockMultiplayer plugin;
 
 	public PlayerInfo(Player p, SkyblockMultiplayer instance) {
@@ -23,6 +24,7 @@ public class PlayerInfo {
 			}
 		}
 		this.setDead(false);
+		this.onIsland = false;
 	}
 
 	public void setHasIsland(boolean b) {
@@ -60,12 +62,21 @@ public class PlayerInfo {
 		return this.isDead;
 	}
 
+	public void setIslandLocation(Location l) {
+		this.islandLocation = l;
+		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".islandLocation", this.plugin.getStringLocation(l));
+	}
+	
 	public Location getIslandLocation() {
 		return this.islandLocation;
 	}
 
-	public void setIslandLocation(Location l) {
-		this.islandLocation = l;
-		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".islandLocation", this.plugin.getStringLocation(l));
+	public void setIsOnIsland(boolean b) {
+		this.onIsland = b;
+		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".isOnIsland", b);
+	}
+
+	public boolean getIsOnIsland() {
+		return this.onIsland;
 	}
 }
