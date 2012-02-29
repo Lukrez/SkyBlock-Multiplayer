@@ -77,6 +77,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	public void registerEvents() {
 		PluginManager manager = this.getServer().getPluginManager();
 		manager.registerEvents(new PlayerPlaceBlockListener(this), this);
+		manager.registerEvents(new PlayerBreackBlockListener(this), this);
 		manager.registerEvents(new PlayerUseBucketListener(this), this);
 		manager.registerEvents(new EntityDeath(this), this);
 		manager.registerEvents(new PlayerJoin(this), this);
@@ -103,7 +104,6 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		}
 
 		if (!this.fileConfig.exists()) {
-
 			Data.ISLAND_DISTANCE = 50;
 			Data.ITEMSCHEST = itemsChest;
 			Data.SKYBLOCK_ONLINE = true;
@@ -154,8 +154,6 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			Data.PVP = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, false));
 			Data.LANGUAGE = this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_LANGUAGE.path, "english");
 		}
-
-		SkyblockMultiplayer.getSkyblockIslands();
 	}
 
 	public void loadPlayerConfig() {
@@ -216,6 +214,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 				}
 			}
 		}
+		
+		SkyblockMultiplayer.getSkyblockIslands();
 	}
 
 	private String replaceColor(String s) {
@@ -286,7 +286,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		pi.setHasIsland(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "hasIsland", false)));
 		pi.setDead(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "isDead", false)));
 		pi.setIslandLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "islandLocation", "")));
-		pi.setOldPlayerLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "oldLocation", null)));
+		pi.setOldPlayerLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "oldLocation", this.getServer().getWorlds().get(0).getSpawnLocation())));
 		pi.setIsOnIsland(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "isOnIsland", false)));
 		return pi;
 	}
@@ -533,7 +533,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		PlayerInfo pi = Data.PLAYERS.get(playerNr);
 
 		boolean ismepty = this.checkIfPlayerInventoryEmpty(player);
-		if (!ismepty && !pi.getIsOnIsland()) {
+		if (!ismepty && pi.getIsOnIsland()) {
 			if (pi.getHasIsland()) {
 				player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORYLEAVE.sentence);
 				return true;
@@ -960,6 +960,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		s1.setLine(0, Language.MSGS_SIGN1LINE1.sentence);
 		s1.setLine(1, Language.MSGS_SIGN1LINE2.sentence);
 		s1.setLine(2, Language.MSGS_SIGN1LINE3.sentence);
+		s1.update(true);
 		SkyblockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).setType(Material.SIGN_POST);
 		Sign s2 = (Sign) SkyblockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).getState();
 		s2.getBlock().setData((byte) 8);
@@ -967,5 +968,6 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		s2.setLine(1, Language.MSGS_SIGN2LINE2.sentence);
 		s2.setLine(2, Language.MSGS_SIGN2LINE3.sentence);
 		s2.setLine(3, Language.MSGS_SIGN2LINE4.sentence);
+		s2.update(true);
 	}
 }

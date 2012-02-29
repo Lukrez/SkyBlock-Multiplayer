@@ -7,8 +7,7 @@ public enum Config {
 	OPTIONS_SKYBLOCKONLINE("options.skyblockOnline"),
 	OPTIONS_PVP("options.pvp"),
 	OPTIONS_LANGUAGE("options.language");
-	
-	
+
 	String path;
 
 	private Config(String path) {
