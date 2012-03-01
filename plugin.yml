@@ -4,5 +4,5 @@ version: 0.42 alpha
 
 commands:
      skyblock:
-          description:
+          description: Use /skyblock [arguments] to get access to the plugin. 
           usage: /<command>
