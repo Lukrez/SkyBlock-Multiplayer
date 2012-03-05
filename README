@@ -1,0 +1,39 @@
+Description:
+
+This plugin is  a multiplayer version of the singleplayer version of SkyBlock.
+(1) PvP mode, where each player has one life and island
+(2) build mode with endless lifes
+
+How to install:
+Copy the SkyblockMultiplayer.jar into your plugin folder.
+Start the server, the plugin creates a own folder named SkyblockMultiplayer, this folder contains the config file and a language folder with the default english.yml. 
+Open the config file and type a name for the world behind the line „worldName: „. 
+Save and close the file, now reload/restart the server or type into the chat „/skyblock reload config“ to reload the config file.
+
+Commands:
+/skyblock – shows the version
+/skyblock join - join Skyblock
+skyblock start - get an island
+/skyblock newIsland [player] - give yourself or an other player a new island
+/skyblock set offline - deactivate Skyblock
+/skyblock set online - activate Skyblock
+/skyblock set language <language> - change language
+/skyblock set pvp <option> - <on> or <off>
+/skyblock reset - reset Skyblock
+/skyblock reload config - reload config
+/skyblock reload language - reload language
+/skyblock status - show status
+
+Permissions:
+skyblock.set – needed for set commands
+skyblock.reset – needed for reset command
+skyblock.newisland – needed only if PVP is on
+skyblock.reload - needed for reload commands
+
+Changelog:
+
+
+
+Downloads (Link zu Github):
+
+
