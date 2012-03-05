@@ -6,9 +6,9 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 public class PlayerUseBucketListener implements Listener {
 
-	SkyblockMultiplayer plugin;
+	SkyBlockMultiplayer plugin;
 
-	public PlayerUseBucketListener(SkyblockMultiplayer instance) {
+	public PlayerUseBucketListener(SkyBlockMultiplayer instance) {
 		this.plugin = instance;
 	}
 
@@ -18,7 +18,7 @@ public class PlayerUseBucketListener implements Listener {
 			return;
 		}
 		
-		if (event.getPlayer().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) { // Prüfe ob der Spieler in der Welt SkyblockMultiplayer ist
+		if (event.getPlayer().getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) { // Prüfe ob der Spieler in der Welt SkyblockMultiplayer ist
 			if (event.getPlayer().getLocation().getBlockX() >= -20 && event.getPlayer().getLocation().getBlockX() <= 20) {
 				if (event.getPlayer().getLocation().getBlockZ() >= -20 && event.getPlayer().getLocation().getBlockZ() <= 20) {
 					event.setCancelled(true);

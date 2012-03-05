@@ -8,9 +8,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 public class EntityDeath implements Listener {
 
-	SkyblockMultiplayer plugin;
+	SkyBlockMultiplayer plugin;
 
-	public EntityDeath(SkyblockMultiplayer instance) {
+	public EntityDeath(SkyBlockMultiplayer instance) {
 		this.plugin = instance;
 	}
 
@@ -44,7 +44,7 @@ public class EntityDeath implements Listener {
 				return;
 			}
 
-			if (!pi.getPlayer().getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+			if (!pi.getPlayer().getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
 				return;
 			}
 
