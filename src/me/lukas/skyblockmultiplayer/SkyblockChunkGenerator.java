@@ -8,7 +8,7 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.noise.NoiseGenerator;
 import org.bukkit.util.noise.SimplexNoiseGenerator;
 
-public class SkyblockChunkGenerator extends ChunkGenerator {
+public class SkyBlockChunkGenerator extends ChunkGenerator {
 
 	@Override
 	public byte[] generate(World world, Random random, int cx, int cz) {

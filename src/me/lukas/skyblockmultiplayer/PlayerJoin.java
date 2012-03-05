@@ -5,9 +5,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoin implements Listener {
-	private SkyblockMultiplayer plugin;
+	private SkyBlockMultiplayer plugin;
 
-	public PlayerJoin(SkyblockMultiplayer instance) {
+	public PlayerJoin(SkyBlockMultiplayer instance) {
 		this.plugin = instance;
 	}
 

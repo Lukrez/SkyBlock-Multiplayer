@@ -24,12 +24,12 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class SkyblockMultiplayer extends JavaPlugin {
+public class SkyBlockMultiplayer extends JavaPlugin {
 	private PluginDescriptionFile pluginFile;
 	private Logger log;
 
+	private static String WORLD_NAME;
 	private static World skyblockIslands = null;
-	public static String WORLD_NAME = "skyblockislands";
 
 	private FileConfiguration configPlugin;
 	private File fileConfig;
@@ -52,6 +52,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	public void onEnable() {
 		this.pluginFile = this.getDescription();
 		this.log = this.getLogger();
+		SkyBlockMultiplayer.WORLD_NAME = this.pluginFile.getName();
 
 		this.pName = "[" + this.pluginFile.getName() + "] ";
 		this.pNameChat = ChatColor.WHITE + "[" + ChatColor.GREEN + this.pluginFile.getName() + ChatColor.WHITE + "] ";
@@ -215,7 +216,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			}
 		}
 		
-		SkyblockMultiplayer.getSkyblockIslands();
+		SkyBlockMultiplayer.getSkyblockIslands();
 	}
 
 	private String replaceColor(String s) {
@@ -294,9 +295,9 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	public static World getSkyblockIslands() {
 		if (skyblockIslands == null) {
 			long seed = 89125;
-			skyblockIslands = WorldCreator.name(SkyblockMultiplayer.WORLD_NAME).type(WorldType.NORMAL).seed(seed).environment(Environment.NORMAL).generator(new SkyblockChunkGenerator()).createWorld();
-			SkyblockMultiplayer.CreateSpawnTower();
-			skyblockIslands.setSpawnLocation(1, SkyblockMultiplayer.getSkyblockIslands().getHighestBlockYAt(1, 1), 1);
+			skyblockIslands = WorldCreator.name(SkyBlockMultiplayer.WORLD_NAME).type(WorldType.NORMAL).seed(seed).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
+			SkyBlockMultiplayer.CreateSpawnTower();
+			skyblockIslands.setSpawnLocation(1, SkyBlockMultiplayer.getSkyblockIslands().getHighestBlockYAt(1, 1), 1);
 		}
 		return skyblockIslands;
 	}
@@ -439,14 +440,14 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			//Checke Spieler ob keiner mehr in Welt Skyblock ist	
 			Player[] playerList = this.getServer().getOnlinePlayers();
 			for (Player p : playerList) {
-				if (p.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+				if (p.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
 					sender.sendMessage(msg + Language.MSGS_PLAYERSINSB.sentence);
 					return true;
 				}
 			}
 
-			this.getServer().unloadWorld(SkyblockMultiplayer.WORLD_NAME, true);
-			SkyblockMultiplayer.skyblockIslands = null;
+			this.getServer().unloadWorld(SkyBlockMultiplayer.WORLD_NAME, true);
+			SkyBlockMultiplayer.skyblockIslands = null;
 			Data.SKYBLOCK_ONLINE = false;
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SKYBLOCKONLINE.path, false);
 			sender.sendMessage(msg + Language.MSGS_ISNOWOFFLINE.sentence);
@@ -468,8 +469,8 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		}
 
 		sender.sendMessage(msg + Language.MSGS_STARTING.sentence);
-		SkyblockMultiplayer.skyblockIslands = null;
-		SkyblockMultiplayer.getSkyblockIslands();
+		SkyBlockMultiplayer.skyblockIslands = null;
+		SkyBlockMultiplayer.getSkyblockIslands();
 		Data.SKYBLOCK_ONLINE = true;
 		this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SKYBLOCKONLINE.path, true);
 		sender.sendMessage(msg + Language.MSGS_ISNOWONLINE.sentence);
@@ -520,7 +521,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	private boolean playerLeave(Player player) {
-		if (!player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
 			return true;
 		}
 
@@ -553,7 +554,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
-		if (!(player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands()))) {
+		if (!(player.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands()))) {
 			return true;
 		}
 
@@ -623,7 +624,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
-		if (player.getWorld().equals(SkyblockMultiplayer.getSkyblockIslands())) {
+		if (player.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
 			return true;
 		}
 
@@ -642,7 +643,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 			}
 		}
 
-		player.teleport(SkyblockMultiplayer.getSkyblockIslands().getSpawnLocation()); // Teleportiere Spieler zum Spawntower in der Mitte
+		player.teleport(SkyBlockMultiplayer.getSkyblockIslands().getSpawnLocation()); // Teleportiere Spieler zum Spawntower in der Mitte
 		player.sendMessage(this.pNameChat + Language.MSGS_WELCOME1.sentence + islands + Language.MSGS_WELCOME2.sentence + Data.PLAYERS_NUMBER + Language.MSGS_WELCOME3.sentence);
 		return true;
 	}
@@ -701,7 +702,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		}
 
 		sender.sendMessage(msg + Language.MSGS_RESETING.sentence);
-		this.getServer().unloadWorld(SkyblockMultiplayer.WORLD_NAME, true);
+		this.getServer().unloadWorld(SkyBlockMultiplayer.WORLD_NAME, true);
 
 		for (PlayerInfo pi : Data.PLAYERS) {
 			pi.setHasIsland(false);
@@ -709,15 +710,15 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		}
 
 		this.sfiles = new ArrayList<File>();
-		this.getAllFiles(SkyblockMultiplayer.WORLD_NAME);
+		this.getAllFiles(SkyBlockMultiplayer.WORLD_NAME);
 
 		for (File f : this.sfiles) {
 			f.delete();
 		}
 
 		//Create Skyblock
-		SkyblockMultiplayer.skyblockIslands = null;
-		SkyblockMultiplayer.getSkyblockIslands();
+		SkyBlockMultiplayer.skyblockIslands = null;
+		SkyBlockMultiplayer.getSkyblockIslands();
 
 		//Reset informations
 		Data.ISLAND_DISTANCE = 50;
@@ -836,16 +837,16 @@ public class SkyblockMultiplayer extends JavaPlugin {
 	}
 
 	private static void makeBlock(int x, int y, int z, Material m) {
-		SkyblockMultiplayer.getSkyblockIslands().getBlockAt(x, y, z).setType(m);
+		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(x, y, z).setType(m);
 	}
 
 	private static void quader(int x, int y, int z, Material m) {
 		if (y < 0)
 			return;
-		SkyblockMultiplayer.makeBlock(x, y, z, m);
-		SkyblockMultiplayer.makeBlock(x, y, z + 1, m);
-		SkyblockMultiplayer.makeBlock(x + 1, y, z, m);
-		SkyblockMultiplayer.makeBlock(x + 1, y, z + 1, m);
+		SkyBlockMultiplayer.makeBlock(x, y, z, m);
+		SkyBlockMultiplayer.makeBlock(x, y, z + 1, m);
+		SkyBlockMultiplayer.makeBlock(x + 1, y, z, m);
+		SkyBlockMultiplayer.makeBlock(x + 1, y, z + 1, m);
 	}
 
 	private static void CreateSpawnTower() {
@@ -857,18 +858,18 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		int z = -2;
 		for (int y = yStart; y < yEnde - 2; y++) {
 			// Mache Obsidian Turm
-			SkyblockMultiplayer.quader(0, y, 0, Material.OBSIDIAN);
+			SkyBlockMultiplayer.quader(0, y, 0, Material.OBSIDIAN);
 			// Mache Innenwand
 			for (int xw = -2; xw < 4; xw++) {
-				SkyblockMultiplayer.makeBlock(xw, y, -2, Material.GLASS);
-				SkyblockMultiplayer.makeBlock(xw, y, 3, Material.GLASS);
+				SkyBlockMultiplayer.makeBlock(xw, y, -2, Material.GLASS);
+				SkyBlockMultiplayer.makeBlock(xw, y, 3, Material.GLASS);
 			}
 			for (int zw = -2; zw < 4; zw++) {
-				SkyblockMultiplayer.makeBlock(-2, y, zw, Material.GLASS);
-				SkyblockMultiplayer.makeBlock(3, y, zw, Material.GLASS);
+				SkyBlockMultiplayer.makeBlock(-2, y, zw, Material.GLASS);
+				SkyBlockMultiplayer.makeBlock(3, y, zw, Material.GLASS);
 			}
 			// Mache Lavatreppe
-			SkyblockMultiplayer.quader(x, y, z, Material.getMaterial(43));
+			SkyBlockMultiplayer.quader(x, y, z, Material.getMaterial(43));
 			x += lavatreppe[i][0];
 			z += lavatreppe[i][1];
 			i++;
@@ -881,7 +882,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		x = -2;
 		z = -2;
 		for (int y = yStart; y <= yEnde; y++) {
-			SkyblockMultiplayer.quader(x, y - 3, z, Material.GLASS);
+			SkyBlockMultiplayer.quader(x, y - 3, z, Material.GLASS);
 			x += lavatreppe[i][0];
 			z += lavatreppe[i][1];
 			i++;
@@ -895,7 +896,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		z = -4;
 		int[][] stairsWhole = { { 4, 0 }, { 2, 2 }, { 0, 4 }, { -2, 2 }, { -4, 0 }, { -2, -2 }, { 0, -4 }, { 2, -2 } };
 		for (int y = yStart + 1; y < yEnde - 1; y++) {
-			SkyblockMultiplayer.quader(x, y, z, Material.getMaterial(43));
+			SkyBlockMultiplayer.quader(x, y, z, Material.getMaterial(43));
 			x += stairsWhole[i][0];
 			z += stairsWhole[i][1];
 			i++;
@@ -908,7 +909,7 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		z = -4;
 		int[][] stairsHalf = { { 4, 0 }, { 4, 0 }, { 0, 4 }, { 0, 4 }, { -4, 0 }, { -4, 0 }, { 0, -4 }, { 0, -4 } };
 		for (int y = yStart + 1; y < yEnde - 1; y++) {
-			SkyblockMultiplayer.quader(x, y, z, Material.getMaterial(44));
+			SkyBlockMultiplayer.quader(x, y, z, Material.getMaterial(44));
 			x += stairsHalf[i][0];
 			z += stairsHalf[i][1];
 			i++;
@@ -917,52 +918,52 @@ public class SkyblockMultiplayer extends JavaPlugin {
 		}
 
 		// Setze Lava
-		SkyblockMultiplayer.makeBlock(2, yEnde - 3, 2, Material.LAVA);
+		SkyBlockMultiplayer.makeBlock(2, yEnde - 3, 2, Material.LAVA);
 		// Setze Wasser
-		SkyblockMultiplayer.makeBlock(-1, yEnde - 3, 0, Material.WATER);
+		SkyBlockMultiplayer.makeBlock(-1, yEnde - 3, 0, Material.WATER);
 
 		// Mache Dach
 		for (x = -2; x < 4; x++) {
 			for (z = -2; z < 4; z++) {
-				SkyblockMultiplayer.makeBlock(x, yEnde - 2, z, Material.getMaterial(43));
+				SkyBlockMultiplayer.makeBlock(x, yEnde - 2, z, Material.getMaterial(43));
 			}
 		}
 
 		// Zaun
 		for (x = -2; x < 4; x++) {
-			SkyblockMultiplayer.makeBlock(x, yEnde - 1, -2, Material.FENCE);
+			SkyBlockMultiplayer.makeBlock(x, yEnde - 1, -2, Material.FENCE);
 		}
 		for (z = -2; z < 4; z++) {
-			SkyblockMultiplayer.makeBlock(-2, yEnde - 1, z, Material.FENCE);
-			SkyblockMultiplayer.makeBlock(3, yEnde - 1, z, Material.FENCE);
+			SkyBlockMultiplayer.makeBlock(-2, yEnde - 1, z, Material.FENCE);
+			SkyBlockMultiplayer.makeBlock(3, yEnde - 1, z, Material.FENCE);
 		}
 
 		// Fackeln
-		SkyblockMultiplayer.makeBlock(-2, yEnde, -2, Material.TORCH);
-		SkyblockMultiplayer.makeBlock(-2, yEnde, 3, Material.TORCH);
-		SkyblockMultiplayer.makeBlock(3, yEnde, -2, Material.TORCH);
-		SkyblockMultiplayer.makeBlock(3, yEnde, 3, Material.TORCH);
+		SkyBlockMultiplayer.makeBlock(-2, yEnde, -2, Material.TORCH);
+		SkyBlockMultiplayer.makeBlock(-2, yEnde, 3, Material.TORCH);
+		SkyBlockMultiplayer.makeBlock(3, yEnde, -2, Material.TORCH);
+		SkyBlockMultiplayer.makeBlock(3, yEnde, 3, Material.TORCH);
 
 		// Mache den Towerboden
 		for (x = -2; x < 4; x++) {
 			for (z = -2; z < 4; z++) {
 				for (int y = 0; y < yStart; y++) {
-					SkyblockMultiplayer.makeBlock(x, y, z, Material.AIR);
+					SkyBlockMultiplayer.makeBlock(x, y, z, Material.AIR);
 				}
-				SkyblockMultiplayer.makeBlock(x, yStart, z, Material.getMaterial(43));
+				SkyBlockMultiplayer.makeBlock(x, yStart, z, Material.getMaterial(43));
 			}
 		}
 
 		//Mache Schilder
-		SkyblockMultiplayer.getSkyblockIslands().getBlockAt(1, yEnde - 1, 2).setType(Material.SIGN_POST);
-		Sign s1 = (Sign) SkyblockMultiplayer.getSkyblockIslands().getBlockAt(1, yEnde - 1, 2).getState();
+		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(1, yEnde - 1, 2).setType(Material.SIGN_POST);
+		Sign s1 = (Sign) SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(1, yEnde - 1, 2).getState();
 		s1.getBlock().setData((byte) 8);
 		s1.setLine(0, Language.MSGS_SIGN1LINE1.sentence);
 		s1.setLine(1, Language.MSGS_SIGN1LINE2.sentence);
 		s1.setLine(2, Language.MSGS_SIGN1LINE3.sentence);
 		s1.update(true);
-		SkyblockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).setType(Material.SIGN_POST);
-		Sign s2 = (Sign) SkyblockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).getState();
+		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).setType(Material.SIGN_POST);
+		Sign s2 = (Sign) SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).getState();
 		s2.getBlock().setData((byte) 8);
 		s2.setLine(0, Language.MSGS_SIGN2LINE1.sentence);
 		s2.setLine(1, Language.MSGS_SIGN2LINE2.sentence);

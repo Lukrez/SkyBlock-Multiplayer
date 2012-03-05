@@ -10,9 +10,9 @@ public class PlayerInfo {
 	private Location oldlocation;
 	private boolean isDead;
 	private boolean onIsland;
-	private SkyblockMultiplayer plugin;
+	private SkyBlockMultiplayer plugin;
 
-	public PlayerInfo(Player p, SkyblockMultiplayer instance) {
+	public PlayerInfo(Player p, SkyBlockMultiplayer instance) {
 		this.plugin = instance;
 		this.player = p;
 		this.hasIsland = false;
