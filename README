@@ -8,8 +8,9 @@ The plugin creates an empty minecraft world with the name "SkyblockMultiplayer" 
 Initially only an out-look tower is created, which can be accessed via console command "/skyblock join". With the command "/skyblock start" the player gets a new island.
 The distance between the islands can be changed within the config file.
 
-New languages for the game messages can be added as .yml files to the language folder. As basis for the translation the default english.yml is provided in the folder.
-Additional translation files can be downloaded from the github repository (languages.zip) and added to the language folder.
+
+New languages for the game messages can be added as .yml files to the language folder. A number of languages (only default english and german at the moment) are provided in the zip subfolder "language_translations".
+These files can be copied into the folder SkyBlockMultiplayer/languages and can also be used as basis for new tranlations. To load a new language file use the command "/skyblock set language <language>".
 
 
 How to install the plugin:
