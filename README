@@ -25,7 +25,7 @@ Save and close the file, now reload/restart the server or type into the chat "/s
 Commands:
 /skyblock – shows the version
 /skyblock join - join Skyblock
-skyblock start - get an island
+/skyblock start - get an island
 /skyblock newIsland [player] - give yourself or an other player a new island
 /skyblock set offline - deactivate Skyblock
 /skyblock set online - activate Skyblock

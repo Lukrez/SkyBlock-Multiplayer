@@ -318,7 +318,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("skyblock")) {
 			if (args.length == 0) {
-				sender.sendMessage("SkyblockMultiplayer v" + this.pluginFile.getVersion());
+				sender.sendMessage(this.pluginFile.getName() + " v" + this.pluginFile.getVersion());
 				sender.sendMessage(Language.MSGS_SKYBLOCK.sentence);
 				return true;
 			}
