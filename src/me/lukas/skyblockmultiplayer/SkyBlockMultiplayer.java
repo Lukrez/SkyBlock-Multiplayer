@@ -294,8 +294,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 	public static World getSkyblockIslands() {
 		if (skyblockIslands == null) {
-			long seed = 89125;
-			skyblockIslands = WorldCreator.name(SkyBlockMultiplayer.WORLD_NAME).type(WorldType.NORMAL).seed(seed).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
+			skyblockIslands = WorldCreator.name(SkyBlockMultiplayer.WORLD_NAME).type(WorldType.NORMAL).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
 			SkyBlockMultiplayer.CreateSpawnTower();
 			skyblockIslands.setSpawnLocation(1, SkyBlockMultiplayer.getSkyblockIslands().getHighestBlockYAt(1, 1), 1);
 		}
