@@ -6,3 +6,6 @@ commands:
      skyblock:
           description: Use /skyblock [arguments] to get access to the plugin. 
           usage: /<command>
+
+author: Seadragon91
+authors: Ktesibios
