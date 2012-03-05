@@ -9,7 +9,7 @@ Initially only an out-look tower is created, which can be accessed via console c
 The distance between the islands can be changed within the config file.
 
 New languages for the game messages can be added as .yml files to the language folder. As basis for the translation the default english.yml is provided in the folder.
-Additional translation files can be downloaded from the github repository (languages.tar) and added to the language folder.
+Additional translation files can be downloaded from the github repository (languages.zip) and added to the language folder.
 
 
 How to install the plugin:
