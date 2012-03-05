@@ -1,14 +1,26 @@
 Description:
 
-This plugin is  a multiplayer version of the singleplayer version of SkyBlock.
+This plugin is a multiplayer version of the singleplayer version of SkyBlock which contains two different game modes:
 (1) PvP mode, where each player has one life and island
 (2) build mode with endless lifes
 
-How to install:
-Copy the SkyblockMultiplayer.jar into your plugin folder.
-Start the server, the plugin creates a own folder named SkyblockMultiplayer, this folder contains the config file and a language folder with the default english.yml. 
-Open the config file and type a name for the world behind the line „worldName: „. 
-Save and close the file, now reload/restart the server or type into the chat „/skyblock reload config“ to reload the config file.
+The plugin creates an empty minecraft world additional to your existing worlds. The default world name "SkyblockMultiplayer" can be changed within the supplied config file if necessary.
+Initially only an out-look tower is created, which can be accessed via console command "/skyblock join". With the command "/skyblock start" the player gets a new island.
+The distance between the islands can be changed within the config file.
+
+New languages for the game messages can be added as .yml files to the language folder. As basis for the translation the default english.yml is provided in the folder.
+Additional translation files can be downloaded from the github repository (languages.tar) and added to the language folder.
+
+
+How to install the plugin:
+Copy the SkyblockMultiplayer.jar into your plugin folder
+Start the server, the plugin creates a folder named SkyblockMultiplayer, this folder contains the config file and the language folder with the default english.yml
+
+
+How to change the worldname (if wanted):
+Open the config file change the worldname in the line "worldName: SkyBlockMultiplayer" into your prefered world name.
+Save and close the file, now reload/restart the server or type into the chat "/skyblock reload config" to reload the config file.
+
 
 Commands:
 /skyblock – shows the version
@@ -24,14 +36,15 @@ skyblock start - get an island
 /skyblock reload language - reload language
 /skyblock status - show status
 
+
 Permissions:
 skyblock.set – needed for set commands
 skyblock.reset – needed for reset command
 skyblock.newisland – needed only if PVP is on
 skyblock.reload - needed for reload commands
 
-Changelog:
 
+Changelog:
 
 
 Downloads (Link zu Github):
