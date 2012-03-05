@@ -4,7 +4,7 @@ This plugin is a multiplayer version of the singleplayer version of SkyBlock whi
 (1) PvP mode, where each player has one life and island
 (2) build mode with endless lifes
 
-The plugin creates an empty minecraft world additional to your existing worlds. The default world name "SkyblockMultiplayer" can be changed within the supplied config file if necessary.
+The plugin creates an empty minecraft world with the name "SkyblockMultiplayer" additional to your existing worlds.
 Initially only an out-look tower is created, which can be accessed via console command "/skyblock join". With the command "/skyblock start" the player gets a new island.
 The distance between the islands can be changed within the config file.
 
