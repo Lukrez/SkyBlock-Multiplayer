@@ -215,7 +215,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				}
 			}
 		}
-		
+
 		SkyBlockMultiplayer.getSkyblockIslands();
 	}
 
@@ -308,7 +308,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 
-		if (!p.getInventory().getHelmet().getType().equals(Material.AIR) || !p.getInventory().getChestplate().getType().equals(Material.AIR) || !p.getInventory().getLeggings().getType().equals(Material.AIR) || !p.getInventory().getBoots().getType().equals(Material.AIR)) {
+		if (p.getInventory().getHelmet() != null || p.getInventory().getChestplate() != null || p.getInventory().getLeggings() != null || p.getInventory().getBoots() != null) {
 			return false;
 		}
 
