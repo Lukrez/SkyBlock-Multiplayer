@@ -30,13 +30,13 @@ public class PlayerInfo {
 		return this.hasIsland;
 	}
 
-	public Location getOldPlayerLocation() {
-		return this.oldlocation;
-	}
-
 	public void setOldPlayerLocation(Location l) {
 		this.oldlocation = l;
 		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".oldLocation", this.plugin.getStringLocation(l));
+	}
+	
+	public Location getOldPlayerLocation() {
+		return this.oldlocation;
 	}
 
 	public Player getPlayer() {

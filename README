@@ -17,12 +17,6 @@ How to install the plugin:
 Copy the SkyBlockMultiplayer.jar into your plugin folder
 Start the server, the plugin creates a folder named SkyBlockMultiplayer, this folder contains the config file and the language folder with the default english.yml
 
-
-How to change the worldname (if wanted):
-Open the config file change the worldname in the line "worldName: SkyBlockMultiplayer" into your prefered world name.
-Save and close the file, now reload/restart the server or type into the chat "/skyblock reload config" to reload the config file.
-
-
 Commands:
 /skyblock – shows the version
 /skyblock join - join Skyblock
