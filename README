@@ -40,7 +40,9 @@ skyblock.reload - needed for reload commands
 
 
 Changelog:
-
+version 0.45 alpha, for 1.1 R-7:
+ 	- fixed sign direction 	
+ 
 
 Downloads:
 https://github.com/Leseratte91/SkyBlock-Multiplayer/downloads
