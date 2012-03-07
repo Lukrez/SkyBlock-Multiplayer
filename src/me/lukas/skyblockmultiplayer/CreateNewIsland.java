@@ -2,10 +2,11 @@ package me.lukas.skyblockmultiplayer;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 public class CreateNewIsland {
 	private static int posY = 64;
@@ -29,7 +30,7 @@ public class CreateNewIsland {
 	}
 
 	public CreateNewIsland() {
-	};
+	}
 
 	public Location getIslandPosition(int N) {
 		//System.out.println("Erstelle Inselnr.: "+N);
@@ -98,7 +99,8 @@ public class CreateNewIsland {
 		}
 
 		// Erstelle Baum
-		SkyBlockMultiplayer.getSkyblockIslands().generateTree(new Location(SkyBlockMultiplayer.getSkyblockIslands(), 5 + l.getBlockX(), 64, l.getBlockZ()), TreeType.TREE);
+		//SkyBlockMultiplayer.getSkyblockIslands().generateTree(new Location(SkyBlockMultiplayer.getSkyblockIslands(), 5 + l.getBlockX(), 64, l.getBlockZ()), TreeType.TREE);
+		this.createTree(new Location(SkyBlockMultiplayer.getSkyblockIslands(), 5 + l.getBlockX(), 64, l.getBlockZ()));
 
 		// Setze Bedrock
 		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(l.getBlockX(), l.getBlockY() - 3, l.getBlockZ()).setType(Material.BEDROCK);
@@ -116,6 +118,40 @@ public class CreateNewIsland {
 				SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
 			}
 		}
+	}
+
+	private void createTree(Location l) {
+		int px = l.getBlockX();
+		int py = l.getBlockY();
+		int pz = l.getBlockZ();
+
+		ItemStack itemWood = new ItemStack(17, 2);
+		itemWood.setData(new MaterialData(1));
+
+		ItemStack itemLeaves = new ItemStack(18, 0);
+		itemLeaves.setData(new MaterialData(1));
+
+		for (int y = 0; y <= 4; y++) {
+			if (y != 4) {
+				SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(px, py + y, pz).setType(itemWood.getType());
+			}
+
+			if (y != 0) {
+				for (int x = -2; x <= 2; x++) {
+					for (int z = -2; z <= 2; z++) {
+						if (y != 4) {
+							if (x != 0 || z != 0) {
+								SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(px + x, py + y, pz + z).setType(itemLeaves.getType());
+							}
+						} else if (Math.abs(x) != 2 && Math.abs(z) != 2) {
+							SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(px + x, py + y, pz + z).setType(itemLeaves.getType());
+						}
+					}
+				}
+			}
+		}
+
+		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(px, py + 5, pz).setType(itemLeaves.getType());
 	}
 
 	private boolean checkIfOccupied(Location l) {
