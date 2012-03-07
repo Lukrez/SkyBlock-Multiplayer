@@ -125,7 +125,7 @@ public class CreateNewIsland {
 		int py = l.getBlockY();
 		int pz = l.getBlockZ();
 
-		ItemStack itemWood = new ItemStack(17, 2);
+		ItemStack itemWood = new ItemStack(17, 0);
 		itemWood.setData(new MaterialData(1));
 
 		ItemStack itemLeaves = new ItemStack(18, 0);

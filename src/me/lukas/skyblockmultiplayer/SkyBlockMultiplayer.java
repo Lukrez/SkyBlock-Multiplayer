@@ -953,21 +953,29 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 
+		/*
+		 * sign.setLine(0, "TEST");
+			sign.update();
+			sign.getBlock().setData((byte) 8);
+			sign.getBlock().getState().update();
+		 * */
+
 		//Mache Schilder
 		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(1, yEnde - 1, 2).setType(Material.SIGN_POST);
 		Sign s1 = (Sign) SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(1, yEnde - 1, 2).getState();
-		s1.getBlock().setData((byte) 8);
 		s1.setLine(0, Language.MSGS_SIGN1LINE1.sentence);
 		s1.setLine(1, Language.MSGS_SIGN1LINE2.sentence);
 		s1.setLine(2, Language.MSGS_SIGN1LINE3.sentence);
-		s1.update(true);
+		s1.update();
+		s1.getBlock().setData((byte) 8);
 		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).setType(Material.SIGN_POST);
 		Sign s2 = (Sign) SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(0, yEnde - 1, 2).getState();
-		s2.getBlock().setData((byte) 8);
+		s2.getBlock().setData((byte) 6);
 		s2.setLine(0, Language.MSGS_SIGN2LINE1.sentence);
 		s2.setLine(1, Language.MSGS_SIGN2LINE2.sentence);
 		s2.setLine(2, Language.MSGS_SIGN2LINE3.sentence);
 		s2.setLine(3, Language.MSGS_SIGN2LINE4.sentence);
-		s2.update(true);
+		s2.update();
+		s2.getBlock().setData((byte) 8);
 	}
 }
