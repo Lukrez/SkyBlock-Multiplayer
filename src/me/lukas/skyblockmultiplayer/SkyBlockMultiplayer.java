@@ -1,6 +1,7 @@
 package me.lukas.skyblockmultiplayer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -116,7 +117,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		} else {
 			try {
 				this.configPlugin.load(this.fileConfig);
-			} catch (IOException | InvalidConfigurationException e) {
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InvalidConfigurationException e) {
 				e.printStackTrace();
 			}
 
@@ -164,7 +167,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		try {
 			this.configPlayer.load(this.filePlayer);
-		} catch (IOException | InvalidConfigurationException e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
 
@@ -190,15 +195,19 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 			try {
 				this.configLanguage.load(this.fileLanguage);
-			} catch (IOException | InvalidConfigurationException e) {
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InvalidConfigurationException e) {
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				this.configLanguage.load(this.fileLanguage);
-			} catch (IOException | InvalidConfigurationException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 				return;
+			} catch (InvalidConfigurationException e) {
+				e.printStackTrace();
 			}
 
 			for (Language g : Language.values()) {
@@ -660,9 +669,19 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_LANGUAGE.path, s);
 					sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGECHANGED.sentence);
 					return true;
-				} catch (InvalidConfigurationException | IOException ex) {
+				} catch (InvalidConfigurationException e) {
 					this.fileLanguage = sf;
-					sender.sendMessage(this.pNameChat + Language.MSGS_ERROROCCURED.sentence + ": " + ex.getLocalizedMessage());
+					sender.sendMessage(this.pNameChat + Language.MSGS_ERROROCCURED.sentence + ": " + e.getLocalizedMessage());
+					sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGENOTCHANGED.sentence);
+					return true;
+				} catch (FileNotFoundException e) {
+					this.fileLanguage = sf;
+					sender.sendMessage(this.pNameChat + Language.MSGS_ERROROCCURED.sentence + ": " + e.getLocalizedMessage());
+					sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGENOTCHANGED.sentence);
+					return true;
+				} catch (IOException e) {
+					this.fileLanguage = sf;
+					sender.sendMessage(this.pNameChat + Language.MSGS_ERROROCCURED.sentence + ": " + e.getLocalizedMessage());
 					sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGENOTCHANGED.sentence);
 					return true;
 				}
