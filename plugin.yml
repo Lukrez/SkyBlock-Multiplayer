@@ -3,9 +3,9 @@ main: me.lukas.skyblockmultiplayer.SkyBlockMultiplayer
 version: 0.46
 
 commands:
-     skyblock:
-          description: Use /skyblock [arguments] to get access to the plugin. 
-          usage: /<command>
+  skyblock:
+    description: Use /skyblock [arguments] to get access to the plugin. 
+    usage: /<command>
 
 author: Seadragon91
 authors: [Ktesibios]

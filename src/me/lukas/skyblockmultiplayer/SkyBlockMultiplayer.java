@@ -418,7 +418,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 	private boolean setPVP(CommandSender sender, String s) {
 		if (!Permissions.SKYBLOCK_SET.has(sender)) {
-			this.notAuthorized((Player) sender);
+			return this.notAuthorized((Player) sender);
 		}
 
 		if (s.equalsIgnoreCase("on")) {
@@ -439,7 +439,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		msg = this.pNameChat;
 
 		if (!Permissions.SKYBLOCK_SET.has(sender)) {
-			this.notAuthorized((Player) sender);
+			return this.notAuthorized((Player) sender);
 		}
 
 		try {
@@ -473,7 +473,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		msg = this.pNameChat;
 
 		if (!Permissions.SKYBLOCK_SET.has(sender)) {
-			this.notAuthorized((Player) sender);
+			return this.notAuthorized((Player) sender);
 		}
 
 		sender.sendMessage(msg + Language.MSGS_STARTING.sentence);
@@ -505,7 +505,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 
 		if (!Permissions.SKYBLOCK_NEWISLAND.has(player)) {
-			this.notAuthorized(player);
+			return this.notAuthorized(player);
 		}
 		if (!Data.SKYBLOCK_ONLINE) {
 			player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
@@ -711,7 +711,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		msg = this.pNameChat;
 
 		if (!Permissions.SKYBLOCK_RESET.has(sender)) {
-			this.notAuthorized((Player) sender);
+			return this.notAuthorized((Player) sender);
 		}
 
 		if (Data.SKYBLOCK_ONLINE) {
@@ -753,8 +753,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		String msg = "";
 		msg = this.pNameChat;
 
-		if (Permissions.SKYBLOCK_RELOAD.has(sender)) {
-			this.notAuthorized(sender);
+		if (!Permissions.SKYBLOCK_RELOAD.has(sender)) {
+			return this.notAuthorized(sender);
 		}
 
 		this.loadConfig();

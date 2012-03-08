@@ -22,6 +22,10 @@ public class EntityDeath implements Listener {
 		}
 
 		Player p = (Player) ent;
+		if (!p.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
+			return;
+		}
+		
 		int playerNr = plugin.findPlayer(p.getName());
 
 		if (playerNr == -1) {
@@ -36,10 +40,6 @@ public class EntityDeath implements Listener {
 		}
 
 		if (!pi.getHasIsland()) {
-			return;
-		}
-
-		if (!pi.getPlayer().getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
 			return;
 		}
 
