@@ -23,53 +23,47 @@ public class EntityDeath implements Listener {
 
 		Player p = (Player) ent;
 		int playerNr = plugin.findPlayer(p.getName());
-		PlayerInfo pi = Data.PLAYERS.get(playerNr);
 
 		if (playerNr == -1) {
 			return;
 		}
+
+		PlayerInfo pi = Data.PLAYERS.get(playerNr);
 
 		if (!Data.PVP) {
 			pi.setIsOnIsland(false);
 			return;
 		}
 
-		if (ent instanceof Player) {
+		if (!pi.getHasIsland()) {
+			return;
+		}
 
-			if (playerNr == -1) {
-				return;
-			}
+		if (!pi.getPlayer().getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
+			return;
+		}
 
-			if (!pi.getHasIsland()) {
-				return;
-			}
+		pi.setDead(true);
 
-			if (!pi.getPlayer().getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
-				return;
-			}
-
-			pi.setDead(true);
-
-			if (!(Data.PLAYERS_NUMBER - 1 < 0)) {
-				Data.PLAYERS_NUMBER--;
-			}
-			if (Data.PLAYERS_NUMBER == 1) {
-				String winner = "";
-				for (PlayerInfo pinfo : Data.PLAYERS) {
-					if (pinfo.isDead() == false) {
-						winner = pinfo.getPlayerName();
-					}
+		if (!(Data.PLAYERS_NUMBER - 1 < 0)) {
+			Data.PLAYERS_NUMBER--;
+		}
+		if (Data.PLAYERS_NUMBER == 1) {
+			String winner = "";
+			for (PlayerInfo pinfo : Data.PLAYERS) {
+				if (pinfo.isDead() == false) {
+					winner = pinfo.getPlayerName();
 				}
-
-				for (PlayerInfo pinfo : Data.PLAYERS) {
-					pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
-				}
-				return;
 			}
 
 			for (PlayerInfo pinfo : Data.PLAYERS) {
-				pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Data.PLAYERS_NUMBER + Language.MSGS_PLAYERDIED2.sentence);
+				pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
 			}
+			return;
+		}
+
+		for (PlayerInfo pinfo : Data.PLAYERS) {
+			pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Data.PLAYERS_NUMBER + Language.MSGS_PLAYERDIED2.sentence);
 		}
 	}
 }

@@ -17,6 +17,7 @@ public class PlayerInfo {
 		this.player = p;
 		this.hasIsland = false;
 		this.oldlocation = null;
+		this.setOldPlayerLocation(p.getLocation());
 		this.setDead(false);
 		this.onIsland = false;
 	}
@@ -34,7 +35,7 @@ public class PlayerInfo {
 		this.oldlocation = l;
 		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".oldLocation", this.plugin.getStringLocation(l));
 	}
-	
+
 	public Location getOldPlayerLocation() {
 		return this.oldlocation;
 	}
@@ -60,7 +61,7 @@ public class PlayerInfo {
 		this.islandLocation = l;
 		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".islandLocation", this.plugin.getStringLocation(l));
 	}
-	
+
 	public Location getIslandLocation() {
 		return this.islandLocation;
 	}
