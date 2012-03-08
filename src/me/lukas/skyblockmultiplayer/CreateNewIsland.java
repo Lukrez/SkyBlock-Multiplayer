@@ -32,14 +32,14 @@ public class CreateNewIsland {
 	public CreateNewIsland() {
 	}
 
-	public Location getIslandPosition(int N) {
+	public Location getIslandPosition(int n) {
 		//System.out.println("Erstelle Inselnr.: "+N);
 		int posX, posZ;
 		// Suche den momentanen Ring
-		int R = (int) (0.5 + Math.sqrt(N / 2.0 - 0.25));
+		int R = (int) (0.5 + Math.sqrt(n / 2.0 - 0.25));
 		//System.out.println("Insel befindet sich in Ringnr "+R);
 		// Bestimme die Anzahl bereits vorhanderer Inseln auf dem Ring
-		int NaufRing = N - 2 * R * (R - 1);
+		int NaufRing = n - 2 * R * (R - 1);
 		//System.out.println("Die Insel ist im Ring die "+NaufRing+" Insel.");
 		// Bestimmen der Seite auf dem Ring
 		int Seite = (int) (Math.ceil(NaufRing / (double) R));
