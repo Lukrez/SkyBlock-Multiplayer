@@ -13,4 +13,5 @@ public class Data {
 	public static int ISLAND_NUMBER;
 	public static boolean PVP = false;
 	public static String LANGUAGE = "english";
+	public static boolean ALLOWCONTENT;
 }

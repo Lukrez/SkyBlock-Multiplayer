@@ -17,7 +17,11 @@ public class PlayerInfo {
 		this.player = p;
 		this.hasIsland = false;
 		this.oldlocation = null;
-		this.setOldPlayerLocation(p.getLocation());
+		if (!p.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
+			this.setOldPlayerLocation(p.getLocation());
+		} else {
+			this.setOldPlayerLocation(this.plugin.getServer().getWorlds().get(0).getSpawnLocation());
+		}
 		this.setDead(false);
 		this.onIsland = false;
 	}

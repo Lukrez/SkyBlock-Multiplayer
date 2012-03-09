@@ -55,7 +55,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		this.log = this.getLogger();
 		SkyBlockMultiplayer.WORLD_NAME = this.pluginFile.getName();
 
-		this.pName = "[" + this.pluginFile.getName() + "] ";
+		this.pName = ChatColor.WHITE + "[" + ChatColor.GREEN + this.pluginFile.getName() + ChatColor.WHITE + "] ";
 		this.pNameChat = ChatColor.WHITE + "[" + ChatColor.GREEN + this.pluginFile.getName() + ChatColor.WHITE + "] ";
 
 		// register Events
@@ -114,6 +114,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_CHESTITEMS.path, items);
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SKYBLOCKONLINE.path, true);
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, false);
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_ALLOWCONTENT.path, false);
 		} else {
 			try {
 				this.configPlugin.load(this.fileConfig);
@@ -124,7 +125,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			try {
-				Data.ISLAND_DISTANCE = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.fileConfig, "islandDistance", 50));
+				Data.ISLAND_DISTANCE = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_ISLANDDISTANCE.path, 50));
 				if (Data.ISLAND_DISTANCE < 50) {
 					Data.ISLAND_DISTANCE = 50;
 				}
@@ -157,6 +158,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Data.SKYBLOCK_ONLINE = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SKYBLOCKONLINE.path, true));
 			Data.PVP = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, false));
 			Data.LANGUAGE = this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_LANGUAGE.path, "english");
+			Data.ALLOWCONTENT = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_ALLOWCONTENT.path, false));
 		}
 	}
 
@@ -360,6 +362,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 			if (args[0].equalsIgnoreCase("reload")) {
 				if (args.length < 2) {
+					sender.sendMessage(this.pName + Language.MSGS_WRONGARGS.sentence);
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("config")) {
@@ -541,7 +544,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 		PlayerInfo pi = Data.PLAYERS.get(playerNr);
 
-		boolean ismepty = this.checkIfPlayerInventoryEmpty(player);
+		boolean ismepty = true;
+		if (!Data.ALLOWCONTENT) {
+			ismepty = this.checkIfPlayerInventoryEmpty(player);
+		}
 		if (!ismepty && pi.getIsOnIsland()) {
 			if (pi.getHasIsland()) {
 				player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORYLEAVE.sentence);
@@ -551,7 +557,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		pi.setIsOnIsland(false);
 		Location l = Data.PLAYERS.get(playerNr).getOldPlayerLocation();
-		player.teleport(l);
+		if (l == null) {
+			player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
+		} else {
+			player.teleport(l);
+		}
+
 		player.sendMessage(this.pNameChat + Language.MSGS_LEFTSKYBLOCK.sentence);
 		return true;
 	}
@@ -566,7 +577,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
-		boolean isempty = this.checkIfPlayerInventoryEmpty(player);
+		boolean isempty = true;
+		if (!Data.ALLOWCONTENT) {
+			isempty = this.checkIfPlayerInventoryEmpty(player);
+		}
+
 		if (!isempty) {
 			player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORYSTART.sentence);
 			return true;
@@ -696,6 +711,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	private boolean reloadLanguage(CommandSender sender) {
+		if (!Permissions.SKYBLOCK_RELOAD.has(sender)) {
+			return this.notAuthorized(sender);
+		}
+
 		this.loadLanguageConfig();
 		sender.sendMessage(this.pNameChat + Language.MSGS_LANGUAGERELOADED.sentence);
 		return true;
