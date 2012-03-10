@@ -41,7 +41,19 @@ skyblock.reload - needed for reload commands
 
 Changelog:
 version 0.45 alpha, for 1.1 R-7:
- 	- fixed sign direction 	
+ 	- fixed sign direction
+	
+version 0.48 alpha:
+ 	- fixed commands, default player could access them
+	- fixed NPE by skyblock leave
+	- added allowContent, join/leave skyblock with content
+	
+version: 0.49 alpha:
+ 	- fixed command newIsland
+	- fixed PvP Mode, counter
+	- fixed language (to apply changes, please replace language files inside the language folder)
+	- simplified chunk generator
+	- code cleaning
  
 
 Downloads:
