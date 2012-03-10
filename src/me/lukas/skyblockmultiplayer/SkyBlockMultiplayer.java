@@ -76,6 +76,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		this.log.info("v" + pluginFile.getVersion() + " enabled.");
 	}
 
+	/**
+	 * Register the events
+	 * 
+	 */
 	public void registerEvents() {
 		PluginManager manager = this.getServer().getPluginManager();
 		manager.registerEvents(new PlayerPlaceBlockListener(this), this);
@@ -85,6 +89,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		manager.registerEvents(new PlayerJoin(this), this);
 	}
 
+	/**
+	 * Creates or loads the config file.
+	 * 
+	 */
 	public void loadConfig() {
 		ArrayList<ItemStack> alitemsChest = new ArrayList<ItemStack>();
 		alitemsChest.add(new ItemStack(Material.ICE, 2));
@@ -183,6 +191,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Loads the language file, that is setted in conig.yml
+	 * 
+	 */
 	private void loadLanguageConfig() {
 		if (!new File(this.getDataFolder() + File.separator + "language").exists()) {
 			new File(this.getDataFolder() + File.separator + "language").mkdirs();
@@ -230,6 +242,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		SkyBlockMultiplayer.getSkyblockIslands();
 	}
 
+	/**
+	 * This replace §0-§f by ChatColor.
+	 * 
+	 * @param s the given String
+	 * @return string with ChatColor.
+	 */
 	private String replaceColor(String s) {
 		for (ChatColor c : ChatColor.values()) {
 			s = s.replaceAll("§" + c.getChar(), "" + ChatColor.getByChar(c.getChar()));
@@ -237,6 +255,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return s;
 	}
 
+	/**
+	 * This writes the the language yml file.
+	 * 
+	 */
 	private void writeLanguageConfig() {
 		for (Language g : Language.values()) {
 			String path = g.path;
@@ -249,8 +271,16 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 	}
 
-	public void setStringbyPath(FileConfiguration fc, File f, String path, Object content) {
-		fc.set(path, content.toString());
+	/**
+	 * Creates the path and set the value.
+	 * 
+	 * @param fc a instance of FileConfiguration.
+	 * @param f a instance of File.
+	 * @param path the path to be created.
+	 * @param value the given value to be included.
+	 */
+	public void setStringbyPath(FileConfiguration fc, File f, String path, Object value) {
+		fc.set(path, value.toString());
 		try {
 			fc.save(f);
 		} catch (IOException e) {
@@ -258,14 +288,29 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 	}
 
-	public String getStringbyPath(FileConfiguration fc, File file, String path, Object stdContent) {
+	/**
+	 *  Get the value from the config by path, if path not exists, it will be created with the given standard value.
+	 * 
+	 * @param fc a instance of FileConfiguration.
+	 * @param file a instance of File.
+	 * @param path the path to the value in the file.
+	 * @param stdValue the standard content, will be return if the path not exists.
+	 * @return string.
+	 */
+	public String getStringbyPath(FileConfiguration fc, File file, String path, Object stdValue) {
 		if (!fc.contains(path)) {
-			this.setStringbyPath(fc, file, path, stdContent);
-			return stdContent.toString();
+			this.setStringbyPath(fc, file, path, stdValue);
+			return stdValue.toString();
 		}
 		return fc.getString(path);
 	}
 
+	/**
+	 * Returns a Location of the given string, can be null.
+	 * 
+	 * @param s the string to get the location from it.
+	 * @return Location or null
+	 */
 	public Location getLocationString(String s) {
 		if (s == null || s.trim() == "") {
 			return null;
@@ -281,6 +326,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return null;
 	}
 
+	/**
+	 * Returns a string of the given location, can be empty.
+	 * 
+	 * @param l get a string of it.
+	 * @return string.
+	 */
 	public String getStringLocation(Location l) {
 		if (l == null) {
 			return "";
@@ -288,13 +339,19 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return l.getWorld().getName() + ":" + l.getBlockX() + ":" + l.getBlockY() + ":" + l.getBlockZ();
 	}
 
-	public PlayerInfo getPlayer(Player p) {
-		PlayerInfo pi = new PlayerInfo(p, this);
-		if (!this.configPlayer.contains("players." + p.getName())) {
+	/**
+	 * Loads the informations from the file players.yml, if the player exists.
+	 * 
+	 * @param player
+	 * @return PlayerInfo
+	 */
+	public PlayerInfo getPlayer(Player player) {
+		PlayerInfo pi = new PlayerInfo(player, this);
+		if (!this.configPlayer.contains("players." + player.getName())) {
 			return null;
 		}
 
-		String path = "players." + p.getName() + ".";
+		String path = "players." + player.getName() + ".";
 		pi.setHasIsland(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "hasIsland", false)));
 		pi.setDead(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "isDead", false)));
 		pi.setIslandLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "islandLocation", "")));
@@ -303,6 +360,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return pi;
 	}
 
+	/**
+	 * Creates the world and the tower of SkyBlock.
+	 * 
+	 * @return world instance of SkyBlock
+	 */
 	public static World getSkyblockIslands() {
 		if (skyblockIslands == null) {
 			skyblockIslands = WorldCreator.name(SkyBlockMultiplayer.WORLD_NAME).type(WorldType.NORMAL).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
@@ -312,20 +374,35 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return skyblockIslands;
 	}
 
-	private boolean checkIfPlayerInventoryEmpty(Player p) {
-		for (ItemStack i : p.getInventory().getContents()) {
+	/**
+	 * Check if the player inventory and equipment is empty.
+	 * 
+	 * @param player to check.
+	 * @return boolean true if empty, false if not empty
+	 */
+	private boolean checkIfPlayerInventoryEmpty(Player player) {
+		for (ItemStack i : player.getInventory().getContents()) {
 			if (i != null) {
 				return false;
 			}
 		}
 
-		if (p.getInventory().getHelmet() != null || p.getInventory().getChestplate() != null || p.getInventory().getLeggings() != null || p.getInventory().getBoots() != null) {
+		if (player.getInventory().getHelmet() != null || player.getInventory().getChestplate() != null || player.getInventory().getLeggings() != null || player.getInventory().getBoots() != null) {
 			return false;
 		}
 
 		return true;
 	}
 
+	/**
+	 * If a command is execute, this is called.
+	 * 	
+	 * @param sender that types the command.
+	 * @param cmd the typed command.
+	 * @param label includes the whole String, with command and arguments.
+	 * @param  args array that includes all given arguments.
+	 * @return boolean command was successfull or not
+	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("skyblock")) {
 			if (args.length == 0) {
@@ -335,6 +412,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			if (args[0].equalsIgnoreCase("set")) {
+				if (!Permissions.SKYBLOCK_SET.has(sender)) {
+					return this.notAuthorized(sender);
+				}
+
 				if (args.length < 2) {
 					sender.sendMessage(this.pName + Language.MSGS_WRONGARGS.sentence);
 					return true;
@@ -380,6 +461,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			if (!(sender instanceof Player)) {
+				
 				return true;
 			}
 
@@ -406,29 +488,26 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				}
 				return this.playerNewIsland(player, s);
 			}
-			if (args[0].equalsIgnoreCase("reset")) {
-				return this.resetSkyblock(sender);
-			}
-			if (args[0].equalsIgnoreCase("status")) {
-				return this.getStatus(sender);
-			}
-
+		
 			player.sendMessage(this.pNameChat + Language.MSGS_WRONGARGS.sentence);
 			return true;
 		}
 		return false;
 	}
 
-	private boolean setPVP(CommandSender sender, String s) {
-		if (!Permissions.SKYBLOCK_SET.has(sender)) {
-			return this.notAuthorized((Player) sender);
-		}
-
-		if (s.equalsIgnoreCase("on")) {
+	/**
+	 * Activate, or deactivate PVP mode.
+	 * 	
+	 * @param sender that types the command.
+	 * @param option on or off.
+	 * @return returns true.
+	 */
+	private boolean setPVP(CommandSender sender, String option) {
+		if (option.equalsIgnoreCase("on")) {
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, true);
 			sender.sendMessage(this.pNameChat + Language.MSGS_PVP_NOW_ON.sentence);
 			return true;
-		} else if (s.equalsIgnoreCase("off")) {
+		} else if (option.equalsIgnoreCase("off")) {
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, false);
 			sender.sendMessage(this.pNameChat + Language.MSGS_PVP_NOW_OFF.sentence);
 			return true;
@@ -437,13 +516,15 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Activate SkyBlock, permission needed.
+	 * 
+	 * @param sender that types the command.
+	 * @return returns true.
+	 */
 	public boolean setSkyblockOffline(CommandSender sender) {
 		String msg = "";
 		msg = this.pNameChat;
-
-		if (!Permissions.SKYBLOCK_SET.has(sender)) {
-			return this.notAuthorized((Player) sender);
-		}
 
 		try {
 			sender.sendMessage(msg + Language.MSGS_STOPPING.sentence);
@@ -471,13 +552,15 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Deactivate SkyBlock, permission needed.
+	 * 
+	 * @param sender that types the command.
+	 * @return returns true.
+	 */
 	public boolean setSkyblockOnline(CommandSender sender) {
 		String msg = "";
 		msg = this.pNameChat;
-
-		if (!Permissions.SKYBLOCK_SET.has(sender)) {
-			return this.notAuthorized((Player) sender);
-		}
 
 		sender.sendMessage(msg + Language.MSGS_STARTING.sentence);
 		SkyBlockMultiplayer.skyblockIslands = null;
@@ -488,7 +571,14 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
-	private boolean playerNewIsland(Player player, String s) {
+	/**
+	 * Gives the sender or an other player a new island
+	 * 
+	 * @param player that types the command.
+	 * @param target the player that is given.
+	 * @return returns true.
+	 */
+	private boolean playerNewIsland(Player player, String target) {
 		if (!Data.PVP) {
 			if (!Data.SKYBLOCK_ONLINE) {
 				player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
@@ -510,12 +600,19 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		if (!Permissions.SKYBLOCK_NEWISLAND.has(player)) {
 			return this.notAuthorized(player);
 		}
+
 		if (!Data.SKYBLOCK_ONLINE) {
 			player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
 			return true;
 		}
 
-		int playerNr = this.findPlayer(s);
+		int playerNr = -1;
+		if (target.trim().equalsIgnoreCase("")) {
+			playerNr = this.findPlayer(player.getName());
+		} else {
+			playerNr = this.findPlayer(target);
+		}
+
 		if (playerNr == -1) {
 			player.sendMessage(this.pNameChat + Language.MSGS_WRONEPLAYERNAME.sentence);
 			return true;
@@ -523,7 +620,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		PlayerInfo pi = Data.PLAYERS.get(playerNr);
 		pi.setDead(false);
 		pi.setHasIsland(false);
-		if (!(Data.PLAYERS_NUMBER - 1 < 0)) {
+		if (Data.PLAYERS_NUMBER > 1) {
 			Data.PLAYERS_NUMBER--;
 		}
 		player.sendMessage(this.pNameChat + Language.MSGS_NEWISLANDPLAYER1.sentence + pi.getPlayerName() + Language.MSGS_NEWISLANDPLAYER2.sentence);
@@ -531,6 +628,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Leave SkyBlock.
+	 * 
+	 * @param player that types the command.
+	 * @return returns true.
+	 */
 	private boolean playerLeave(Player player) {
 		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
 			return true;
@@ -567,6 +670,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Get an island in the world SkyBlock.
+	 * 
+	 * @param player that types the command.
+	 * @return returns true.
+	 */
 	private boolean playerStart(Player player) {
 		if (!Data.SKYBLOCK_ONLINE) {
 			player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
@@ -641,6 +750,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Join the world SkyBlock.
+	 * 
+	 * @param player that types the command.
+	 * @return returns true
+	 */
 	private boolean playerJoin(Player player) {
 		if (!Data.SKYBLOCK_ONLINE) {
 			player.sendMessage(this.pNameChat + Language.MSGS_ISOFFLINE.sentence);
@@ -671,6 +786,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Change the lanugage.
+	 * 
+	 * @param sender that types the command.
+	 * @param The given language.
+	 * @return returns true
+	 */
 	private boolean setLanguage(CommandSender sender, String s) {
 		if (!Data.LANGUAGE.equalsIgnoreCase(s)) {
 			File f = new File(this.getDataFolder() + File.separator + "language", s + ".yml");
@@ -710,6 +832,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Reloads the language.
+	 * 
+	 * @param sender that types the command.
+	 * @return returns true.
+	 */
 	private boolean reloadLanguage(CommandSender sender) {
 		if (!Permissions.SKYBLOCK_RELOAD.has(sender)) {
 			return this.notAuthorized(sender);
@@ -720,11 +848,24 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Send message not authorized to the sender.
+	 * 
+	 * @param sender that types the command.
+	 * @return returns true.
+	 */
 	private boolean notAuthorized(CommandSender s) {
 		s.sendMessage(this.pNameChat + Language.MSGS_NOTAUTHORIZED.sentence);
 		return true;
 	}
 
+	/**
+	 * Reset the world SkyBlock, and the players.yml.
+	 * 
+	 * 
+	 * @param sender that types the command.
+	 * @return returns true.
+	 */
 	private boolean resetSkyblock(CommandSender sender) {
 		String msg = "";
 		msg = this.pNameChat;
@@ -768,6 +909,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Reloads the config.
+	 * 
+	 * @param sender that types the command.
+	 * @return returns true.
+	 */
 	public boolean reloadConfig(CommandSender sender) {
 		String msg = "";
 		msg = this.pNameChat;
@@ -781,6 +928,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Get informations about SkyBlock
+	 * 
+	 * @param sender
+	 * @return
+	 */
 	public boolean getStatus(CommandSender sender) {
 		if (Data.SKYBLOCK_ONLINE) {
 			sender.sendMessage(Language.MSGS_STATUSONLINE.sentence);
@@ -800,6 +953,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Send a list of all commands, filtered by permissions.
+	 * 
+	 * @param sender that types the command.
+	 * @return returns true.
+	 */
 	public boolean getListCommands(CommandSender sender) {
 		String sb_info = "";
 
@@ -844,6 +1003,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 	ArrayList<File> sfiles;
 
+	/**
+	 * Get all files, directories inside of the given path.
+	 * 
+	 * @param path the directory. 
+	 */
 	public void getAllFiles(String path) {
 
 		File dirpath = new File(path);
@@ -864,9 +1028,15 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 	}
 
-	public int findPlayer(String playername) {
+	/**
+	 * Check if the player name inside of a ArrayList.
+	 * 
+	 * @param name of the player
+	 * @return a integer
+	 */
+	public int findPlayer(String playerName) {
 		for (int i = 0; i < Data.PLAYERS.size(); i++) {
-			if (Data.PLAYERS.get(i).getPlayerName().equalsIgnoreCase(playername)) {
+			if (Data.PLAYERS.get(i).getPlayerName().equalsIgnoreCase(playerName)) {
 				return i;
 			}
 		}
