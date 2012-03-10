@@ -38,16 +38,14 @@ public class EntityDeath implements Listener {
 			return;
 
 		if (!Data.PVP) {
-			pi.setIsOnIsland(false);
-			return;
+			if (this.plugin.isPlayerOnTower(p)) {
+				return;
+			}
 		}
 
 		if (!pi.getHasIsland() || pi.isDead()) {
 			return;
 		}
-		/*iif (!pi.getIsOnIsland() || pi.isDead()){
-			return;
-		}*/
 
 		pi.setDead(true);
 

@@ -356,7 +356,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		pi.setDead(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "isDead", false)));
 		pi.setIslandLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "islandLocation", "")));
 		pi.setOldPlayerLocation(this.getLocationString(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "oldLocation", this.getServer().getWorlds().get(0).getSpawnLocation())));
-		pi.setIsOnIsland(Boolean.parseBoolean(this.getStringbyPath(this.configPlayer, this.filePlayer, path + "isOnIsland", false)));
 		return pi;
 	}
 
@@ -461,7 +460,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			if (!(sender instanceof Player)) {
-				
+
 				return true;
 			}
 
@@ -488,7 +487,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				}
 				return this.playerNewIsland(player, s);
 			}
-		
+
 			player.sendMessage(this.pNameChat + Language.MSGS_WRONGARGS.sentence);
 			return true;
 		}
@@ -651,14 +650,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		if (!Data.ALLOWCONTENT) {
 			ismepty = this.checkIfPlayerInventoryEmpty(player);
 		}
-		if (!ismepty && pi.getIsOnIsland()) {
+		if (!ismepty && !this.isPlayerOnTower(player)) {
 			if (pi.getHasIsland()) {
 				player.sendMessage(this.pNameChat + Language.MSGS_NOEMPTYINVENTORYLEAVE.sentence);
 				return true;
 			}
 		}
 
-		pi.setIsOnIsland(false);
 		Location l = Data.PLAYERS.get(playerNr).getOldPlayerLocation();
 		if (l == null) {
 			player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
@@ -708,7 +706,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				CreateNewIsland isl = new CreateNewIsland(player);
 				pi.setIslandLocation(isl.Islandlocation);
 				pi.setHasIsland(true);
-				pi.setIsOnIsland(true);
 				Data.PLAYERS_NUMBER++;
 
 				// send message to all
@@ -718,7 +715,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				player.sendMessage(this.pNameChat + Language.MSGS_TONEWPLAYER.sentence);
 				return true;
 			} else {
-				pi.setIsOnIsland(true);
 				player.teleport(pi.getIslandLocation());
 				player.sendMessage(this.pNameChat + Language.MSGS_WELCOMEBACK.sentence + player.getName());
 				return true;
@@ -1041,6 +1037,17 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 		return -1;
+	}
+
+	public boolean isPlayerOnTower(Player player) {
+		int px = player.getLocation().getBlockX();
+		int pz = player.getLocation().getBlockZ();
+
+		if (px >= -20 && px <= 20 && pz >= -20 && pz <= 20) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private static void makeBlock(int x, int y, int z, Material m) {

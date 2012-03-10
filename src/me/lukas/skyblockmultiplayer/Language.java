@@ -12,7 +12,7 @@ public enum Language {
 	MSGS_ISNOWONLINE("msgs.isNowOnline", "Skyblock is now online."),
 	MSGS_MUSTBEOFFLINE("msgs.mustBeOffline", "Skyblock must be offline before you can reset it."),
 	MSGS_RESETING("msgs.reseting", "Reseting Skyblock..."),
-	MSGS_ISNOWRESETED("msgs.isNowRested", "Skyblock has been reseted."),
+	MSGS_ISNOWRESETED("msgs.isNowReseted", "Skyblock has been reseted."),
 	MSGS_CONFIGRELOADED("msgs.configReloaded", "Config has been reloaded."),
 	MSGS_LANGUAGERELOADED("msgs.languageReloaded", "Language has been reloaded."),
 	MSGS_LANGUAGECHANGED("msgs.languageChanged", "Language has been changed."),
