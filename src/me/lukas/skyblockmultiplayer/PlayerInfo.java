@@ -1,32 +1,40 @@
 package me.lukas.skyblockmultiplayer;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class PlayerInfo {
-	private boolean hasIsland;
-	private Location islandLocation;
-	private Player player;
-	private Location oldlocation;
-	private boolean isDead;
-	private SkyBlockMultiplayer plugin;
+public class PlayerInfo implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	public PlayerInfo(Player p, SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-		this.player = p;
+	private boolean hasIsland;
+	private String worldIsland;
+	private String playerName;
+	private int islandX, islandY, islandZ;
+	private String worldOld;
+	private int oldX, oldY, oldZ;
+	private boolean isDead;
+	private ArrayList<String> friends;
+
+	public PlayerInfo(Player p) {
+		this.playerName = p.getName();
 		this.hasIsland = false;
-		this.oldlocation = null;
-		if (!p.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) {
+		this.friends = new ArrayList<String>();
+		if (!p.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) {
 			this.setOldPlayerLocation(p.getLocation());
 		} else {
-			this.setOldPlayerLocation(this.plugin.getServer().getWorlds().get(0).getSpawnLocation());
+			this.setOldPlayerLocation(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
 		}
 		this.setDead(false);
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
 	}
 
 	public void setHasIsland(boolean b) {
 		this.hasIsland = b;
-		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".hasIsland", b);
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
 	}
 
 	public boolean getHasIsland() {
@@ -34,25 +42,20 @@ public class PlayerInfo {
 	}
 
 	public void setOldPlayerLocation(Location l) {
-		this.oldlocation = l;
-		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".oldLocation", this.plugin.getStringLocation(l));
+		this.worldOld = l.getWorld().getName();
+		this.oldX = l.getBlockX();
+		this.oldY = l.getBlockY();
+		this.oldZ = l.getBlockZ();
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
 	}
 
 	public Location getOldPlayerLocation() {
-		return this.oldlocation;
-	}
-
-	public Player getPlayer() {
-		return this.player;
-	}
-
-	public String getPlayerName() {
-		return this.player.getName();
+		return new Location(Bukkit.getServer().getWorld(this.worldOld), this.oldX, this.oldY, this.oldZ);
 	}
 
 	public void setDead(boolean b) {
 		this.isDead = b;
-		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".isDead", b);
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
 	}
 
 	public boolean isDead() {
@@ -60,11 +63,36 @@ public class PlayerInfo {
 	}
 
 	public void setIslandLocation(Location l) {
-		this.islandLocation = l;
-		this.plugin.setStringbyPath(this.plugin.configPlayer, this.plugin.filePlayer, "players." + this.getPlayerName() + ".islandLocation", this.plugin.getStringLocation(l));
+		this.worldIsland = l.getWorld().getName();
+		this.islandX = l.getBlockX();
+		this.islandY = l.getBlockY();
+		this.islandZ = l.getBlockZ();
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
 	}
 
 	public Location getIslandLocation() {
-		return this.islandLocation;
+		return new Location(Bukkit.getServer().getWorld(this.worldIsland), this.islandX, this.islandY, this.islandZ);
+	}
+
+	public void addFriend(String playerName) {
+		this.friends.add(playerName);
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
+	}
+
+	public void removeFriend(String playerName) {
+		this.friends.remove(playerName);
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
+	}
+
+	public ArrayList<String> getFriends() {
+		return this.friends;
+	}
+
+	public Player getPlayer() {
+		return Bukkit.getServer().getPlayer(this.playerName);
+	}
+
+	public String getPlayerName() {
+		return this.playerName;
 	}
 }

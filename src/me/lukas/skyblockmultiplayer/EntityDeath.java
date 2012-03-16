@@ -21,26 +21,22 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
-		Player p = (Player) ent;
-		if (!p.getWorld().equals(SkyBlockMultiplayer.getSkyblockIslands())) { // Exit, if player not on SkyBlock
+		Player player = (Player) ent;
+		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Exit, if player not on SkyBlock
 			return;
 		}
 
-		int playerNr = plugin.findPlayer(p.getName());
+		PlayerInfo pi = Data.PLAYERS.get(player.getName());
 
-		if (playerNr == -1) { // Check, if player is in playerlist (should be covered by function above)
+		if (pi == null) { // Check, if player is in playerlist
 			return;
 		}
 
-		PlayerInfo pi = Data.PLAYERS.get(playerNr);
-
-		if (!Data.PVP)
+		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD && Data.BUILD_RESPAWNWITHINVENTORY) {
+			Data.PLAYERINVENTORYS.put(player, player.getInventory().getContents());
+			Data.PLAYEREQUIPMENTS.put(player, player.getInventory().getArmorContents());
+			event.getDrops().clear();
 			return;
-
-		if (!Data.PVP) {
-			if (this.plugin.isPlayerOnTower(p)) {
-				return;
-			}
 		}
 
 		if (!pi.getHasIsland() || pi.isDead()) {
@@ -54,19 +50,19 @@ public class EntityDeath implements Listener {
 
 		Data.PLAYERS_NUMBER--;
 
-		for (PlayerInfo pinfo : Data.PLAYERS) {
+		for (PlayerInfo pinfo : Data.PLAYERS.values()) {
 			pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Data.PLAYERS_NUMBER + Language.MSGS_PLAYERDIED2.sentence);
 		}
 
 		if (Data.PLAYERS_NUMBER == 1) {
 			String winner = "";
-			for (PlayerInfo pinfo : Data.PLAYERS) {
+			for (PlayerInfo pinfo : Data.PLAYERS.values()) {
 				if (pinfo.isDead() == false) {
-					winner = pinfo.getPlayerName();
+					winner = pinfo.getPlayer().getName();
 				}
 			}
 
-			for (PlayerInfo pinfo : Data.PLAYERS) {
+			for (PlayerInfo pinfo : Data.PLAYERS.values()) {
 				pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
 			}
 			return;

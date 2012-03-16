@@ -3,11 +3,15 @@ package me.lukas.skyblockmultiplayer;
 public enum Config {
 
 	OPTIONS_ISLANDDISTANCE("options.islandDistance"),
-	OPTIONS_CHESTITEMS("options.chest.Items"),
+	OPTIONS_CHESTITEMS("options.chestItems"),
 	OPTIONS_SKYBLOCKONLINE("options.skyblockOnline"),
+	OPTIONS_ALLOWCONTENT("options.allowContent"),
+	OPTIONS_LANGUAGE("options.language"),
+	OPTIONS_GAMEMODE("options.gameMode"),
 	OPTIONS_PVP("options.pvp"),
-	OPTIONS_LANGUAGE("options.language"), 
-	OPTIONS_ALLOWCONTENT("options.allowContent");
+	OPTIONS_BUILD_SPAWNTOWER("options.build.spawnTower"),
+	OPTIONS_BUILD_RESPAWNWITHINVENTORY("options.build.respawnWithInventory"),
+	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea");
 
 	String path;
 

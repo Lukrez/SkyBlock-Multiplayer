@@ -1,12 +1,17 @@
 package me.lukas.skyblockmultiplayer;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public enum Permissions {
 	SKYBLOCK_SET("skyblock.set"),
 	SKYBLOCK_RESET("skyblock.reset"),
 	SKYBLOCK_NEWISLAND("skyblock.newisland"),
-	SKYBLOCK_RELOAD("skyblock.reload");
+	SKYBLOCK_RELOAD("skyblock.reload"),
+	SKYBLOCK_CHECK("skyblock.check"),
+	SKYBLOCK_JOIN("skyblock.join"),
+	SKYBLOCK_START("skyblock.start"),
+	SKYBLOCK_BUILD("skyblock.build");
 
 	private final String node;
 
@@ -16,5 +21,8 @@ public enum Permissions {
 
 	public boolean has(CommandSender sender) {
 		return sender.hasPermission(this.node) || sender.isOp();
+	}
+	public boolean has(Player player) {
+		return player.hasPermission(this.node) || player.isOp();
 	}
 }
