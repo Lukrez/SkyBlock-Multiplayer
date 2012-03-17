@@ -23,7 +23,7 @@ public class PlayerPlaceBlockListener implements Listener {
 		if (!Data.SKYBLOCK_ONLINE) {
 			return;
 		}
-		
+
 		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Check if player is in world SkyBlockMultiplayer
 			return;
 		}
@@ -58,7 +58,7 @@ public class PlayerPlaceBlockListener implements Listener {
 					event.setCancelled(true);
 					return;
 				}
-				if (this.canPlayerDoThat(pi, b.getLocation()) || pOwner.getFriends().contains(player.getName())) {
+				if (pOwner.getFriends().contains(player.getName())) {
 					return;
 				}
 				event.setCancelled(true);

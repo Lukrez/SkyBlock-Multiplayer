@@ -3,6 +3,8 @@ package me.lukas.skyblockmultiplayer;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.lukas.skyblockmultiplayer.Data.GAMEMODE;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
