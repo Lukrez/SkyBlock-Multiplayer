@@ -25,37 +25,67 @@ public class PlayerInteract implements Listener {
 		Block b = event.getClickedBlock();
 		ItemStack item = event.getItem();
 
-		if (item == null || action != Action.RIGHT_CLICK_BLOCK) {
+		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) {
 			return;
 		}
 
-		if (!item.getType().equals(Material.STICK)) {
-			return;
-		}
-		
-		
-
-		PlayerInfo owner = this.getOwner(b.getLocation());
-		if (owner == null) {
-			player.sendMessage("Free area or borders.");
+		if (item == null) {
 			return;
 		}
 
-		player.sendMessage("Owner: " + owner.getPlayerName());
-		String list = "";
-		for (int i = 0; i < owner.getFriends().size(); i++) {
-			if (i != 0) {
-				list += ", ";
+		if (item.getType().equals(Material.STICK)) {
+			if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+				PlayerInfo owner = null;
+				if (b == null) {
+					owner = this.getOwner(player.getLocation());
+				} else {
+					owner = this.getOwner(b.getLocation());
+				}
+
+				if (owner == null) {
+					player.sendMessage("Free area or borders.");
+					return;
+				}
+
+				player.sendMessage("Owner: " + owner.getPlayerName());
+				String list = "";
+				for (int i = 0; i < owner.getFriends().size(); i++) {
+					if (i != 0) {
+						list += ", ";
+					}
+					list += owner.getFriends().get(i);
+				}
+				player.sendMessage("Friends: " + list);
+				return;
 			}
-			list += owner.getFriends().get(i);
 		}
-		player.sendMessage("Friends: " + list);
+
+		PlayerInfo pi = Data.PLAYERS.get(player.getName());
+		PlayerInfo owner = Data.PLAYERS.get(player.getName());
+
+		if (owner == null) {
+			if (b == null) {
+				if (this.canPlayerDoThat(pi, player.getLocation())) {
+					return;
+				}
+				event.setCancelled(true);
+				return;
+			}
+			if (this.canPlayerDoThat(pi, b.getLocation())) {
+				return;
+			}
+			event.setCancelled(true);
+			return;
+		}
+		if (owner.getFriends().contains(player.getName())) {
+			return;
+		}
+		event.setCancelled(true);
 		return;
 	}
 
 	private PlayerInfo getOwner(Location l) {
 		for (PlayerInfo pi : Data.PLAYERS.values()) {
-
 			int islandX = pi.getIslandLocation().getBlockX();
 			int islandZ = pi.getIslandLocation().getBlockZ();
 
@@ -71,5 +101,22 @@ public class PlayerInteract implements Listener {
 			}
 		}
 		return null;
+	}
+
+	private boolean canPlayerDoThat(PlayerInfo pi, Location l) {
+		int islandX = pi.getIslandLocation().getBlockX();
+		int islandZ = pi.getIslandLocation().getBlockZ();
+
+		int blockX = l.getBlockX();
+		int blockZ = l.getBlockZ();
+
+		int dist = (Data.ISLAND_DISTANCE / 2) - 3;
+
+		if (islandX + dist >= blockX && islandX - dist <= blockX) {
+			if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

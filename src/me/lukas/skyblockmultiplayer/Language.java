@@ -71,10 +71,10 @@ public enum Language {
 	MSGS_NONAME("msgs.noName", "No player with this name exists."),
 	MSGS_BETTERSPECIFY("msgs.betterSpecify", "There are more players that begin with this name."),
 	MSGS_GAMEMODECHANGED("msgs.gameModeChanged", "Game mode has been changed."),
-	MSGS_BUILDERREMOVED("msgs.friendRemoved", "Friend removed"),
-	MSGS_BUILDERADDED("msgs.friendAdded", "Friend added"),
+	MSGS_FRIENDREMOVED("msgs.friendRemoved", "Friend removed"),
+	MSGS_FRIENDADDED("msgs.friendAdded", "Friend added"),
 	MSGS_NOTFRIENDFROMYOU("msgs.notFriendFromYou", "Not possible, you are not in the players home list!"),
-	MSGS_SOMEONEADDEDYOU("msgs.someoneAddedYou", " added you to his friend list.");
+	MSGS_SOMEONEADDEDYOU("msgs.playerAddedYou", " added you to his friend list.");
 
 	String path;
 	String sentence;

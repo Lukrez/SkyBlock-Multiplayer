@@ -20,9 +20,8 @@ public class Data {
 	public static enum GAMEMODE {
 		BUILD, PVP
 	}
-	public static GAMEMODE GAMEMODE_SELECTED;
 
-	public static boolean BUILD_SPAWNTOWER;
+	public static GAMEMODE GAMEMODE_SELECTED;
 	public static Map<Player, ItemStack[]> PLAYERINVENTORYS = new HashMap<Player, ItemStack[]>();
 	public static Map<Player, ItemStack[]> PLAYEREQUIPMENTS = new HashMap<Player, ItemStack[]>();
 	public static boolean BUILD_RESPAWNWITHINVENTORY;

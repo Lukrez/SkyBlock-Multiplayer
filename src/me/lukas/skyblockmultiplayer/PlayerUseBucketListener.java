@@ -24,43 +24,45 @@ public class PlayerUseBucketListener implements Listener {
 			return;
 		}
 
+		if (player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Check if player is in world SkyBlockMultiplayer
+			return;
+		}
+
 		if (Permissions.SKYBLOCK_BUILD.has(player)) {
 			return;
 		}
 
-		if (event.getPlayer().getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Check if player is in world SkyBlockMultiplayer
-			if (event.getPlayer().getLocation().getBlockX() >= -20 && event.getPlayer().getLocation().getBlockX() <= 20) {
-				if (event.getPlayer().getLocation().getBlockZ() >= -20 && event.getPlayer().getLocation().getBlockZ() <= 20) {
-					event.setCancelled(true);
-					return;
-				}
-			}
-
-			if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.PVP) {
+		if (event.getPlayer().getLocation().getBlockX() >= -20 && event.getPlayer().getLocation().getBlockX() <= 20) {
+			if (event.getPlayer().getLocation().getBlockZ() >= -20 && event.getPlayer().getLocation().getBlockZ() <= 20) {
+				event.setCancelled(true);
 				return;
 			}
+		}
 
-			if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
-				if (Data.BUILD_WITHPROTECTEDAREA) {
-					PlayerInfo pi = Data.PLAYERS.get(player.getName());
-					if (pi == null) {
-						return;
-					}
+		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.PVP) {
+			return;
+		}
 
-					PlayerInfo pOwner = this.getOwner(b.getLocation());
-					if (pOwner == null) {
-						if (this.canPlayerDoThat(pi, b.getLocation())) {
-							return;
-						}
-						event.setCancelled(true);
-						return;
-					}
-					if (this.canPlayerDoThat(pi, b.getLocation()) || pOwner.getFriends().contains(player.getName())) {
+		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
+			if (Data.BUILD_WITHPROTECTEDAREA) {
+				PlayerInfo pi = Data.PLAYERS.get(player.getName());
+				if (pi == null) {
+					return;
+				}
+
+				PlayerInfo pOwner = this.getOwner(b.getLocation());
+				if (pOwner == null) {
+					if (this.canPlayerDoThat(pi, b.getLocation())) {
 						return;
 					}
 					event.setCancelled(true);
 					return;
 				}
+				if (this.canPlayerDoThat(pi, b.getLocation()) || pOwner.getFriends().contains(player.getName())) {
+					return;
+				}
+				event.setCancelled(true);
+				return;
 			}
 		}
 	}
