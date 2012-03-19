@@ -588,6 +588,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			if (args[0].equalsIgnoreCase("home")) {
+				if(Data.GAMEMODE_SELECTED ==  Data.GAMEMODE.PVP) {
+					player.sendMessage(this.pName + Language.MSGS_ONLYINBUILDMODE.sentence);
+					return true;
+				}
+				
 				if (args.length == 1) {
 					PlayerInfo pi = Data.PLAYERS.get(player.getName());
 					if (pi == null) {
