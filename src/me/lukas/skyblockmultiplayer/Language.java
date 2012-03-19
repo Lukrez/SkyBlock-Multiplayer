@@ -74,10 +74,15 @@ public enum Language {
 	MSGS_FRIENDREMOVED("msgs.friendRemoved", "Friend removed"),
 	MSGS_FRIENDADDED("msgs.friendAdded", "Friend added"),
 	MSGS_NOTFRIENDFROMYOU("msgs.notFriendFromYou", "Not possible, you are not in the players home list!"),
-	MSGS_SOMEONEADDEDYOU("msgs.playerAddedYou", " added you to his friend list.");
+	MSGS_SOMEONEADDEDYOU("msgs.playerAddedYou", " added you to his friend list."),
+	MSGS_ISNOWCLOSED("msgs.isNowClosed", "SkyBlock is now closed."),
+	MSGS_ISNOWOPENED("msgs.isOpened", "SkyBlock is now open."),
+	MSGS_ISCLOSED("msgs.isNowClosed", "SkyBlock is closed."),
+	MSGS_ISOPENED("msgs.isOpened", "SkyBlock is open."),
+	MSGS_AREABORDERS("msgs.areaBorders", "Protected area or protected borders.");
 
-	String path;
-	String sentence;
+	public String path;
+	public String sentence;
 
 	private Language(String path, String sentence) {
 		this.path = path;

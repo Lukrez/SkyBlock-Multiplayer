@@ -8,10 +8,13 @@ public enum Config {
 	OPTIONS_ALLOWCONTENT("options.allowContent"),
 	OPTIONS_LANGUAGE("options.language"),
 	OPTIONS_GAMEMODE("options.gameMode"),
+	OPTIONS_WORLDNAME("options.worldName"),
+	OPTIONS_CLOSED("options.closed"),
 	OPTIONS_PVP("options.pvp"),
 	OPTIONS_BUILD_SPAWNTOWER("options.build.spawnTower"),
 	OPTIONS_BUILD_RESPAWNWITHINVENTORY("options.build.respawnWithInventory"),
-	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea");
+	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea"),
+	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl");
 
 	String path;
 

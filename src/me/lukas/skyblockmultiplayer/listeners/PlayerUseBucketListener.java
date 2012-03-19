@@ -1,4 +1,9 @@
-package me.lukas.skyblockmultiplayer;
+package me.lukas.skyblockmultiplayer.listeners;
+
+import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Permissions;
+import me.lukas.skyblockmultiplayer.PlayerInfo;
+import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -50,15 +55,20 @@ public class PlayerUseBucketListener implements Listener {
 					return;
 				}
 
-				PlayerInfo pOwner = this.getOwner(b.getLocation());
-				if (pOwner == null) {
+				PlayerInfo owner = this.getOwner(b.getLocation());
+				if (owner == null) {
 					if (this.canPlayerDoThat(pi, b.getLocation())) {
 						return;
 					}
 					event.setCancelled(true);
 					return;
 				}
-				if (this.canPlayerDoThat(pi, b.getLocation()) || pOwner.getFriends().contains(player.getName())) {
+
+				if (owner.getPlayerName().equalsIgnoreCase(player.getName())) {
+					return;
+				}
+
+				if (owner.getFriends().contains(player.getName())) {
 					return;
 				}
 				event.setCancelled(true);

@@ -1,24 +1,29 @@
-package me.lukas.skyblockmultiplayer;
+package me.lukas.skyblockmultiplayer.listeners;
+
+import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Permissions;
+import me.lukas.skyblockmultiplayer.PlayerInfo;
+import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
-public class PlayerBreackBlockListener implements Listener {
+public class PlayerPlaceBlockListener implements Listener {
 
 	SkyBlockMultiplayer plugin;
 
-	public PlayerBreackBlockListener(SkyBlockMultiplayer instance) {
+	public PlayerPlaceBlockListener(SkyBlockMultiplayer instance) {
 		this.plugin = instance;
 	}
 
 	@EventHandler
-	public void onBlockBreak(BlockBreakEvent event) {
+	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
-		Block b = event.getBlock();
+		Block b = event.getBlockPlaced();
 
 		if (!Data.SKYBLOCK_ONLINE) {
 			return;
@@ -47,18 +52,24 @@ public class PlayerBreackBlockListener implements Listener {
 			if (Data.BUILD_WITHPROTECTEDAREA) {
 				PlayerInfo pi = Data.PLAYERS.get(player.getName());
 				if (pi == null) {
+					event.setCancelled(true);
 					return;
 				}
 
-				PlayerInfo pOwner = this.getOwner(b.getLocation());
-				if (pOwner == null) {
+				PlayerInfo owner = this.getOwner(b.getLocation());
+				if (owner == null) {
 					if (this.canPlayerDoThat(pi, b.getLocation())) {
 						return;
 					}
 					event.setCancelled(true);
 					return;
 				}
-				if (this.canPlayerDoThat(pi, b.getLocation()) || pOwner.getFriends().contains(player.getName())) {
+
+				if (owner.getPlayerName().equalsIgnoreCase(player.getName())) {
+					return;
+				}
+
+				if (owner.getFriends().contains(player.getName())) {
 					return;
 				}
 				event.setCancelled(true);
@@ -74,7 +85,7 @@ public class PlayerBreackBlockListener implements Listener {
 		int blockX = l.getBlockX();
 		int blockZ = l.getBlockZ();
 
-		int dist = Data.ISLAND_DISTANCE / 2 - 3;
+		int dist = (Data.ISLAND_DISTANCE / 2) - 3;
 
 		if (islandX + dist >= blockX && islandX - dist <= blockX) {
 			if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {

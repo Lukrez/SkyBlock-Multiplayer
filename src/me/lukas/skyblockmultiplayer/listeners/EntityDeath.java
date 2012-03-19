@@ -1,5 +1,9 @@
-package me.lukas.skyblockmultiplayer;
+package me.lukas.skyblockmultiplayer.listeners;
 
+import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Language;
+import me.lukas.skyblockmultiplayer.PlayerInfo;
+import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,20 +26,23 @@ public class EntityDeath implements Listener {
 		}
 
 		Player player = (Player) ent;
-		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Exit, if player not on SkyBlock
+		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Exit, if player not in SkyBlock
 			return;
 		}
 
 		PlayerInfo pi = Data.PLAYERS.get(player.getName());
-
 		if (pi == null) { // Check, if player is in playerlist
 			return;
 		}
 
 		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD && Data.BUILD_RESPAWNWITHINVENTORY) {
-			Data.PLAYERINVENTORYS.put(player, player.getInventory().getContents());
-			Data.PLAYEREQUIPMENTS.put(player, player.getInventory().getArmorContents());
+			pi.setContentsInventory(player.getInventory().getContents());
+			pi.setContentsArmor(player.getInventory().getArmorContents());
 			event.getDrops().clear();
+			return;
+		}
+
+		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
 			return;
 		}
 
@@ -45,13 +52,16 @@ public class EntityDeath implements Listener {
 
 		pi.setDead(true);
 
-		if (Data.PLAYERS_NUMBER < 1)
+		if (Data.PLAYERS_NUMBER < 1) {
 			return;
+		}
 
 		Data.PLAYERS_NUMBER--;
 
-		for (PlayerInfo pinfo : Data.PLAYERS.values()) {
-			pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Data.PLAYERS_NUMBER + Language.MSGS_PLAYERDIED2.sentence);
+		for (PlayerInfo pInfo : Data.PLAYERS.values()) {
+			if (pInfo.getPlayer() != null) {
+				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Data.PLAYERS_NUMBER + Language.MSGS_PLAYERDIED2.sentence);
+			}
 		}
 
 		if (Data.PLAYERS_NUMBER == 1) {
@@ -62,11 +72,12 @@ public class EntityDeath implements Listener {
 				}
 			}
 
-			for (PlayerInfo pinfo : Data.PLAYERS.values()) {
-				pinfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
+			for (PlayerInfo pInfo : Data.PLAYERS.values()) {
+				if (pInfo.getPlayer() != null) {
+					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
+				}
 			}
 			return;
 		}
-
 	}
 }

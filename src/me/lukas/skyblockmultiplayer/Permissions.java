@@ -22,6 +22,7 @@ public enum Permissions {
 	public boolean has(CommandSender sender) {
 		return sender.hasPermission(this.node) || sender.isOp();
 	}
+
 	public boolean has(Player player) {
 		return player.hasPermission(this.node) || player.isOp();
 	}

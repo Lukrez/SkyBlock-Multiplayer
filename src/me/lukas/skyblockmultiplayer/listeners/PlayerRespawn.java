@@ -1,5 +1,8 @@
-package me.lukas.skyblockmultiplayer;
+package me.lukas.skyblockmultiplayer.listeners;
 
+import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.PlayerInfo;
+import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,21 +34,25 @@ public class PlayerRespawn implements Listener {
 			return;
 		}
 
-		if (Data.BUILD_RESPAWNWITHINVENTORY) {
-			if (Data.PLAYERINVENTORYS.containsKey(player)) {
-				player.getInventory().setContents(Data.PLAYERINVENTORYS.get(player));
+		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD && Data.BUILD_RESPAWNWITHINVENTORY) {
+			if (pi.getContentsInventory() != null) {
+				player.getInventory().setContents(pi.getContentsInventory());
 			}
 
-			if (Data.PLAYEREQUIPMENTS.containsKey(player)) {
-				player.getInventory().setArmorContents(Data.PLAYEREQUIPMENTS.get(player));
+			if (pi.getContentsArmor() != null) {
+				player.getInventory().setArmorContents(pi.getContentsArmor());
 			}
 		}
 
-		if (player.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+		if (player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) {
 			if (pi.getIslandLocation() != null) {
 				event.setRespawnLocation(pi.getIslandLocation());
 			} else {
-				event.setRespawnLocation(pi.getOldPlayerLocation());
+				if (pi.getOldPlayerLocation() != null) {
+					event.setRespawnLocation(pi.getOldPlayerLocation());
+				} else {
+					event.setRespawnLocation(this.plugin.getServer().getWorlds().get(0).getSpawnLocation());
+				}
 			}
 		}
 	}
