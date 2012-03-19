@@ -79,7 +79,8 @@ public enum Language {
 	MSGS_ISNOWOPENED("msgs.isOpened", "SkyBlock is now open."),
 	MSGS_ISCLOSED("msgs.isNowClosed", "SkyBlock is closed."),
 	MSGS_ISOPENED("msgs.isOpened", "SkyBlock is open."),
-	MSGS_AREABORDERS("msgs.areaBorders", "Protected area or protected borders.");
+	MSGS_AREABORDERS("msgs.areaBorders", "Protected area or protected borders."),
+	MSGS_ONLYINBUILDMODE("msgs.onlyInBuildMode", "This works only in build mode!");
 
 	public String path;
 	public String sentence;
