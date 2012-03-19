@@ -33,41 +33,40 @@ public class CreateNewIsland {
 	}
 
 	public Location getIslandPosition(int n) {
-		//System.out.println("Erstelle Inselnr.: "+N);
+		//System.out.println("Erstelle Inselnr.: "+n);
 		int posX, posZ;
 		// Suche den momentanen Ring
-		int R = (int) (0.5 + Math.sqrt(n / 2.0 - 0.25));
-		//System.out.println("Insel befindet sich in Ringnr "+R);
+		int r = (int) (0.5 + Math.sqrt(n / 2.0 - 0.25));
+		//System.out.println("Insel befindet sich in Ringnr "+r);
 		// Bestimme die Anzahl bereits vorhanderer Inseln auf dem Ring
-		int NaufRing = n - 2 * R * (R - 1);
-		//System.out.println("Die Insel ist im Ring die "+NaufRing+" Insel.");
+		int naufRing = n - 2 * r * (r - 1);
+		//System.out.println("Die Insel ist im Ring die "+naufRing+" Insel.");
 		// Bestimmen der Seite auf dem Ring
-		int Seite = (int) (Math.ceil(NaufRing / (double) R));
-		//System.out.println("Die Insel befindet sich auf der "+Seite+" Seite.");
+		int seite = (int) (Math.ceil(naufRing / (double) r));
+		//System.out.println("Die Insel befindet sich auf der "+seite+" Seite.");
 		// Bestimme die Position der Insel auf der Seite
-		int PosSeite = NaufRing - (Seite - 1) * R - 1;
-		//System.out.println("und ist auf der Seite die "+PosSeite+" Insel.");
+		int posSeite = naufRing - (seite - 1) * r - 1;
+		//System.out.println("und ist auf der Seite die "+posSeite+" Insel.");
 		//System.out.println("Die Inseldistanz ist "+CreateNewIsland.IslandDistance);
 		// Berechne die Positionen
-		if (Seite == 1) {
-			posX = (PosSeite - R) * Data.ISLAND_DISTANCE;
-			posZ = -PosSeite * Data.ISLAND_DISTANCE;
-
-		} else if (Seite == 2) {
-			posX = PosSeite * Data.ISLAND_DISTANCE;
-			posZ = (PosSeite - R) * Data.ISLAND_DISTANCE;
-		} else if (Seite == 3) {
-			posX = (R - PosSeite) * Data.ISLAND_DISTANCE;
-			posZ = PosSeite * Data.ISLAND_DISTANCE;
+		if (seite == 1) {
+			posX = (posSeite - r) * Data.ISLAND_DISTANCE;
+			posZ = -posSeite * Data.ISLAND_DISTANCE;
+		} else if (seite == 2) {
+			posX = posSeite * Data.ISLAND_DISTANCE;
+			posZ = (posSeite - r) * Data.ISLAND_DISTANCE;
+		} else if (seite == 3) {
+			posX = (r - posSeite) * Data.ISLAND_DISTANCE;
+			posZ = posSeite * Data.ISLAND_DISTANCE;
 		} else {
-			posX = -PosSeite * Data.ISLAND_DISTANCE;
-			posZ = (R - PosSeite) * Data.ISLAND_DISTANCE;
+			posX = -posSeite * Data.ISLAND_DISTANCE;
+			posZ = (r - posSeite) * Data.ISLAND_DISTANCE;
 		}
 		//System.out.println("Die Insel befindet sich auf "+posX+" in X-Richtung.");
 		//System.out.println("Die Insel befindet sich auf "+posZ+" in Z-Richtung.");
 
 		// Erstelle Location
-		return new Location(SkyBlockMultiplayer.getSkyblockIslands(), posX, posY, posZ);
+		return new Location(SkyBlockMultiplayer.getSkyBlockWorld(), posX, CreateNewIsland.posY, posZ);
 	}
 
 	private void createIsland(Location l) {
@@ -78,14 +77,14 @@ public class CreateNewIsland {
 		// Ersetze Erde durch Sand
 		for (int x = 2; x <= 4; x++) {
 			for (int z = -1; z <= 1; z++) {
-				SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(x + l.getBlockX(), 62, z + l.getBlockZ()).setType(Material.SAND);
+				SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(x + l.getBlockX(), 62, z + l.getBlockZ()).setType(Material.SAND);
 			}
 		}
 		//Erstelle oberste Grassebene
 		createLayer(l, 63, Material.GRASS);
 
 		// Erstelle Chest		
-		Block block = SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(0 + l.getBlockX(), 64, 4 + l.getBlockZ());
+		Block block = SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(0 + l.getBlockX(), 64, 4 + l.getBlockZ());
 		block.setType(Material.CHEST);
 		Chest chest = (Chest) block.getState();
 		chest.getBlock().setData((byte) 2);
@@ -100,22 +99,22 @@ public class CreateNewIsland {
 
 		// Erstelle Baum
 		//SkyBlockMultiplayer.getSkyblockIslands().generateTree(new Location(SkyBlockMultiplayer.getSkyblockIslands(), 5 + l.getBlockX(), 64, l.getBlockZ()), TreeType.TREE);
-		this.createTree(new Location(SkyBlockMultiplayer.getSkyblockIslands(), 5 + l.getBlockX(), 64, l.getBlockZ()));
+		this.createTree(new Location(SkyBlockMultiplayer.getSkyBlockWorld(), 5 + l.getBlockX(), 64, l.getBlockZ()));
 
 		// Setze Bedrock
-		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(l.getBlockX(), l.getBlockY() - 3, l.getBlockZ()).setType(Material.BEDROCK);
+		SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(l.getBlockX(), l.getBlockY() - 3, l.getBlockZ()).setType(Material.BEDROCK);
 
 	}
 
 	private void createLayer(Location l, int y, Material m) {
 		for (int x = -1; x <= 6; x++) {
 			for (int z = -1; z <= 1; z++) {
-				SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
+				SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
 			}
 		}
 		for (int x = -1; x <= 1; x++) {
 			for (int z = 2; z <= 4; z++) {
-				SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
+				SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(x + l.getBlockX(), y, z + l.getBlockZ()).setType(m);
 			}
 		}
 	}
@@ -133,7 +132,7 @@ public class CreateNewIsland {
 
 		for (int y = 0; y <= 4; y++) {
 			if (y != 4) {
-				SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(px, py + y, pz).setType(itemWood.getType());
+				SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(px, py + y, pz).setType(itemWood.getType());
 			}
 
 			if (y != 0) {
@@ -141,24 +140,24 @@ public class CreateNewIsland {
 					for (int z = -2; z <= 2; z++) {
 						if (y != 4) {
 							if (x != 0 || z != 0) {
-								SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(px + x, py + y, pz + z).setType(itemLeaves.getType());
+								SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(px + x, py + y, pz + z).setType(itemLeaves.getType());
 							}
 						} else if (Math.abs(x) != 2 && Math.abs(z) != 2) {
-							SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(px + x, py + y, pz + z).setType(itemLeaves.getType());
+							SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(px + x, py + y, pz + z).setType(itemLeaves.getType());
 						}
 					}
 				}
 			}
 		}
 
-		SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(px, py + 5, pz).setType(itemLeaves.getType());
+		SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(px, py + 5, pz).setType(itemLeaves.getType());
 	}
 
 	private boolean checkIfOccupied(Location l) {
 		for (int x = -5; x <= 5; x++) {
 			for (int y = -5; y <= 5; y++) {
 				for (int z = -5; z <= 5; z++) {
-					if (!SkyBlockMultiplayer.getSkyblockIslands().getBlockAt(l.getBlockX() + x, l.getBlockY() + y, l.getBlockZ() + z).getType().equals(Material.AIR)) {
+					if (!SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(l.getBlockX() + x, l.getBlockY() + y, l.getBlockZ() + z).getType().equals(Material.AIR)) {
 						return true;
 					}
 				}
