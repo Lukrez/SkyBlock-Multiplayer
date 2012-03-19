@@ -29,7 +29,6 @@ public class Data {
 
 	/** Gamemode is build **/
 	public static boolean BUILD_RESPAWNWITHINVENTORY; // If true save contents of player in SkyBlock in Death
-
 	public static boolean BUILD_WITHPROTECTEDAREA; // If true, protected Area around of the island and a player can not do anything on another island
 	public static boolean BUILD_ALLOW_ENDERPEARL; // If true, player can use ender pearl
 }

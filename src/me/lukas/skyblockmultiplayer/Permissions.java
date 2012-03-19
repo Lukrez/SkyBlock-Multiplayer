@@ -8,9 +8,7 @@ public enum Permissions {
 	SKYBLOCK_RESET("skyblock.reset"),
 	SKYBLOCK_NEWISLAND("skyblock.newisland"),
 	SKYBLOCK_RELOAD("skyblock.reload"),
-	SKYBLOCK_CHECK("skyblock.check"),
 	SKYBLOCK_JOIN("skyblock.join"),
-	SKYBLOCK_START("skyblock.start"),
 	SKYBLOCK_BUILD("skyblock.build");
 
 	private final String node;
