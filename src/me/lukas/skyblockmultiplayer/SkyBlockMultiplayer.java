@@ -588,11 +588,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			if (args[0].equalsIgnoreCase("home")) {
-				if(Data.GAMEMODE_SELECTED ==  Data.GAMEMODE.PVP) {
+				if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.PVP) {
 					player.sendMessage(this.pName + Language.MSGS_ONLYINBUILDMODE.sentence);
 					return true;
 				}
-				
+
 				if (args.length == 1) {
 					PlayerInfo pi = Data.PLAYERS.get(player.getName());
 					if (pi == null) {
@@ -1015,6 +1015,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
+		if (Permissions.SKYBLOCK_JOIN.has(player)) {
+			return this.notAuthorized(player);
+		}
+
 		if (Data.CLOSED) {
 			player.sendMessage(this.pName + Language.MSGS_ISCLOSED.sentence);
 			return true;
@@ -1221,18 +1225,25 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		String sb_setOffline = Language.MSGS_CMDSETOFFLINE.sentence + "\n";
 		String sb_setOnline = Language.MSGS_CMDSETONLINE.sentence + "\n";
 		String sb_setLanguage = Language.MSGS_CMDSETLANGUAGE.sentence + "\n";
-		String sb_setPVP = Language.MSGS_CMDSETPVP.sentence + "\n";
+		String sb_setGameMode = Language.MSGS_CMDSETGAMEMODE.sentence + "\n";
 		String sb_reset = Language.MSGS_CMDRESET.sentence + "\n";
 		String sb_reload_config = Language.MSGS_CMDRELOADCONFIG.sentence + "\n";
 		String sb_reload_language = Language.MSGS_CMDRELOADLANGUAGE.sentence + "\n";
-		String sb_status = Language.MSGS_CMDSTATUS.sentence;
+		String sb_status = Language.MSGS_CMDSTATUS.sentence + "\n";
+		String sb_home = Language.MSGS_CMDHOME.sentence + "\n";
+		String sb_home_add = Language.MSGS_CMDHOMEADD.sentence + "\n";
+		String sb_home_remove = Language.MSGS_CMDHOMEREMOVE.sentence + "\n";
+		String sb_home_join = Language.MSGS_CMDHOMEJOIN.sentence + "\n";
+		String sb_home_list = Language.MSGS_CMDHOMELIST.sentence + "\n";
+		String sb_closed = Language.MSGS_CMDSETCLOSED.sentence + "\n";
+		String sb_opened = Language.MSGS_CMDSETOPENED.sentence + "\n";
 
-		String ret = sb_info + sb + sb_start + sb_leave;
+		String ret = sb_info + sb + sb_start + sb_leave + sb_home + sb_home_add + sb_home_remove + sb_home_join + sb_home_list;
 		if (Permissions.SKYBLOCK_NEWISLAND.has(sender)) {
 			ret += sb_newisland;
 		}
 		if (Permissions.SKYBLOCK_SET.has(sender)) {
-			ret += sb_setOnline + sb_setOffline + sb_setLanguage + sb_setPVP;
+			ret += sb_setOnline + sb_setOffline + sb_setLanguage + sb_setGameMode + sb_closed + sb_opened;
 		}
 		if (Permissions.SKYBLOCK_RESET.has(sender)) {
 			ret += sb_reset;
