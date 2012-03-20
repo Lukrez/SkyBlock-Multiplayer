@@ -1015,7 +1015,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
-		if (Permissions.SKYBLOCK_JOIN.has(player)) {
+		if (!Permissions.SKYBLOCK_JOIN.has(player)) {
 			return this.notAuthorized(player);
 		}
 
