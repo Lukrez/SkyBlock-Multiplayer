@@ -8,6 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class EntityDeath implements Listener {
@@ -43,6 +44,11 @@ public class EntityDeath implements Listener {
 		}
 
 		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
+			if (event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID) {
+				player.teleport(player.getWorld().getSpawnLocation());
+				player.setHealth(player.getMaxHealth());
+				return;
+			}
 			return;
 		}
 

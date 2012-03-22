@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import me.lukas.skyblockmultiplayer.listeners.EntityDeath;
 import me.lukas.skyblockmultiplayer.listeners.PlayerInteract;
 import me.lukas.skyblockmultiplayer.listeners.PlayerRespawn;
+import me.lukas.skyblockmultiplayer.listeners.PlayerTeleport;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -50,7 +52,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 	public File directoryPlayers;
 
-	private String pName;
+	public String pName;
 
 	@Override
 	public void onDisable() {
@@ -163,6 +165,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		manager.registerEvents(new EntityDeath(this), this);
 		manager.registerEvents(new PlayerRespawn(this), this);
 		manager.registerEvents(new PlayerInteract(this), this);
+		manager.registerEvents(new PlayerTeleport(this), this);
 	}
 
 	/**
@@ -199,6 +202,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Data.BUILD_RESPAWNWITHINVENTORY = true;
 			Data.BUILD_WITHPROTECTEDAREA = false;
 			Data.BUILD_ALLOW_ENDERPEARL = false;
+			Data.SPAWNTOWER_RECREATE = true;
 
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_ISLANDDISTANCE.path, 50);
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_CHESTITEMS.path, items);
@@ -207,9 +211,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_LANGUAGE.path, "english");
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_GAMEMODE.path, "build");
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_WORLDNAME.path, this.pluginFile.getName());
+			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SPAWNTOWER_RECREATE.path, false);
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_CLOSED.path, false);
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_PVP.path, "");
-			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_BUILD_SPAWNTOWER.path, true);
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_BUILD_RESPAWNWITHINVENTORY.path, true);
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_BUILD_WITHPROTECTEDAREA.path, true);
 			this.setStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_BUILD_ALLOWENDERPEARL.path, false);
@@ -264,6 +268,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Data.BUILD_ALLOW_ENDERPEARL = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_BUILD_ALLOWENDERPEARL.path, false, true));
 			Data.WORLDNAME = this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_WORLDNAME.path, this.pluginFile.getName(), true);
 			Data.CLOSED = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_CLOSED.path, false, true));
+			Data.SPAWNTOWER_RECREATE = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.fileConfig, Config.OPTIONS_SPAWNTOWER_RECREATE.path, false, true));
 		}
 	}
 
@@ -465,7 +470,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	public static World getSkyBlockWorld() {
 		if (skyBlockWorld == null) {
 			skyBlockWorld = WorldCreator.name(Data.WORLDNAME).type(WorldType.NORMAL).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
+			//if (Data.SPAWNTOWER_RECREATE) {
 			SkyBlockMultiplayer.createSpawnTower();
+			//}
 			skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
 		}
 		return skyBlockWorld;
@@ -862,7 +869,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		if (Data.PLAYERS_NUMBER > 1) {
 			Data.PLAYERS_NUMBER--;
 		}
-		player.sendMessage(this.pName + Language.MSGS_NEWISLANDPLAYER1.sentence + pi.getPlayer() + Language.MSGS_NEWISLANDPLAYER2.sentence);
+		player.sendMessage(this.pName + Language.MSGS_NEWISLANDPLAYER1.sentence + pi.getPlayer().getName() + Language.MSGS_NEWISLANDPLAYER2.sentence);
 		pi.getPlayer().sendMessage(this.pName + Language.MSGS_GOTNEWISLAND1.sentence + player.getName() + Language.MSGS_GOTNEWISLAND2.sentence);
 		return true;
 	}
@@ -879,36 +886,43 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 
 		PlayerInfo pi = Data.PLAYERS.get(player.getName());
+
+		if (!Data.ALLOWCONTENT) {
+			if (!this.isPlayerOnTower(player)) {
+				pi.setContentsInventory(player.getInventory().getContents());
+				pi.setContentsArmor(player.getInventory().getArmorContents());
+				player.getInventory().clear();
+				this.clearArmorContents(player);
+			}
+		}
+
 		if (pi == null) {
 			player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
 			player.sendMessage(this.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
 			return true;
 		}
 
-		boolean ismepty = true;
-		if (!Data.ALLOWCONTENT) {
-			ismepty = this.checkIfPlayerInventoryEmpty(player);
-		}
-		if (!ismepty && !this.isPlayerOnTower(player)) {
-			if (pi.getHasIsland()) {
-				player.sendMessage(this.pName + Language.MSGS_NOEMPTYINVENTORYLEAVE.sentence);
-				return true;
-			}
-		}
-
 		Location l = pi.getOldPlayerLocation();
+		boolean tpWorked = true;
 		if (l == null) {
-			player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
+			tpWorked = player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
 		} else {
 			player.teleport(l);
 		}
 
-		if (pi.getIslandLocation() == null) {
-			Data.PLAYERS.remove(player.getName());
-		}
+		if (tpWorked) {
+			if (pi.getIslandLocation() == null) {
+				Data.PLAYERS.remove(player.getName());
+			}
 
-		player.sendMessage(this.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
+			player.sendMessage(this.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
+		}
 		return true;
+	}
+
+	public void clearArmorContents(Player player) {
+		ItemStack[] items = new ItemStack[player.getInventory().getArmorContents().length];
+		player.getInventory().setArmorContents(items);
 	}
 
 	/**
@@ -929,10 +943,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		PlayerInfo pi = Data.PLAYERS.get(player.getName());
 		if (pi == null) { // if player not in list, add him
-			pi = new PlayerInfo(player.getName());
-			pi.setOldPlayerLocation(this.getServer().getWorlds().get(0).getSpawnLocation());
-			Data.PLAYERS.put(player.getName(), pi);
-			pi = Data.PLAYERS.get(player.getName());
+			pi = this.readPlayerFile(player.getName());
+			if (pi == null) {
+				pi = new PlayerInfo(player.getName());
+				pi.setOldPlayerLocation(this.getServer().getWorlds().get(0).getSpawnLocation());
+				Data.PLAYERS.put(player.getName(), pi);
+				pi = Data.PLAYERS.get(player.getName());
+			}
 		}
 
 		boolean isempty = true;
@@ -943,14 +960,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		if (!isempty) {
 			player.sendMessage(this.pName + Language.MSGS_NOEMPTYINVENTORYSTART.sentence);
 			return true;
-		}
-
-		if (pi.getContentsInventory() != null) {
-			player.getInventory().setContents(pi.getContentsInventory());
-		}
-
-		if (pi.getContentsArmor() != null) {
-			player.getInventory().setArmorContents(pi.getContentsArmor());
 		}
 
 		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
@@ -971,6 +980,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				return true;
 			}
 
+			if (!Data.ALLOWCONTENT) {
+				player.getInventory().setContents(pi.getContentsInventory());
+				player.getInventory().setArmorContents(pi.getContentsArmor());
+			}
 			player.teleport(pi.getIslandLocation());
 			player.sendMessage(this.pName + Language.MSGS_WELCOMEBACK.sentence + player.getName());
 			return true;
@@ -981,6 +994,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				player.sendMessage(this.pName + Language.MSGS_HADAISLAND.sentence);
 				return true;
 			}
+
+			player.getInventory().setContents(pi.getContentsInventory());
+			player.getInventory().setArmorContents(pi.getContentsArmor());
 			// teleport player
 			player.teleport(pi.getIslandLocation());
 			player.sendMessage(this.pName + Language.MSGS_WELCOMEBACK.sentence + player.getName() + ".");

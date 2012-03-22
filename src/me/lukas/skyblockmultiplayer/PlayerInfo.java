@@ -161,7 +161,7 @@ public class PlayerInfo implements Serializable {
 	public ItemStack[] getContentsArmor() {
 		ItemStack[] items = new ItemStack[this.contentsArmor.size()];
 		for (int i = 0; i < items.length; i++) {
-			String s = this.contentsInventory.get(i);
+			String s = this.contentsArmor.get(i);
 			if (!s.equalsIgnoreCase("")) {
 				items[i] = this.parseStringToItemStack(this.contentsArmor.get(i));
 			}

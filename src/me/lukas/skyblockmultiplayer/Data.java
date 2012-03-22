@@ -14,7 +14,8 @@ public class Data {
 	public static String WORLDNAME; // The world name of the world and the world folder
 	public static boolean SKYBLOCK_ONLINE; // SkyBlock online or offline
 	public static int ISLAND_DISTANCE; // Distance between the player spawn locations
-	public static boolean CLOSED;
+	public static boolean CLOSED; // lock SkyBlock to maximize the amount of players
+	public static boolean SPAWNTOWER_RECREATE;
 
 	/** Needed for plugin **/
 	public static Map<String, PlayerInfo> PLAYERS = new HashMap<String, PlayerInfo>(); // Key = Player, value PlayerInfo

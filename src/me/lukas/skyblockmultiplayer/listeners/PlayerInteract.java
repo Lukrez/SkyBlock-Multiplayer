@@ -32,6 +32,10 @@ public class PlayerInteract implements Listener {
 		Block b = event.getClickedBlock();
 		ItemStack item = event.getItem();
 
+		if (!Data.SKYBLOCK_ONLINE) {
+			return;
+		}
+
 		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) {
 			return;
 		}
@@ -125,17 +129,21 @@ public class PlayerInteract implements Listener {
 
 	private PlayerInfo getOwner(Location l) {
 		for (PlayerInfo pi : Data.PLAYERS.values()) {
-			int islandX = pi.getIslandLocation().getBlockX();
-			int islandZ = pi.getIslandLocation().getBlockZ();
+			if (pi != null) {
+				if (pi.getIslandLocation() != null) {
+					int islandX = pi.getIslandLocation().getBlockX();
+					int islandZ = pi.getIslandLocation().getBlockZ();
 
-			int blockX = l.getBlockX();
-			int blockZ = l.getBlockZ();
+					int blockX = l.getBlockX();
+					int blockZ = l.getBlockZ();
 
-			int dist = (Data.ISLAND_DISTANCE / 2) - 3;
+					int dist = (Data.ISLAND_DISTANCE / 2) - 3;
 
-			if (islandX + dist >= blockX && islandX - dist <= blockX) {
-				if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
-					return pi;
+					if (islandX + dist >= blockX && islandX - dist <= blockX) {
+						if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
+							return pi;
+						}
+					}
 				}
 			}
 		}
