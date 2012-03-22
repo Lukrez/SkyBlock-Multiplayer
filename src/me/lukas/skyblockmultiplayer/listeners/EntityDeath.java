@@ -1,6 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Language;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
@@ -31,19 +31,28 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Data.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.PLAYERS.get(player.getName());
 		if (pi == null) { // Check, if player is in playerlist
 			return;
 		}
 
-		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD && Data.BUILD_RESPAWNWITHINVENTORY) {
+		if (this.plugin.playerIsOnTower(player)) {
+			if(pi.getIslandLocation() == null) {
+				pi.setContentsInventory(player.getInventory().getContents());
+				pi.setContentsArmor(player.getInventory().getArmorContents());
+				event.getDrops().clear();
+			}
+			return;
+		}
+
+		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD && Settings.build_respawnWithInventory) {
 			pi.setContentsInventory(player.getInventory().getContents());
 			pi.setContentsArmor(player.getInventory().getArmorContents());
 			event.getDrops().clear();
 			return;
 		}
 
-		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
+		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
 			if (event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID) {
 				player.teleport(player.getWorld().getSpawnLocation());
 				player.setHealth(player.getMaxHealth());
@@ -58,27 +67,27 @@ public class EntityDeath implements Listener {
 
 		pi.setDead(true);
 
-		if (Data.PLAYERS_NUMBER < 1) {
+		if (Settings.numbersPlayers < 1) {
 			return;
 		}
 
-		Data.PLAYERS_NUMBER--;
+		Settings.numbersPlayers--;
 
-		for (PlayerInfo pInfo : Data.PLAYERS.values()) {
+		for (PlayerInfo pInfo : Settings.PLAYERS.values()) {
 			if (pInfo.getPlayer() != null) {
-				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Data.PLAYERS_NUMBER + Language.MSGS_PLAYERDIED2.sentence);
+				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYERDIED2.sentence);
 			}
 		}
 
-		if (Data.PLAYERS_NUMBER == 1) {
+		if (Settings.numbersPlayers == 1) {
 			String winner = "";
-			for (PlayerInfo pinfo : Data.PLAYERS.values()) {
+			for (PlayerInfo pinfo : Settings.PLAYERS.values()) {
 				if (pinfo.isDead() == false) {
 					winner = pinfo.getPlayer().getName();
 				}
 			}
 
-			for (PlayerInfo pInfo : Data.PLAYERS.values()) {
+			for (PlayerInfo pInfo : Settings.PLAYERS.values()) {
 				if (pInfo.getPlayer() != null) {
 					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
 				}

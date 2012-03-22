@@ -1,6 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Permissions;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
@@ -24,7 +24,7 @@ public class PlayerBreackBlockListener implements Listener {
 		Player player = event.getPlayer();
 		Block b = event.getBlock();
 
-		if (!Data.SKYBLOCK_ONLINE) {
+		if (!Settings.skyBlockOnline) {
 			return;
 		}
 
@@ -43,13 +43,13 @@ public class PlayerBreackBlockListener implements Listener {
 			}
 		}
 
-		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.PVP) {
+		if (Settings.gameModeSelected == Settings.GAMEMODE.PVP) {
 			return;
 		}
 
-		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
-			if (Data.BUILD_WITHPROTECTEDAREA) {
-				PlayerInfo pi = Data.PLAYERS.get(player.getName());
+		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
+			if (Settings.build_withProtectedArea) {
+				PlayerInfo pi = Settings.PLAYERS.get(player.getName());
 				if (pi == null) {
 					return;
 				}
@@ -83,7 +83,7 @@ public class PlayerBreackBlockListener implements Listener {
 		int blockX = l.getBlockX();
 		int blockZ = l.getBlockZ();
 
-		int dist = Data.ISLAND_DISTANCE / 2 - 3;
+		int dist = Settings.distanceIslands / 2 - 3;
 
 		if (islandX + dist >= blockX && islandX - dist <= blockX) {
 			if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
@@ -94,14 +94,14 @@ public class PlayerBreackBlockListener implements Listener {
 	}
 
 	private PlayerInfo getOwner(Location l) {
-		for (PlayerInfo pi : Data.PLAYERS.values()) {
+		for (PlayerInfo pi : Settings.PLAYERS.values()) {
 			int islandX = pi.getIslandLocation().getBlockX();
 			int islandZ = pi.getIslandLocation().getBlockZ();
 
 			int blockX = l.getBlockX();
 			int blockZ = l.getBlockZ();
 
-			int dist = (Data.ISLAND_DISTANCE / 2) - 3;
+			int dist = (Settings.distanceIslands / 2) - 3;
 
 			if (islandX + dist >= blockX && islandX - dist <= blockX) {
 				if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {

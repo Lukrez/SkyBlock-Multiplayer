@@ -14,15 +14,15 @@ public class CreateNewIsland {
 
 	public CreateNewIsland(Player player) {
 
-		Data.ISLAND_NUMBER += 1;
-		Location l = getIslandPosition(Data.ISLAND_NUMBER);
+		Settings.numberIslands += 1;
+		Location l = getIslandPosition(Settings.numberIslands);
 
 		while (this.checkIfOccupied(l)) {
-			Data.ISLAND_NUMBER += 1;
-			l = getIslandPosition(Data.ISLAND_NUMBER);
+			Settings.numberIslands += 1;
+			l = getIslandPosition(Settings.numberIslands);
 		}
 
-		player.sendMessage(Language.MSGS_showIslandNumber.sentence + Data.ISLAND_NUMBER);
+		player.sendMessage(Language.MSGS_showIslandNumber.sentence + Settings.numberIslands);
 		this.createIsland(l);
 		this.Islandlocation = l;
 		// transport player
@@ -50,17 +50,17 @@ public class CreateNewIsland {
 		//System.out.println("Die Inseldistanz ist "+CreateNewIsland.IslandDistance);
 		// Berechne die Positionen
 		if (seite == 1) {
-			posX = (posSeite - r) * Data.ISLAND_DISTANCE;
-			posZ = -posSeite * Data.ISLAND_DISTANCE;
+			posX = (posSeite - r) * Settings.distanceIslands;
+			posZ = -posSeite * Settings.distanceIslands;
 		} else if (seite == 2) {
-			posX = posSeite * Data.ISLAND_DISTANCE;
-			posZ = (posSeite - r) * Data.ISLAND_DISTANCE;
+			posX = posSeite * Settings.distanceIslands;
+			posZ = (posSeite - r) * Settings.distanceIslands;
 		} else if (seite == 3) {
-			posX = (r - posSeite) * Data.ISLAND_DISTANCE;
-			posZ = posSeite * Data.ISLAND_DISTANCE;
+			posX = (r - posSeite) * Settings.distanceIslands;
+			posZ = posSeite * Settings.distanceIslands;
 		} else {
-			posX = -posSeite * Data.ISLAND_DISTANCE;
-			posZ = (r - posSeite) * Data.ISLAND_DISTANCE;
+			posX = -posSeite * Settings.distanceIslands;
+			posZ = (r - posSeite) * Settings.distanceIslands;
 		}
 		//System.out.println("Die Insel befindet sich auf "+posX+" in X-Richtung.");
 		//System.out.println("Die Insel befindet sich auf "+posZ+" in Z-Richtung.");
@@ -89,9 +89,9 @@ public class CreateNewIsland {
 		Chest chest = (Chest) block.getState();
 		chest.getBlock().setData((byte) 2);
 
-		for (int i = 0; i < Data.ITEMSCHEST.length; i++) {
+		for (int i = 0; i < Settings.itemsChest.length; i++) {
 			try {
-				chest.getInventory().addItem(Data.ITEMSCHEST[i]);
+				chest.getInventory().addItem(Settings.itemsChest[i]);
 			} catch (Exception ex) {
 				System.out.println(ex.getMessage());
 			}

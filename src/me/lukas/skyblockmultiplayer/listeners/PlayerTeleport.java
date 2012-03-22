@@ -1,6 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Language;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 
@@ -20,7 +20,7 @@ public class PlayerTeleport implements Listener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		Player player = event.getPlayer();
 
-		if (!Data.SKYBLOCK_ONLINE) {
+		if (!Settings.skyBlockOnline) {
 			return;
 		}
 
@@ -33,7 +33,7 @@ public class PlayerTeleport implements Listener {
 		}
 
 		if (!this.plugin.checkIfEmpty(player.getInventory().getContents()) && !this.plugin.checkIfEmpty(player.getInventory().getArmorContents())) {
-			if (!this.plugin.isPlayerOnTower(player) && !Data.ALLOWCONTENT) {
+			if (!this.plugin.playerIsOnTower(player) && !Settings.allowContent) {
 				event.setCancelled(true);
 				player.sendMessage(this.plugin.pName + Language.MSGS_NOEMPTYINVENTORYLEAVE.sentence);
 				return;
