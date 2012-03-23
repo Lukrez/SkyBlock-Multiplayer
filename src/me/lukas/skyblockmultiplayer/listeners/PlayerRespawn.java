@@ -24,7 +24,7 @@ public class PlayerRespawn implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) {
 			event.setRespawnLocation(player.getWorld().getSpawnLocation());
 			return;

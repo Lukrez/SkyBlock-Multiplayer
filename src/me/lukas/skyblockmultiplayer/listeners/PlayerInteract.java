@@ -25,14 +25,12 @@ public class PlayerInteract implements Listener {
 		this.plugin = instance;
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Action action = event.getAction();
 		Block b = event.getClickedBlock();
 		ItemStack item = event.getItem();
-
-		player.sendMessage(this.plugin.getStringLocation(b.getLocation()));
 
 		if (!Settings.skyBlockOnline) {
 			return;
@@ -53,7 +51,7 @@ public class PlayerInteract implements Listener {
 			}
 		}
 
-		PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
 		PlayerInfo owner = null;
 
 		if (b == null) {
@@ -96,21 +94,25 @@ public class PlayerInteract implements Listener {
 				}
 			}
 
-			if (Settings.gameModeSelected == Settings.GAMEMODE.PVP) {
+			if (Settings.gameModeSelected == Settings.GAMEMODE.PVP || !Settings.build_withProtectedArea) {
 				return;
 			}
 		}
 
 		if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK || action == Action.PHYSICAL) {
+			if (action == Action.RIGHT_CLICK_BLOCK && item != null && b == null) { // this let allow the event BlockPlace calling
+				return;
+			}
+			
 			if (owner == null) {
 				if (b == null) {
-					if (this.canPlayerDoThat(pi, player.getLocation())) {
+					if (this.canPlayerDoThat(pi, player.getLocation()) || this.IsNeighborAFriend(player, player.getLocation())) {
 						return;
 					}
 					event.setCancelled(true);
 					return;
 				}
-				if (this.canPlayerDoThat(pi, b.getLocation())) {
+				if (this.canPlayerDoThat(pi, b.getLocation()) || this.IsNeighborAFriend(player, b.getLocation())) {
 					return;
 				}
 				event.setCancelled(true);
@@ -121,9 +123,6 @@ public class PlayerInteract implements Listener {
 				return;
 			}
 
-			/*if (this.IsNeighborAFriend(player, b.getLocation())) {
-				return;
-			}*/
 			if (owner.getFriends().contains(player.getName())) {
 				return;
 			}
@@ -134,7 +133,7 @@ public class PlayerInteract implements Listener {
 	}
 
 	private PlayerInfo getOwner(Location l) {
-		for (PlayerInfo pi : Settings.PLAYERS.values()) {
+		for (PlayerInfo pi : Settings.players.values()) {
 			if (pi != null) {
 				if (pi.getIslandLocation() != null) {
 					int islandX = pi.getIslandLocation().getBlockX();
@@ -157,15 +156,14 @@ public class PlayerInteract implements Listener {
 	}
 
 	private boolean IsNeighborAFriend(Player player, Location l) {
-		System.out.println("called...");
-		for (PlayerInfo pi : Settings.PLAYERS.values()) {
+		int blockX = l.getBlockX();
+		int blockZ = l.getBlockZ();
+
+		for (PlayerInfo pi : Settings.players.values()) {
 			if (pi != null) {
 				if (pi.getIslandLocation() != null) {
 					int islandX = pi.getIslandLocation().getBlockX();
 					int islandZ = pi.getIslandLocation().getBlockZ();
-
-					int blockX = l.getBlockX();
-					int blockZ = l.getBlockZ();
 
 					int dist = (Settings.distanceIslands / 2) - 3;
 

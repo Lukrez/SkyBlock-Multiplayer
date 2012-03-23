@@ -50,7 +50,7 @@ public class PlayerUseBucketListener implements Listener {
 
 		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
 			if (Settings.build_withProtectedArea) {
-				PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+				PlayerInfo pi = Settings.players.get(player.getName());
 				if (pi == null) {
 					return;
 				}
@@ -95,7 +95,7 @@ public class PlayerUseBucketListener implements Listener {
 	}
 
 	private PlayerInfo getOwner(Location l) {
-		for (PlayerInfo pi : Settings.PLAYERS.values()) {
+		for (PlayerInfo pi : Settings.players.values()) {
 			int islandX = pi.getIslandLocation().getBlockX();
 			int islandZ = pi.getIslandLocation().getBlockZ();
 

@@ -25,7 +25,7 @@ public class PlayerQuit implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
 
 		if (!this.plugin.checkIfEmpty(player.getInventory().getContents())) {
 			pi.setContentsInventory(player.getInventory().getContents());
@@ -37,7 +37,7 @@ public class PlayerQuit implements Listener {
 		}
 
 		if (pi.getIslandLocation() == null) {
-			Settings.PLAYERS.remove(player.getName());
+			Settings.players.remove(player.getName());
 		}
 	}
 }

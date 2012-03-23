@@ -123,13 +123,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		for (String s : this.configPlayer.getConfigurationSection("players").getKeys(false)) {
 			Old_PlayerInfo oldPi = this.getPlayer(s);
-			if (!Settings.PLAYERS.containsKey(s) && oldPi != null && !new File(this.directoryPlayers, s).exists()) {
+			if (!Settings.players.containsKey(s) && oldPi != null && !new File(this.directoryPlayers, s).exists()) {
 				PlayerInfo pi = new PlayerInfo(s);
 				pi.setDead(oldPi.isDead());
 				pi.setHasIsland(oldPi.getHasIsland());
 				pi.setIslandLocation(oldPi.getIslandLocation());
 				pi.setOldPlayerLocation(oldPi.getOldPlayerLocation());
-				Settings.PLAYERS.put(s, pi);
+				Settings.players.put(s, pi);
 			}
 		}
 	}
@@ -254,7 +254,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				PlayerInfo pi = this.readPlayerFile(f);
 				if (pi != null) {
 					if (pi.getIslandLocation() != null) {
-						Settings.PLAYERS.put(f, pi);
+						Settings.players.put(f, pi);
 					}
 				}
 			}
@@ -286,7 +286,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(f);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(Settings.PLAYERS.get(playerName));
+			out.writeObject(Settings.players.get(playerName));
 			out.close();
 			fileOut.close();
 		} catch (Exception e) {
@@ -570,13 +570,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					return true;
 				}
 
-				PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+				PlayerInfo pi = Settings.players.get(player.getName());
 				if (pi == null) {
 					pi = this.readPlayerFile(player.getName());
 					if (pi == null) {
 						pi = new PlayerInfo(player.getName());
 						pi.setOldPlayerLocation(player.getLocation());
-						Settings.PLAYERS.put(player.getName(), pi);
+						Settings.players.put(player.getName(), pi);
 					}
 				}
 
@@ -616,7 +616,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				}
 
 				if (args.length == 1) {
-					PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
 						return true;
 					}
@@ -625,7 +625,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				}
 
 				if (args[1].equalsIgnoreCase("list")) {
-					PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
 						return true;
 					}
@@ -657,7 +657,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						return true;
 					}
 
-					PlayerInfo pTarget = Settings.PLAYERS.get(res);
+					PlayerInfo pTarget = Settings.players.get(res);
 					if (pTarget == null) {
 						return true;
 					}
@@ -696,7 +696,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						toAdd.sendMessage(player.getName() + " " + Language.MSGS_SOMEONEADDEDYOU.sentence);
 					}
 
-					PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
 						return true;
 					}
@@ -722,7 +722,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						return true;
 					}
 
-					PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
 						return true;
 					}
@@ -837,7 +837,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				return true;
 			}
 
-			PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+			PlayerInfo pi = Settings.players.get(player.getName());
 			if (pi == null) {
 				player.sendMessage(this.pName + Language.MSGS_WRONEPLAYERNAME.sentence);
 				return true;
@@ -859,7 +859,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		PlayerInfo pi = null;
 		if (target.trim().equalsIgnoreCase("")) {
-			pi = Settings.PLAYERS.get(player.getName());
+			pi = Settings.players.get(player.getName());
 		} else {
 			String res = this.getFullPlayerName(target);
 			if (res.equalsIgnoreCase("-1")) {
@@ -871,7 +871,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				return true;
 			}
 
-			pi = Settings.PLAYERS.get(res);
+			pi = Settings.players.get(res);
 		}
 
 		if (pi == null) {
@@ -900,7 +900,19 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
-		PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
+
+		if (pi == null) {
+			pi = this.readPlayerFile(player.getName());
+		}
+
+		if (pi == null) {
+			player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
+			player.sendMessage(this.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
+			return true;
+		}
+
+		Settings.players.put(player.getName(), pi);
 
 		if (!Settings.allowContent) {
 			if (!this.playerIsOnTower(player)) {
@@ -909,12 +921,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				player.getInventory().clear();
 				this.clearArmorContents(player);
 			}
-		}
-
-		if (pi == null) {
-			player.teleport(this.getServer().getWorlds().get(0).getSpawnLocation());
-			player.sendMessage(this.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
-			return true;
 		}
 
 		Location l = pi.getOldPlayerLocation();
@@ -927,7 +933,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		if (tpWorked) {
 			if (pi.getIslandLocation() == null) {
-				Settings.PLAYERS.remove(player.getName());
+				Settings.players.remove(player.getName());
 			}
 
 			player.sendMessage(this.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
@@ -956,16 +962,20 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
-		PlayerInfo pi = Settings.PLAYERS.get(player.getName());
-		if (pi == null) { // if player not in list, add him
-			pi = this.readPlayerFile(player.getName());
-			if (pi == null) {
-				pi = new PlayerInfo(player.getName());
-				pi.setOldPlayerLocation(this.getServer().getWorlds().get(0).getSpawnLocation());
-				Settings.PLAYERS.put(player.getName(), pi);
-				pi = Settings.PLAYERS.get(player.getName());
-			}
+		PlayerInfo pi = null;
+		if (Settings.players.containsKey(player.getName())) {
 		}
+
+		if (pi == null) {
+			pi = this.readPlayerFile(player.getName());
+		}
+
+		if (pi == null) { // if player not in list, add and create him
+			pi = new PlayerInfo(player.getName());
+			pi.setOldPlayerLocation(player.getLocation());
+		}
+
+		Settings.players.put(player.getName(), pi);
 
 		boolean isempty = true;
 		if (!Settings.allowContent) {
@@ -985,7 +995,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				Settings.numbersPlayers++;
 
 				// send message to all
-				for (PlayerInfo pInfo : Settings.PLAYERS.values()) {
+				for (PlayerInfo pInfo : Settings.players.values()) {
 					if (pInfo.getPlayer() != null) {
 						pInfo.getPlayer().sendMessage(this.pName + Language.MSGS_WELCOMEBROADCAST1.sentence + player.getName() + Language.MSGS_WELCOMEBROADCAST2.sentence);
 					}
@@ -1025,7 +1035,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		Settings.numbersPlayers++;
 
 		// Nachricht an alle
-		for (PlayerInfo pInfo : Settings.PLAYERS.values()) {
+		for (PlayerInfo pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
 				pInfo.getPlayer().sendMessage(this.pName + Language.MSGS_WELCOMEBROADCAST1.sentence + player.getName() + Language.MSGS_WELCOMEBROADCAST2.sentence);
 			}
@@ -1060,8 +1070,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 
 		PlayerInfo pi = null;
-		if (Settings.PLAYERS.containsKey(player.getName())) {
-			pi = Settings.PLAYERS.get(player.getName());
+		if (Settings.players.containsKey(player.getName())) {
+			pi = Settings.players.get(player.getName());
 		}
 
 		if (pi == null) {
@@ -1071,14 +1081,15 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		if (pi == null) { // if player not in list, add and create him
 			pi = new PlayerInfo(player.getName());
 			pi.setOldPlayerLocation(player.getLocation());
-			Settings.PLAYERS.put(player.getName(), pi);
 		} else {
 			//Refreshe OldLocation of the player
 			pi.setOldPlayerLocation(player.getLocation());
 		}
 
+		Settings.players.put(player.getName(), pi);
+
 		int islands = 0;
-		for (PlayerInfo p : Settings.PLAYERS.values()) {
+		for (PlayerInfo p : Settings.players.values()) {
 			if (p.getHasIsland()) {
 				islands++;
 			}
@@ -1172,7 +1183,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		sender.sendMessage(this.pName + Language.MSGS_RESETING.sentence);
 		this.getServer().unloadWorld(Settings.worldName, true);
 
-		for (PlayerInfo pi : Settings.PLAYERS.values()) {
+		for (PlayerInfo pi : Settings.players.values()) {
 			pi.setHasIsland(false);
 			pi.setIslandLocation(null);
 			pi.setDead(false);
@@ -1191,8 +1202,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		SkyBlockMultiplayer.createSpawnTower();
 
 		// Reset informations
-		Settings.PLAYERS.clear();
-		Settings.PLAYERS = new HashMap<String, PlayerInfo>();
+		Settings.players.clear();
+		Settings.players = new HashMap<String, PlayerInfo>();
 		Settings.numbersPlayers = 0;
 		Settings.numberIslands = 0;
 
@@ -1230,14 +1241,14 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 
 		int islands = 0;
-		for (PlayerInfo p : Settings.PLAYERS.values()) {
+		for (PlayerInfo p : Settings.players.values()) {
 			if (p.getHasIsland()) {
 				islands++;
 			}
 		}
 
 		sender.sendMessage(Language.MSGS_NUMBEROFISLANDS.sentence + islands);
-		sender.sendMessage(Language.MSGS_NUMBEROFPLAYERS.sentence + Settings.PLAYERS.size());
+		sender.sendMessage(Language.MSGS_NUMBEROFPLAYERS.sentence + Settings.players.size());
 		return true;
 	}
 
@@ -1248,9 +1259,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * @return returns true.
 	 */
 	public boolean getListCommands(CommandSender sender) {
-		String sb_info = "-----" + this.pName + "v" + this.pluginFile.getVersion() + "-----\n";
-
-		String sb = Language.MSGS_SKYBLOCK.sentence + "\n";
 		String sb_start = Language.MSGS_CMDSTART.sentence + "\n";
 		String sb_leave = Language.MSGS_CMDLEAVE.sentence + "\n";
 		String sb_newisland = Language.MSGS_CMDNEWISLAND.sentence + "\n";
@@ -1270,7 +1278,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		String sb_closed = Language.MSGS_CMDSETCLOSED.sentence + "\n";
 		String sb_opened = Language.MSGS_CMDSETOPENED.sentence + "\n";
 
-		String ret = sb_info + sb + sb_start + sb_leave + sb_home + sb_home_add + sb_home_remove + sb_home_join + sb_home_list;
+		String ret = sb_start + sb_leave + sb_home + sb_home_add + sb_home_remove + sb_home_join + sb_home_list;
 		if (Permissions.SKYBLOCK_NEWISLAND.has(sender)) {
 			ret += sb_newisland;
 		}
@@ -1345,7 +1353,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	public String getFullPlayerName(String partName) {
 		int amount = 0;
 		String hName = "";
-		for (PlayerInfo pi : Settings.PLAYERS.values()) {
+		for (PlayerInfo pi : Settings.players.values()) {
 			if (pi.getPlayerName().toLowerCase().startsWith(partName.toLowerCase())) {
 				amount++;
 				hName = pi.getPlayerName();

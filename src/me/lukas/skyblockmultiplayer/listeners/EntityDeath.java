@@ -31,7 +31,7 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Settings.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) { // Check, if player is in playerlist
 			return;
 		}
@@ -73,7 +73,7 @@ public class EntityDeath implements Listener {
 
 		Settings.numbersPlayers--;
 
-		for (PlayerInfo pInfo : Settings.PLAYERS.values()) {
+		for (PlayerInfo pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
 				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYERDIED2.sentence);
 			}
@@ -81,13 +81,13 @@ public class EntityDeath implements Listener {
 
 		if (Settings.numbersPlayers == 1) {
 			String winner = "";
-			for (PlayerInfo pinfo : Settings.PLAYERS.values()) {
+			for (PlayerInfo pinfo : Settings.players.values()) {
 				if (pinfo.isDead() == false) {
 					winner = pinfo.getPlayer().getName();
 				}
 			}
 
-			for (PlayerInfo pInfo : Settings.PLAYERS.values()) {
+			for (PlayerInfo pInfo : Settings.players.values()) {
 				if (pInfo.getPlayer() != null) {
 					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
 				}

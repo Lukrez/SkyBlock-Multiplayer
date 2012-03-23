@@ -19,7 +19,7 @@ public class Settings {
 	public static boolean spawnTowerReCreate;
 
 	/** Needed for plugin **/
-	public static Map<String, PlayerInfo> PLAYERS = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
+	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
 	public static int numbersPlayers; // Amount of players in SkyBlock
 	public static int numberIslands; // Amount of islands in SkyBlock
 

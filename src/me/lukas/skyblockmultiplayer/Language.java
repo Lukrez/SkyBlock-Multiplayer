@@ -83,7 +83,7 @@ public enum Language {
 	MSGS_ISNOWCLOSED("msgs.isNowClosed", "SkyBlock is now closed."),
 	MSGS_ISNOWOPENED("msgs.isNowOpened", "SkyBlock is now open."),
 	MSGS_ISCLOSED("msgs.isClosed", "SkyBlock is closed."),
-	MSGS_AREABORDERS("msgs.areaBorders", "Protected area or protected borders."),
+	MSGS_AREABORDERS("msgs.areaBorders", "Protected area or borders."),
 	MSGS_ONLYINBUILDMODE("msgs.onlyInBuildMode", "This works only in build mode!"),
 	MSGS_BACKONTOWER("msgs.backOnTower", "You are now back on the spawn tower."),
 	MSGS_SPAWNTOWERRECREATED("msgs.spawnTowerReCreated", "The spawn tower has been recreated.");
