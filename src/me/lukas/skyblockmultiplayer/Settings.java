@@ -15,7 +15,7 @@ public class Settings {
 	public static boolean skyBlockOnline; // SkyBlock online or offline
 	public static int distanceIslands; // Distance between the player spawn locations
 	public static boolean closed; // Lock SkyBlock to maximize the amount of players
-	public static boolean islandsPerPlayer; // islands who every player have, 0 = endless
+	public static int islandsPerPlayer; // islands who every player have, 0 = endless
 	public static boolean spawnTowerReCreate;
 
 	/** Needed for plugin **/

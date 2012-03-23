@@ -230,6 +230,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				itemsChest[i] = alitemsChest.get(i);
 			}
 
+			/*Settings.islandsPerPlayer = 0;
+			try {
+				Settings.islandsPerPlayer = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, Config.OPTIONS_ISLANDSPERPLAYER.path, 0, true));
+			} catch (Exception e) {
+				Settings.islandsPerPlayer = 0;
+			}*/
+
 			Settings.itemsChest = itemsChest;
 			Settings.skyBlockOnline = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, Config.OPTIONS_SKYBLOCKONLINE.path, true, true));
 			Settings.language = this.getStringbyPath(this.configPlugin, this.filePlugin, Config.OPTIONS_LANGUAGE.path, "english", true);

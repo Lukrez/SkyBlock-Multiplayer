@@ -11,6 +11,7 @@ public enum Config {
 	OPTIONS_WORLDNAME("options.worldName", Settings.worldName),
 	OPTIONS_SPAWNTOWERRECREATE("options.spawnTowerReCreate", false),
 	OPTIONS_CLOSED("options.closed", false),
+	OPTIONS_ISLANDSPERPLAYER("options.islandsPerPlayer", 0),
 	OPTIONS_PVP("options.pvp", ""),
 	OPTIONS_BUILD_RESPAWNWITHINVENTORY("options.build.respawnWithInventory", true),
 	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea", true),
