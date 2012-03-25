@@ -1,0 +1,87 @@
+msgs:
+  skyblock: Use "/skyblock help" for more information.
+  stopping: Stopping SkyBlock...
+  playersInSb: There are players in SkyBlock. SkyBlock can not be disabled!
+  isNowOffline: SkyBlock is now offline.
+  isOffline: SkyBlock is offline.
+  errorOccured: An error occurred.
+  starting: Starting SkyBlock...
+  isNowOnline: SkyBlock is now online.
+  mustBeOffline: SkyBlock must be offline before you can reset it.
+  reseting: Reseting SkyBlock...
+  isNowReseted: SkyBlock has been reseted.
+  configReloaded: Config has been reloaded.
+  languageReloaded: Language has been reloaded.
+  languageChanged: Language has been changed.
+  languageNotChanged: Language has not been changed.
+  languageFileNotExists: Language file does not exists.
+  notAuthorized: You are not authorized!
+  statusOffline: Is Offline
+  statusOnline: Is Online.
+  numberOfIslands: 'Number of islands: '
+  numberOfPlayers: 'Number of players: '
+  commands:
+    join: /skyblock join - join SkyBlock
+    start: /skyblock start - get an island
+    leave: /skyblock leave - leave SkyBlock
+    newIsland: /skyblock newIsland [player] - give yourself or an other player a new island
+    setOffline: /skyblock set offline - deactivate SkyBlock
+    setOnline: /skyblock set online - activate SkyBlock
+    setLanguage: /skyblock set language <language> - change language
+    setGameMode: /skyblock set gamemode <option> - <build> or <pvp>
+    setClosed: /skyblock set closed - close SkyBlock to stop players to join
+    setOpened: /skyblock set opened - open SkyBlock to allow players to join
+    reset: /skyblock reset - reset SkyBlock
+    reloadConfig: /skyblock reload config - reload config
+    reloadLanguage: /skyblock reload language - reload language
+    status: /skyblock status - show status
+    home: /skyblock home - teleport back to your island
+    homeAdd: /skyblock home add - add a player to your friend list
+    homeRemove: /skyblock home remove - remove a player from your friend list
+    homeJoin: /skyblock home join <player name> - teleport to a friends's island
+    homeList: /skyblock home list - show all friends from your list
+  wrongArgs: Incorrect or missing arguments
+  welcome1: 'Welcome to the world SkyBlock for multiplayer! At the moment there are '
+  welcome2: ' islands and  '
+  welcome3: ' players. Use "/skyblock start" to get an own island.'
+  welcomeBack: 'Welcome back '
+  welcomeBroadcast1: 'The player '
+  welcomeBroadcast2: ' has joined the SkyBlock game.'
+  toNewPlayer: Do not fall and make no obsidian :-).
+  showIslandNumber: 'You are on island number '
+  leftSkyblock: You left SkyBlock.
+  noEmptyInventoryLeave: You cannot leave skyblock with content in your inventory.
+  noEmptyInventoryStart: You can not play with content in your inventory.
+  wrongPlayerName: There is no player with that name. Or the player is not in SkyBlock.
+  newIslandPlayer1: 'The player '
+  newIslandPlayer2: ' has get a new live.'
+  gotNewIsland1: 'The player '
+  gotNewIsland2: ' has given you a new live.'
+  sign1Line1: Welcome to
+  sign1Line2: SkyBlock-
+  sign1Line3: Multiplayer
+  sign2Line1: For more
+  sign2Line2: informations
+  sign2Line3: /skyblock help
+  sign2Line4: Good luck!
+  playerDied1: 'One player died. There are '
+  playerDied2: ' players remaining.'
+  playerWinBroadcast1: 'The player '
+  playerWinBroadcast2: ' won the game. Congratulations!'
+  noName: No player with this name exists.
+  betterSpecify: There are more players that begin with this name.
+  gameModeChanged: Game mode has been changed.
+  friendRemoved: Friend removed
+  friendAdded: Friend added
+  notFriendFromYou: Not possible, you are not in the players home list!
+  playerAddedYou: ' added you to his friend list.'
+  isNowClosed: SkyBlock is now closed.
+  isNowOpened: SkyBlock is now open.
+  isClosed: SkyBlock is closed.
+  areaBorders: Protected area or borders.
+  onlyInBuildMode: This works only in build mode!
+  backOnTower: You are now back on the spawn tower.
+  spawnTowerReCreated: The spawn tower has been recreated.
+  stillLivesLeft1: 'You have '
+  stillLivesLeft2: ' live points left. '
+  noMoreLivesLeft: Sorry, you have no more live points left.

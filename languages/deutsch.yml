@@ -1,0 +1,86 @@
+msgs:
+  skyblock: Gib "/skyblock help" für weitere Informationen ein.
+  stopping: Stoppe Skyblock...
+  playersInSb: Es sind Spieler in Skyblock. Skyblock kann nicht deaktiviert werden.
+  isNowOffline: Skyblock ist nun offline.
+  isOffline: Skyblock ist offline.
+  errorOccured: Ein Fehler ist aufgetreten.
+  starting: Starte Skyblock...
+  isNowOnline: Skyblock ist nun online.
+  mustBeOffline: Skyblock muss offline sein, bevor du  es reseten kannst.
+  reseting: Resette Skyblock...
+  isNowReseted: SkyBlock has been reseted.
+  configReloaded: Config wurde neu geladen.
+  languageReloaded: Sprachdatei wurde neu geladen.
+  languageChanged: Sprache wurde geändert.
+  languageNotChanged: Sprache wurde nicht geändert.
+  languageFileNotExists: Sprachdatei existiert nicht.
+  notAuthorized: Du bist nicht autorisiert!
+  statusOffline: Ist Offline
+  statusOnline: Ist Online
+  numberOfIslands: 'Anzahl der Inseln: '
+  numberOfPlayers: 'Anzahl der Spieler: '
+  commands:
+    join: /skyblock join - Die Welt Skyblock betreten
+    start: /skyblock start - Bei Skyblock mitspielen
+    leave: /skyblock leave - Zur alten Position in der alten Welt zurückkehren
+    newIsland: /skyblock newIsland [player] - Gib dir oder einem anderem Spieler eine neue Insel
+    setOffline: /skyblock set offline - deaktiviere Skyblock
+    setOnline: /skyblock set online - aktiviere Skyblock
+    setLanguage: /skyblock set language <language> - Sprache ändern
+    reset: /skyblock reset - Resette Skyblock
+    reloadConfig: /skyblock reload config - Lade die Config-Datei neu
+    reloadLanguage: /skyblock reload language - Lade die Sprachdatei neu
+    status: /skyblock status - Zeige Informationen zu Skyblock
+    setGameMode: /skyblock gamemode <option> - <build> oder <pvp>
+    setClosed: /skyblock set closed - schließe SkyBlock, kein Spieler mehr kann joinen
+    setOpened: /skyblock set opened - öffne SkyBlock, Spieler können wieder joinen
+    home: /skyblock home - teleportiere dich zurück zu deiner Insel
+    homeAdd: /skyblock home add - füge einen Spieler zu deiner Freundesliste
+    homeRemove: /skyblock home remove - entferne einen Spieler aus deiner Freundesliste
+    homeJoin: /skyblock home join <player name> - teleportiere dich zu einer Insel deines Freundes
+    homeList: /skyblock home list - zeigt alle deine Freunde aus der Freundesliste
+  wrongArgs: Falsche oder fehlende Argumente
+  welcome1: 'Willkommen auf der Welt SkyBlock für Multiplayer! Es gibt momentan '
+  welcome2: ' Inseln und '
+  welcome3: ' Spieler. Gib \"/skyblock start\" ein um eine eigene Insel zu bekommen.'
+  welcomeBack: 'Willkommen zurück '
+  welcomeBroadcast1: 'Der Spieler '
+  welcomeBroadcast2: ' spielt mit.'
+  toNewPlayer: Falle nicht runter und mache keine Obisidian :-).
+  showIslandNumber: 'Du bist auf Inselnummer '
+  leftSkyblock: Du hast Skyblock verlassen.
+  noEmptyInventoryLeave: Du kannst Skyblock mit Inhalt im Inventar nicht verlassen!
+  noEmptyInventoryStart: Es ist nicht erlaubt mit Inhalt im Inventar mitzuspielen!
+  wrongPlayerName: Da ist kein Spieler mit diesem Namen. Oder der Spieler ist nicht in Skyblock.
+  newIslandPlayer1: 'Der Spieler '
+  newIslandPlayer2: ' hat eine neue Insel.'
+  gotNewIsland1: 'Der Spieler '
+  gotNewIsland2: ' hat dir eine neue Insel gegeben.'
+  sign1Line1: Willkommen in
+  sign1Line2: Skyblock-
+  sign1Line3: Multiplayer
+  sign2Line1: Für mehr
+  sign2Line2: Informationen
+  sign2Line3: /skyblock help
+  sign2Line4: Viel Glück!
+  playerDied1: 'Jetzt sind noch '
+  playerDied2: ' Spieler übrig.'
+  playerWinBroadcast1: 'Der Spieler '
+  playerWinBroadcast2: ' hat das Spiel gewonnen. Glückwunsch!'
+  noName: No player with this name exists.
+  betterSpecify: There are more players that begin with this name.
+  gameModeChanged: Game mode has been changed.
+  friendRemoved: Friend removed
+  friendAdded: Friend added
+  notFriendFromYou: Not possible, you are not in the players home list!
+  playerAddedYou: ' hat die zu deiner Freundesliste hinzugefügt.'
+  isNowClosed: SkyBlock ist nun gesperrt.
+  isNowOpened: SkyBlock is nun offen.
+  isClosed: SkyBlock is closed.
+  areaBorders: Geschütztes Gebiet oder geschütze Grenzen.
+  onlyInBuildMode: Dies funktioniert nur in Build mode!
+  spawnTowerReCreated: Der Spawnturm wurde neu generiert.
+  stillLivesLeft1: 'Du hast noch '
+  stillLivesLeft2: ' Lebenspunkte übrig.'
+  noMoreLivesLeft: Sorry, keine Lebenspunkte mehr.

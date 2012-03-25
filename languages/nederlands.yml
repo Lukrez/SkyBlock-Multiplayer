@@ -1,0 +1,87 @@
+msgs:
+  skyblock: Gebruik "/skyblock help" voor meer informatie.
+  stopping: Skyblock uitzetten...
+  playersInSb: Er zijn spelers in de Skyblock wereld. Skyblock kan niet worden uitgezet!
+  isNowOffline: De Skyblock wereld is nu offline.
+  isOffline: De Skyblock wereld is offline.
+  errorOccured: Er is een fout opgetreden.
+  starting: Skyblock aanzetten...
+  isNowOnline: De Skyblock wereld is nu online.
+  mustBeOffline: De Skyblock wereld moet offline zijn voordat je de wereld kan resetten.
+  reseting: Resetting Skyblock...
+  isNowReseted: De Skyblock wereld is gereset.
+  configReloaded: De config is opnieuw geladen.
+  languageReloaded: De taal is opnieuw geladen.
+  languageChanged: De taal us veranderd.
+  languageNotChanged: De taal is niet veranderd.
+  languageFileNotExists: Taal bestand bestaat niet.
+  notAuthorized: Je hebt geen toestemming!
+  statusOffline: Is Offline
+  statusOnline: Is Online.
+  numberOfIslands: 'Aantal eilanden: '
+  numberOfPlayers: 'Aantal spelers: '
+  commands:
+    join: /skyblock join - Skyblock joinen
+    start: /skyblock start - Een eiland krijgen
+    leave: /skyblock leave - Skyblock verlaten
+    newIsland: /skyblock newIsland [player] - Geef jezelf of iemand anders een nieuw eiland
+    setOffline: /skyblock set offline - Skyblock uitzetten
+    setOnline: /skyblock set online - Skyblock aanzetten
+    setLanguage: /skyblock set language <language> - De taal veranderen
+    setGameMode: /skyblock set gamemode <option> - <build> of <pvp>
+    setClosed: /skyblock set closed - Maak Skyblock dicht zodat geen andere spelers meer kunnen joinen
+    setOpened: /skyblock set opened - Maak Skyblock open zodat andere spelers kunnen joinen
+    reset: /skyblock reset - Skyblock resetten
+    reloadConfig: /skyblock reload config - Config herladen
+    reloadLanguage: /skyblock reload language - De taal herladen
+    status: /skyblock status - Toon de status
+    home: /skyblock home - Terug naar je eiland teleporteren
+    homeAdd: /skyblock home add - Voeg een speler toe aan je vriendenlijst
+    homeRemove: /skyblock home remove - Verwijder een speler uit je vriendenlijst
+    homeJoin: /skyblock home join <player name> - Teleporteer naar het eiland van een vriend
+    homeList: /skyblock home list - Toon alle vrienden van je lijst
+  wrongArgs: incorrecte of te kort argumenten
+  welcome1: 'Welkom op de Skyblockmultiplayer wereld! Op dit moment zijn er '
+  welcome2: ' Eilanden en  '
+  welcome3: ' Spelers. Gebruik "/skyblock start" om zelf een eiland te krijgen.'
+  welcomeBack: 'Welkom terug '
+  welcomeBroadcast1: 'De speler '
+  welcomeBroadcast2: ' is bij de Skyblock game gekomen.'
+  toNewPlayer: Val niet en maak geen obsidian xD.
+  showIslandNumber: 'Jij bent op eiland nummer '
+  leftSkyblock: Je hebt Skyblock verlaten.
+  noEmptyInventoryLeave: Je kan Skyblock niet verlaten met spullen in je inventory.
+  noEmptyInventoryStart: Je kan niet spelen met spullen in je inventory.
+  wrongPlayerName: Er is geen speler met die naam. Of de speler is niet in de Skyblock wereld.
+  newIslandPlayer1: 'De speler '
+  newIslandPlayer2: ' heeft een nieuw eiland.'
+  gotNewIsland1: 'De speler '
+  gotNewIsland2: ' heeft jou een nieuw eiland gegeven.'
+  sign1Line1: Welkom op
+  sign1Line2: Skyblock-
+  sign1Line3: Multiplayer
+  sign2Line1: voor meer
+  sign2Line2: info
+  sign2Line3: /skyblock help
+  sign2Line4: Veel succes!
+  playerDied1: 'Er is een speler doodgegaan. Er zijn nog '
+  playerDied2: ' spelers over.'
+  playerWinBroadcast1: 'De speler '
+  playerWinBroadcast2: ' heeft de game gewonnen. Gefeliciteerd!'
+  noName: Geen speler met deze naam bestaat
+  betterSpecify: Er zijn meer spelers die beginnen met deze naam
+  gameModeChanged: De gamemode is veranderd
+  friendRemoved: Vriend verwijderd
+  friendAdded: Vriend toegevoegd
+  notFriendFromYou: Niet mogelijk, je staat niet in de spelers home lijst!
+  playerAddedYou: ' heeft je aan zijn vriendenlijst toegevoegd.'
+  isNowClosed: SkyBlock is nu gesloten.
+  isNowOpened: SkyBlock is nu geopend.
+  isClosed: SkyBlock is gesloten.
+  areaBorders: Beschermd gebied of beschermde grens.
+  onlyInBuildMode: Dit werkt alleen in build mode!
+  backOnTower: Je bent nu terug op de toren.
+  spawnTowerReCreated: De toren is nu opnieuw gemaakt.
+  stillLivesLeft1: 'Je hebt '
+  stillLivesLeft2: ' levens over. '
+  noMoreLivesLeft: Sorry, je hebt geen levens meer.
