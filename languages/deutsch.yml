@@ -69,16 +69,16 @@ msgs:
   playerWinBroadcast1: 'Der Spieler '
   playerWinBroadcast2: ' hat das Spiel gewonnen. Glückwunsch!'
   noName: No player with this name exists.
-  betterSpecify: There are more players that begin with this name.
-  gameModeChanged: Game mode has been changed.
-  friendRemoved: Friend removed
-  friendAdded: Friend added
-  notFriendFromYou: Not possible, you are not in the players home list!
-  playerAddedYou: ' hat die zu deiner Freundesliste hinzugefügt.'
+  betterSpecify: Da sind mehr Spieler wo mit dem Namen anfangen.
+  gameModeChanged: Game mode wurde geändert.
+  friendRemoved: Freund entfernt.
+  friendAdded: Freund hinzugefügt.
+  notFriendFromYou: Nicht möglich, dui bist nicht in der Freundes liste des Spielers.
+  playerAddedYou: ' hat dich zu deiner Freundesliste hinzugefügt.'
   isNowClosed: SkyBlock ist nun gesperrt.
   isNowOpened: SkyBlock is nun offen.
-  isClosed: SkyBlock is closed.
-  areaBorders: Geschütztes Gebiet oder geschütze Grenzen.
+  isClosed: SkyBlock ist nun geschlossen.
+  areaBorders: Geschütztes Gebiet oder Grenzen.
   onlyInBuildMode: Dies funktioniert nur in Build mode!
   spawnTowerReCreated: Der Spawnturm wurde neu generiert.
   stillLivesLeft1: 'Du hast noch '
