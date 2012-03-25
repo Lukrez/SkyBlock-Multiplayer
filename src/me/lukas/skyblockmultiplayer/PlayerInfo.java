@@ -15,6 +15,7 @@ public class PlayerInfo implements Serializable {
 	private boolean hasIsland;
 	private boolean isDead;
 	private String playerName;
+	private int lives;
 
 	private String worldIsland;
 	private int islandX, islandY, islandZ;
@@ -29,7 +30,8 @@ public class PlayerInfo implements Serializable {
 	public PlayerInfo(String playerName) {
 		this.playerName = playerName;
 		this.hasIsland = false;
-		this.setDead(false);
+		this.isDead = false;
+		this.lives = Settings.pvp_livePointsPerPlayer;
 		this.worldIsland = "";
 		this.worldOld = "";
 		this.friends = new ArrayList<String>();
@@ -78,6 +80,15 @@ public class PlayerInfo implements Serializable {
 
 	public boolean isDead() {
 		return this.isDead;
+	}
+
+	public void setLives(int i) {
+		this.lives = i;
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
+	}
+
+	public int getLives() {
+		return this.lives;
 	}
 
 	public void setIslandLocation(Location l) {
@@ -133,6 +144,9 @@ public class PlayerInfo implements Serializable {
 
 	public void setContentsInventory(ItemStack[] items) {
 		this.contentsInventory = new ArrayList<String>();
+		if (items == null) {
+			return;
+		}
 		for (ItemStack i : items) {
 			this.contentsInventory.add(this.parseItemStackToString(i));
 		}
@@ -152,6 +166,9 @@ public class PlayerInfo implements Serializable {
 
 	public void setContentsArmor(ItemStack[] items) {
 		this.contentsArmor = new ArrayList<String>();
+		if (items == null) {
+			return;
+		}
 		for (ItemStack i : items) {
 			this.contentsArmor.add(this.parseItemStackToString(i));
 		}
@@ -161,7 +178,7 @@ public class PlayerInfo implements Serializable {
 	public ItemStack[] getContentsArmor() {
 		ItemStack[] items = new ItemStack[this.contentsArmor.size()];
 		for (int i = 0; i < items.length; i++) {
-			String s = this.contentsInventory.get(i);
+			String s = this.contentsArmor.get(i);
 			if (!s.equalsIgnoreCase("")) {
 				items[i] = this.parseStringToItemStack(this.contentsArmor.get(i));
 			}

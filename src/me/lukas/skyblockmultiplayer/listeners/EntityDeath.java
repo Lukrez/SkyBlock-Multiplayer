@@ -1,6 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Language;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
@@ -8,6 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class EntityDeath implements Listener {
@@ -30,19 +31,33 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Data.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) { // Check, if player is in playerlist
 			return;
 		}
 
-		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD && Data.BUILD_RESPAWNWITHINVENTORY) {
+		if (this.plugin.playerIsOnTower(player)) {
+			if(pi.getIslandLocation() == null) {
+				pi.setContentsInventory(player.getInventory().getContents());
+				pi.setContentsArmor(player.getInventory().getArmorContents());
+				event.getDrops().clear();
+			}
+			return;
+		}
+
+		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD && Settings.build_respawnWithInventory) {
 			pi.setContentsInventory(player.getInventory().getContents());
 			pi.setContentsArmor(player.getInventory().getArmorContents());
 			event.getDrops().clear();
 			return;
 		}
 
-		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
+		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
+			if (event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID) {
+				player.teleport(player.getWorld().getSpawnLocation());
+				player.setHealth(player.getMaxHealth());
+				return;
+			}
 			return;
 		}
 
@@ -52,27 +67,27 @@ public class EntityDeath implements Listener {
 
 		pi.setDead(true);
 
-		if (Data.PLAYERS_NUMBER < 1) {
+		if (Settings.numbersPlayers < 1) {
 			return;
 		}
 
-		Data.PLAYERS_NUMBER--;
+		Settings.numbersPlayers--;
 
-		for (PlayerInfo pInfo : Data.PLAYERS.values()) {
+		for (PlayerInfo pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
-				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Data.PLAYERS_NUMBER + Language.MSGS_PLAYERDIED2.sentence);
+				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYERDIED2.sentence);
 			}
 		}
 
-		if (Data.PLAYERS_NUMBER == 1) {
+		if (Settings.numbersPlayers == 1) {
 			String winner = "";
-			for (PlayerInfo pinfo : Data.PLAYERS.values()) {
+			for (PlayerInfo pinfo : Settings.players.values()) {
 				if (pinfo.isDead() == false) {
 					winner = pinfo.getPlayer().getName();
 				}
 			}
 
-			for (PlayerInfo pInfo : Data.PLAYERS.values()) {
+			for (PlayerInfo pInfo : Settings.players.values()) {
 				if (pInfo.getPlayer() != null) {
 					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
 				}

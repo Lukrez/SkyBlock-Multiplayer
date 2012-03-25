@@ -1,6 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 import org.bukkit.entity.Player;
@@ -24,35 +24,33 @@ public class PlayerRespawn implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Data.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) {
+			event.setRespawnLocation(player.getWorld().getSpawnLocation());
 			return;
 		}
 
-		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.PVP || this.plugin.isPlayerOnTower(player)) {
-			event.setRespawnLocation(pi.getOldPlayerLocation());
+		if (pi.getIslandLocation() == null) {
+			player.getInventory().setContents(pi.getContentsInventory());
+			player.getInventory().setArmorContents(pi.getContentsArmor());
 			return;
 		}
 
-		if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD && Data.BUILD_RESPAWNWITHINVENTORY) {
-			if (pi.getContentsInventory() != null) {
-				player.getInventory().setContents(pi.getContentsInventory());
-			}
-
-			if (pi.getContentsArmor() != null) {
-				player.getInventory().setArmorContents(pi.getContentsArmor());
-			}
+		if (Settings.gameModeSelected == Settings.GAMEMODE.PVP || this.plugin.playerIsOnTower(player)) {
+			event.setRespawnLocation(player.getWorld().getSpawnLocation());
+			return;
 		}
 
-		if (player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) {
+		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD && Settings.build_respawnWithInventory) {
+			player.getInventory().setContents(pi.getContentsInventory());
+			player.getInventory().setArmorContents(pi.getContentsArmor());
+		}
+
+		if (player.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
 			if (pi.getIslandLocation() != null) {
 				event.setRespawnLocation(pi.getIslandLocation());
 			} else {
-				if (pi.getOldPlayerLocation() != null) {
-					event.setRespawnLocation(pi.getOldPlayerLocation());
-				} else {
-					event.setRespawnLocation(this.plugin.getServer().getWorlds().get(0).getSpawnLocation());
-				}
+				event.setRespawnLocation(player.getWorld().getSpawnLocation());
 			}
 		}
 	}

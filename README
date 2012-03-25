@@ -1,7 +1,7 @@
 Description:
 
 This plugin is a multiplayer version of the singleplayer version of SkyBlock which contains two different game modes:
-(1) PvP mode, where each player has one life and island
+(1) PvP mode, where each player can have one or more islands
 (2) build mode with endless lifes
 
 The plugin creates an empty minecraft world with the name "SkyBlockMultiplayer" additional to your existing worlds.
@@ -25,36 +25,40 @@ Commands:
 /skyblock set offline - deactivate Skyblock
 /skyblock set online - activate Skyblock
 /skyblock set language <language> - change language
-/skyblock set pvp <option> - <on> or <off>
+/skyblock set gamemode <option> - <build> or <pvp>
+/skyblock set closed - close SkyBlock to stop players to join
+/skyblock set opened - open SkyBlock to allow players to join
 /skyblock reset - reset Skyblock
 /skyblock reload config - reload config
 /skyblock reload language - reload language
 /skyblock status - show status
-
+/skyblock home - teleport back to your island
+/skyblock home add - add a player to your friend list
+/skyblock home remove - remove a player from your friend list
+/skyblock home join <player name> - teleport to a friends's island
+/skyblock home list - show all friends from your list
+/skyblock tower - teleport to the spawn tower
+/skyblock tower recreate - recreates the spawn tower
 
 Permissions:
 skyblock.set – needed for set commands
 skyblock.reset – needed for reset command
 skyblock.newisland – needed only if PVP is on
 skyblock.reload - needed for reload commands
-
+skyblock.join - needed to join SkyBlock
+skyblock.build - to build on the spawn tower, to build on other player islands (only needed if build.withProtectedArea is true)
 
 Changelog:
-version 0.45 alpha, for 1.1 R-7:
- 	- fixed sign direction
-	
-version 0.48 alpha:
- 	- fixed commands, default player could access them
-	- fixed NPE by skyblock leave
-	- added allowContent, join/leave skyblock with content
-	
-version: 0.49 alpha:
- 	- fixed command newIsland
-	- fixed PvP Mode, counter
-	- fixed language (to apply changes, please replace language files inside the language folder)
-	- simplified chunk generator
-	- code cleaning
- 
+ 	- fixed bugs and issues
+	- added setting for pvp mode, livePointsPerPlayer
+	- fixed setting buildWithProtectedArea
+	- ender pearl can not be used to come on the tower
+	- added command skyblock tower - teleport to the spawn tower
+	- added command skyblock tower recreate - recreates the tower
+	- tower won't be recreated anymore after restart of the server, only if the world is deleted
+	- if player fell into void, should not anymore disconnecting the client
+	- language updated
+	- it could be possible, that I forget to mention something...
 
 Downloads:
 https://github.com/Leseratte91/SkyBlock-Multiplayer/downloads

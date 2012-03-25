@@ -2,23 +2,25 @@ package me.lukas.skyblockmultiplayer;
 
 public enum Config {
 
-	OPTIONS_ISLANDDISTANCE("options.islandDistance"),
-	OPTIONS_CHESTITEMS("options.chestItems"),
-	OPTIONS_SKYBLOCKONLINE("options.skyblockOnline"),
-	OPTIONS_ALLOWCONTENT("options.allowContent"),
-	OPTIONS_LANGUAGE("options.language"),
-	OPTIONS_GAMEMODE("options.gameMode"),
-	OPTIONS_WORLDNAME("options.worldName"),
-	OPTIONS_CLOSED("options.closed"),
-	OPTIONS_PVP("options.pvp"),
-	OPTIONS_BUILD_SPAWNTOWER("options.build.spawnTower"),
-	OPTIONS_BUILD_RESPAWNWITHINVENTORY("options.build.respawnWithInventory"),
-	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea"),
-	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl");
+	OPTIONS_ISLANDDISTANCE("options.islandDistance", 50),
+	OPTIONS_CHESTITEMS("options.chestItems", "79:2 6:5 360:3 81:1 327:1 86:1"),
+	OPTIONS_SKYBLOCKONLINE("options.skyblockOnline", true),
+	OPTIONS_ALLOWCONTENT("options.allowContent", false),
+	OPTIONS_LANGUAGE("options.language", "english"),
+	OPTIONS_GAMEMODE("options.gameMode", "build"),
+	OPTIONS_WORLDNAME("options.worldName", Settings.worldName),
+	OPTIONS_CLOSED("options.closed", false),
+	OPTIONS_PVP("options.pvp", ""),
+	OPTIONS_PVP_LIVEPOINTSPERPLAYER("options.pvp.livePointsPerPlayer", 1),
+	OPTIONS_BUILD_RESPAWNWITHINVENTORY("options.build.respawnWithInventory", true),
+	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea", true),
+	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl", false);
 
 	String path;
+	Object value;
 
-	private Config(String path) {
+	private Config(String path, Object value) {
 		this.path = path;
+		this.value = value;
 	}
 }

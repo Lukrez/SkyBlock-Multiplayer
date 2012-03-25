@@ -1,6 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Language;
 import me.lukas.skyblockmultiplayer.Permissions;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
@@ -25,12 +25,16 @@ public class PlayerInteract implements Listener {
 		this.plugin = instance;
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Action action = event.getAction();
 		Block b = event.getClickedBlock();
 		ItemStack item = event.getItem();
+
+		if (!Settings.skyBlockOnline) {
+			return;
+		}
 
 		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) {
 			return;
@@ -47,7 +51,7 @@ public class PlayerInteract implements Listener {
 			}
 		}
 
-		PlayerInfo pi = Data.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
 		PlayerInfo owner = null;
 
 		if (b == null) {
@@ -57,10 +61,10 @@ public class PlayerInteract implements Listener {
 		}
 
 		if (item != null) {
-			if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.BUILD) {
+			if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
 				if (item.getType().equals(Material.ENDER_PEARL)) {
 					if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-						if (Data.BUILD_ALLOW_ENDERPEARL) {
+						if (Settings.build_allowEnderpearl) {
 							return;
 						}
 						event.setCancelled(true);
@@ -90,12 +94,16 @@ public class PlayerInteract implements Listener {
 				}
 			}
 
-			if (Data.GAMEMODE_SELECTED == Data.GAMEMODE.PVP) {
+			if (Settings.gameModeSelected == Settings.GAMEMODE.PVP || !Settings.build_withProtectedArea) {
 				return;
 			}
 		}
 
 		if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK || action == Action.PHYSICAL) {
+			if (action == Action.RIGHT_CLICK_BLOCK && item != null && b == null) { // this let allow the event BlockPlace calling
+				return;
+			}
+
 			if (owner == null) {
 				if (b == null) {
 					if (this.canPlayerDoThat(pi, player.getLocation())) {
@@ -118,24 +126,29 @@ public class PlayerInteract implements Listener {
 			if (owner.getFriends().contains(player.getName())) {
 				return;
 			}
+
 			event.setCancelled(true);
 			return;
 		}
 	}
 
 	private PlayerInfo getOwner(Location l) {
-		for (PlayerInfo pi : Data.PLAYERS.values()) {
-			int islandX = pi.getIslandLocation().getBlockX();
-			int islandZ = pi.getIslandLocation().getBlockZ();
+		for (PlayerInfo pi : Settings.players.values()) {
+			if (pi != null) {
+				if (pi.getIslandLocation() != null) {
+					int islandX = pi.getIslandLocation().getBlockX();
+					int islandZ = pi.getIslandLocation().getBlockZ();
 
-			int blockX = l.getBlockX();
-			int blockZ = l.getBlockZ();
+					int blockX = l.getBlockX();
+					int blockZ = l.getBlockZ();
 
-			int dist = (Data.ISLAND_DISTANCE / 2) - 3;
+					int dist = (Settings.distanceIslands / 2) - 3;
 
-			if (islandX + dist >= blockX && islandX - dist <= blockX) {
-				if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
-					return pi;
+					if (islandX + dist >= blockX && islandX - dist <= blockX) {
+						if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
+							return pi;
+						}
+					}
 				}
 			}
 		}
@@ -143,13 +156,16 @@ public class PlayerInteract implements Listener {
 	}
 
 	private boolean canPlayerDoThat(PlayerInfo pi, Location l) {
+		if (pi == null) {
+			return false;
+		}
 		int islandX = pi.getIslandLocation().getBlockX();
 		int islandZ = pi.getIslandLocation().getBlockZ();
 
 		int blockX = l.getBlockX();
 		int blockZ = l.getBlockZ();
 
-		int dist = (Data.ISLAND_DISTANCE / 2) - 3;
+		int dist = (Settings.distanceIslands / 2) - 3;
 
 		if (islandX + dist >= blockX && islandX - dist <= blockX) {
 			if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {

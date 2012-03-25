@@ -1,6 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Data;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 
@@ -25,7 +25,7 @@ public class PlayerQuit implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Data.PLAYERS.get(player.getName());
+		PlayerInfo pi = Settings.players.get(player.getName());
 
 		if (!this.plugin.checkIfEmpty(player.getInventory().getContents())) {
 			pi.setContentsInventory(player.getInventory().getContents());
@@ -37,7 +37,7 @@ public class PlayerQuit implements Listener {
 		}
 
 		if (pi.getIslandLocation() == null) {
-			Data.PLAYERS.remove(player.getName());
+			Settings.players.remove(player.getName());
 		}
 	}
 }
