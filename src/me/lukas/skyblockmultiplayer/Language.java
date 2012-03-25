@@ -48,7 +48,6 @@ public enum Language {
 	MSGS_WELCOME1("msgs.welcome1", "Welcome to the world SkyBlock for multiplayer! At the moment there are "),
 	MSGS_WELCOME2("msgs.welcome2", " islands and  "),
 	MSGS_WELCOME3("msgs.welcome3", " players. Use \"/skyblock start\" to get an own island."),
-	MSGS_HADAISLAND("msgs.hadAIsland", "You already had an island."),
 	MSGS_WELCOMEBACK("msgs.welcomeBack", "Welcome back "),
 	MSGS_WELCOMEBROADCAST1("msgs.welcomeBroadcast1", "The player "),
 	MSGS_WELCOMEBROADCAST2("msgs.welcomeBroadcast2", " has joined the SkyBlock game."),
@@ -59,9 +58,9 @@ public enum Language {
 	MSGS_NOEMPTYINVENTORYSTART("msgs.noEmptyInventoryStart", "You can not play with content in your inventory."),
 	MSGS_WRONEPLAYERNAME("msgs.wrongPlayerName", "There is no player with that name. Or the player is not in SkyBlock."),
 	MSGS_NEWISLANDPLAYER1("msgs.newIslandPlayer1", "The player "),
-	MSGS_NEWISLANDPLAYER2("msgs.newIslandPlayer2", " has a new island."),
+	MSGS_NEWISLANDPLAYER2("msgs.newIslandPlayer2", " has get a new live."),
 	MSGS_GOTNEWISLAND1("msgs.gotNewIsland1", "The player "),
-	MSGS_GOTNEWISLAND2("msgs.gotNewIsland2", " has given you a new island."),
+	MSGS_GOTNEWISLAND2("msgs.gotNewIsland2", " has given you a new live."),
 	MSGS_SIGN1LINE1("msgs.sign1Line1", "Welcome to"),
 	MSGS_SIGN1LINE2("msgs.sign1Line2", "SkyBlock-"),
 	MSGS_SIGN1LINE3("msgs.sign1Line3", "Multiplayer"),
@@ -86,7 +85,10 @@ public enum Language {
 	MSGS_AREABORDERS("msgs.areaBorders", "Protected area or borders."),
 	MSGS_ONLYINBUILDMODE("msgs.onlyInBuildMode", "This works only in build mode!"),
 	MSGS_BACKONTOWER("msgs.backOnTower", "You are now back on the spawn tower."),
-	MSGS_SPAWNTOWERRECREATED("msgs.spawnTowerReCreated", "The spawn tower has been recreated.");
+	MSGS_SPAWNTOWERRECREATED("msgs.spawnTowerReCreated", "The spawn tower has been recreated."),
+	MSGS_STILLLIVESLEFT1("msgs.stillLivesLeft1", "You have "),
+	MSGS_STILLLIVESLEFT2("msgs.stillLivesLeft2", " lives left. "),
+	MSGS_NOMORELIVESLEFT("msgs.noMoreLivesLeft", "Sorry, you have no more lives left.");
 
 	public String path;
 	public String sentence;

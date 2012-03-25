@@ -9,19 +9,18 @@ public enum Config {
 	OPTIONS_LANGUAGE("options.language", "english"),
 	OPTIONS_GAMEMODE("options.gameMode", "build"),
 	OPTIONS_WORLDNAME("options.worldName", Settings.worldName),
-	OPTIONS_SPAWNTOWERRECREATE("options.spawnTowerReCreate", false),
 	OPTIONS_CLOSED("options.closed", false),
-	OPTIONS_ISLANDSPERPLAYER("options.islandsPerPlayer", 0),
 	OPTIONS_PVP("options.pvp", ""),
+	OPTIONS_PVP_ISLANDSPERPLAYER("options.pvp.livePointsPerPlayer", 1),
 	OPTIONS_BUILD_RESPAWNWITHINVENTORY("options.build.respawnWithInventory", true),
 	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea", true),
-	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl", false),
-	OPTIONS_BUILD_FRIENDSOVERBORDERS("options.build.friendsOverBorders", true);
+	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl", false);
 
 	String path;
 	Object value;
 
 	private Config(String path, Object value) {
 		this.path = path;
+		this.value = value;
 	}
 }

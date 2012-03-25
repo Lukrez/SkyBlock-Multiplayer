@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class PlayerTeleport implements Listener {
 	private SkyBlockMultiplayer plugin;
@@ -25,6 +26,17 @@ public class PlayerTeleport implements Listener {
 		}
 
 		if (!player.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+			return;
+		}
+		
+		if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
+			if (this.plugin.locationIsOnTower(event.getTo())) {
+				event.setCancelled(true);
+			}
+			return;
+		}
+
+		if (event.getTo().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
 			return;
 		}
 

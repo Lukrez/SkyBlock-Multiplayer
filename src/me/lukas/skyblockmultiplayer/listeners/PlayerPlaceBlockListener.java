@@ -54,7 +54,7 @@ public class PlayerPlaceBlockListener implements Listener {
 
 		PlayerInfo owner = this.getOwner(b.getLocation());
 		if (owner == null) {
-			if (this.canPlayerDoThat(pi, b.getLocation()) || this.IsNeighborAFriend(player, b.getLocation())) {
+			if (this.canPlayerDoThat(pi, b.getLocation())) {
 				return;
 			}
 			event.setCancelled(true);
@@ -94,35 +94,6 @@ public class PlayerPlaceBlockListener implements Listener {
 			}
 		}
 		return null;
-	}
-
-	private boolean IsNeighborAFriend(Player player, Location l) {
-		int blockX = l.getBlockX();
-		int blockZ = l.getBlockZ();
-
-		for (PlayerInfo pi : Settings.players.values()) {
-			if (pi != null) {
-				if (pi.getIslandLocation() != null) {
-					int islandX = pi.getIslandLocation().getBlockX();
-					int islandZ = pi.getIslandLocation().getBlockZ();
-
-					int dist = (Settings.distanceIslands / 2) - 3;
-
-					for (int x = -6; x <= 6; x++) {
-						if (islandX + dist + x >= blockX && islandX - dist - x <= blockX) {
-							for (int z = -6; z <= 6; z++) {
-								if (islandZ + dist + z >= blockZ && islandZ - dist - z <= blockZ) {
-									if (pi.getFriends().contains(player.getName())) {
-										return true;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 	private boolean canPlayerDoThat(PlayerInfo pi, Location l) {

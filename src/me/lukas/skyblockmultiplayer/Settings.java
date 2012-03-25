@@ -15,8 +15,6 @@ public class Settings {
 	public static boolean skyBlockOnline; // SkyBlock online or offline
 	public static int distanceIslands; // Distance between the player spawn locations
 	public static boolean closed; // Lock SkyBlock to maximize the amount of players
-	public static int islandsPerPlayer; // islands who every player have, 0 = endless
-	public static boolean spawnTowerReCreate;
 
 	/** Needed for plugin **/
 	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
@@ -33,4 +31,7 @@ public class Settings {
 	public static boolean build_respawnWithInventory; // If true save contents of player in SkyBlock in Death
 	public static boolean build_withProtectedArea; // If true, protected Area around of the island and a player can not do anything on another island
 	public static boolean build_allowEnderpearl; // If true, player can use ender pearl
+	
+	/** Gamemode is pvp **/
+	public static int pvp_livePointsPerPlayer; // islands who every player have, 1 = only 1
 }

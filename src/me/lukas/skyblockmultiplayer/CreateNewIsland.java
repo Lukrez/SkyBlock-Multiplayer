@@ -29,8 +29,18 @@ public class CreateNewIsland {
 		player.teleport(l);
 	}
 
-	public CreateNewIsland() {
-	}
+	/*public CreateNewIsland(int amount) {
+		Location l = getIslandPosition(Settings.numberIslands);
+		for (int i = 0; i < amount; i++) {
+			while (this.checkIfOccupied(l)) {
+				Settings.numberIslands += 1;
+				l = getIslandPosition(Settings.numberIslands);
+				System.out.println(Settings.numberIslands + " : Location " + SkyBlockMultiplayer.instance.getStringLocation(l));
+
+			}
+			this.createIsland(l);
+		}
+	}*/
 
 	public Location getIslandPosition(int n) {
 		//System.out.println("Erstelle Inselnr.: "+n);
