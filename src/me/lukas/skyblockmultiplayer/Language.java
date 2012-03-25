@@ -87,8 +87,8 @@ public enum Language {
 	MSGS_BACKONTOWER("msgs.backOnTower", "You are now back on the spawn tower."),
 	MSGS_SPAWNTOWERRECREATED("msgs.spawnTowerReCreated", "The spawn tower has been recreated."),
 	MSGS_STILLLIVESLEFT1("msgs.stillLivesLeft1", "You have "),
-	MSGS_STILLLIVESLEFT2("msgs.stillLivesLeft2", " lives left. "),
-	MSGS_NOMORELIVESLEFT("msgs.noMoreLivesLeft", "Sorry, you have no more lives left.");
+	MSGS_STILLLIVESLEFT2("msgs.stillLivesLeft2", " live points left. "),
+	MSGS_NOMORELIVESLEFT("msgs.noMoreLivesLeft", "Sorry, you have no more live points left.");
 
 	public String path;
 	public String sentence;

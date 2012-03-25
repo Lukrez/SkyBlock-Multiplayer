@@ -11,7 +11,7 @@ public enum Config {
 	OPTIONS_WORLDNAME("options.worldName", Settings.worldName),
 	OPTIONS_CLOSED("options.closed", false),
 	OPTIONS_PVP("options.pvp", ""),
-	OPTIONS_PVP_ISLANDSPERPLAYER("options.pvp.livePointsPerPlayer", 1),
+	OPTIONS_PVP_LIVEPOINTSPERPLAYER("options.pvp.livePointsPerPlayer", 1),
 	OPTIONS_BUILD_RESPAWNWITHINVENTORY("options.build.respawnWithInventory", true),
 	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea", true),
 	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl", false);

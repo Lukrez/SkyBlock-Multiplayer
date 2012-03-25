@@ -229,7 +229,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			try {
-				Settings.pvp_livePointsPerPlayer = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, Config.OPTIONS_PVP_ISLANDSPERPLAYER.path, 1, true));
+				Settings.pvp_livePointsPerPlayer = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, Config.OPTIONS_PVP_LIVEPOINTSPERPLAYER.path, 1, true));
 				if (Settings.pvp_livePointsPerPlayer <= 0) {
 					Settings.pvp_livePointsPerPlayer = 1;
 				}
