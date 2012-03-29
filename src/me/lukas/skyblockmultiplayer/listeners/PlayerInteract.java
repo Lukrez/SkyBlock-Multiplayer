@@ -90,6 +90,7 @@ public class PlayerInteract implements Listener {
 							return;
 						}
 						player.sendMessage("Island number: " + i);
+						event.setCancelled(true);
 						return;
 					} else {
 						int i = -1;

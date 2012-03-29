@@ -36,7 +36,7 @@ public class EntityDeath implements Listener {
 		}
 
 		if (this.plugin.playerIsOnTower(player)) {
-			/*pi.setOldInventory(player.getInventory().getContents());
+			pi.setOldInventory(player.getInventory().getContents());
 			pi.setOldArmor(player.getInventory().getArmorContents());
 			pi.setOldExp(player.getExp());
 			pi.setOldLevel(player.getLevel());
@@ -46,7 +46,7 @@ public class EntityDeath implements Listener {
 			event.getDrops().clear();
 			event.setDroppedExp(0);
 
-			this.plugin.writePlayerFile(player.getName(), pi);*/
+			this.plugin.writePlayerFile(player.getName(), pi);
 			return;
 		}
 

@@ -764,7 +764,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 					Player toAdd = this.getServer().getPlayer(res);
 					if (toAdd != null) {
-						toAdd.sendMessage(player.getName() + " " + Language.MSGS_SOMEONEADDEDYOU.sentence);
+						toAdd.sendMessage(player.getName() + Language.MSGS_SOMEONEADDEDYOU.sentence);
 					}
 
 					PlayerInfo pi = Settings.players.get(player.getName());
@@ -1506,8 +1506,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			page = 1;
 		}
 
+		String pluginName = this.pName.replace("[", "").replace("]", "");
 		if (page == 1 && !(page < 1 || page > 2)) {
-			String top = ChatColor.GOLD + "----- " + this.pName + " help index (1/2) " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
+			String top = ChatColor.GOLD + "----- " + pluginName + " help index (1/2) " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
 			String msgs = top + sb_join + sb_start + sb_tower + sb_leave + sb_status + sb_home + sb_home_add + sb_home_remove + sb_home_join + sb_home_list + sb_home_set;
 
 			for (String s : msgs.split("\n")) {
@@ -1517,7 +1518,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 			return true;
 		} else if (page == 2) {
-			String top = ChatColor.GOLD + "----- " + this.pName + " help index (2/2) " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
+			String top = ChatColor.GOLD + "----- " + pluginName + " help index (2/2) " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
 			String msgs = top + sb_newIsland + sb_closed + sb_opened + sb_setOffline + sb_setOnline + sb_tower_recreate + sb_setLanguage + sb_setGameMode + sb_reset + sb_reload_config + sb_reload_language;
 
 			for (String s : msgs.split("\n")) {

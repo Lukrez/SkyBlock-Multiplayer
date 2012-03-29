@@ -1,5 +1,7 @@
 package me.lukas.skyblockmultiplayer;
 
+import org.bukkit.ChatColor;
+
 public enum Language {
 
 	MSGS_SKYBLOCK("msgs.skyblock", "Use \"/skyblock help\" for more information."),
@@ -24,28 +26,28 @@ public enum Language {
 	MSGS_NUMBEROFISLANDS("msgs.numberOfIslands", "Number of islands: "),
 	MSGS_NUMBEROFPLAYERS("msgs.numberOfPlayers", "Number of players: "),
 	/* commands list */
-	MSGS_CMDJOIN("msgs.commands.join", "/skyblock join - join SkyBlock"),
-	MSGS_CMDSTART("msgs.commands.start", "/skyblock start - get an island"),
-	MSGS_CMDLEAVE("msgs.commands.leave", "/skyblock leave - leave SkyBlock"),
-	MSGS_CMDTOWER("msgs.commands.tower", "/skyblock tower - teleport back to spawn tower"),
-	MSGS_CMDNEWISLAND("msgs.commands.newIsland", "/skyblock newIsland [player] - give yourself or an other player a new island"),
-	MSGS_CMDSETOFFLINE("msgs.commands.setOffline", "/skyblock set offline - deactivate SkyBlock"),
-	MSGS_CMDSETONLINE("msgs.commands.setOnline", "/skyblock set online - activate SkyBlock"),
-	MSGS_CMDTOWERRECREATE("msgs.commands.towerReCreate", "/skyblock tower recreate - recreates the tower"),
-	MSGS_CMDSETLANGUAGE("msgs.commands.setLanguage", "/skyblock set language <language> - change language"),
-	MSGS_CMDSETGAMEMODE("msgs.commands.setGameMode", "/skyblock set gamemode <option> - <build> or <pvp>"),
-	MSGS_CMDSETCLOSED("msgs.commands.setClosed", "/skyblock set closed - close SkyBlock to stop players to join"),
-	MSGS_CMDSETOPENED("msgs.commands.setOpened", "/skyblock set opened - open SkyBlock to allow players to join"),
-	MSGS_CMDRESET("msgs.commands.reset", "/skyblock reset - reset SkyBlock"),
-	MSGS_CMDRELOADCONFIG("msgs.commands.reloadConfig", "/skyblock reload config - reload config"),
-	MSGS_CMDRELOADLANGUAGE("msgs.commands.reloadLanguage", "/skyblock reload language - reload language"),
-	MSGS_CMDSTATUS("msgs.commands.status", "/skyblock status - show status"),
-	MSGS_CMDHOME("msgs.commands.home", "/skyblock home - teleport back to your island"),
-	MSGS_CMDHOMEADD("msgs.commands.homeAdd", "/skyblock home add - add a player to your friend list"),
-	MSGS_CMDHOMEREMOVE("msgs.commands.homeRemove", "/skyblock home remove - remove a player from your friend list"),
-	MSGS_CMDHOMEJOIN("msgs.commands.homeJoin", "/skyblock home join <player name> - teleport to a friends's island"),
-	MSGS_CMDHOMELIST("msgs.commands.homeList", "/skyblock home list - show all friends from your list"),
-	MSGS_CMDHOMESET("msgs.commands.homeSet", "/skyblock home set - change your spawn location"),
+	MSGS_CMDJOIN("msgs.commands.join", "§6/skyblock join§7 - join SkyBlock"),
+	MSGS_CMDSTART("msgs.commands.start", "§6/skyblock start§7 - get an island"),
+	MSGS_CMDLEAVE("msgs.commands.leave", "§6/skyblock leave§7 - leave SkyBlock"),
+	MSGS_CMDTOWER("msgs.commands.tower", "§6/skyblock tower§7 - teleport back to spawn tower"),
+	MSGS_CMDNEWISLAND("msgs.commands.newIsland", "§6/skyblock newIsland [player]§7 - give yourself or an other player a new island"),
+	MSGS_CMDSETOFFLINE("msgs.commands.setOffline", "§6/skyblock set offline§7 - deactivate SkyBlock"),
+	MSGS_CMDSETONLINE("msgs.commands.setOnline", "§6/skyblock set online§7 - activate SkyBlock"),
+	MSGS_CMDTOWERRECREATE("msgs.commands.towerReCreate", "§6/skyblock tower recreate§7 - recreates the tower"),
+	MSGS_CMDSETLANGUAGE("msgs.commands.setLanguage", "§6/skyblock set language <language>§7 - change language"),
+	MSGS_CMDSETGAMEMODE("msgs.commands.setGameMode", "§6/skyblock set gamemode <option>§7 - <build> or <pvp>"),
+	MSGS_CMDSETCLOSED("msgs.commands.setClosed", "§6/skyblock set closed§7 - close SkyBlock to stop players to join"),
+	MSGS_CMDSETOPENED("msgs.commands.setOpened", "§6/skyblock set opened§7 - open SkyBlock to allow players to join"),
+	MSGS_CMDRESET("msgs.commands.reset", "§6/skyblock reset§7 - reset SkyBlock"),
+	MSGS_CMDRELOADCONFIG("msgs.commands.reloadConfig", "§6/skyblock reload config§7 - reload config"),
+	MSGS_CMDRELOADLANGUAGE("msgs.commands.reloadLanguage", "§6/skyblock reload language§7 - reload language"),
+	MSGS_CMDSTATUS("msgs.commands.status", "§6/skyblock status§7 - show status"),
+	MSGS_CMDHOME("msgs.commands.home", "§6/skyblock home§7 - teleport back to your island"),
+	MSGS_CMDHOMEADD("msgs.commands.homeAdd", "§6/skyblock home add <player>§7 - add a player to your friendlist"),
+	MSGS_CMDHOMEREMOVE("msgs.commands.homeRemove", "§6/skyblock home remove <player>§7 - remove a player from your friendlist"),
+	MSGS_CMDHOMEJOIN("msgs.commands.homeJoin", "§6/skyblock home join <player>§7 - teleport to a friends island"),
+	MSGS_CMDHOMELIST("msgs.commands.homeList", "§6/skyblock home list§7 - show all friends from your list"),
+	MSGS_CMDHOMESET("msgs.commands.homeSet", "§6/skyblock home set§7 - change your spawn location"),
 	/* end of command list */
 	MSGS_WRONGARGS("msgs.wrongArgs", "Incorrect or missing arguments"),
 	MSGS_WELCOME1("msgs.welcome1", "Welcome to the world SkyBlock for multiplayer! At the moment there are "),
@@ -99,6 +101,13 @@ public enum Language {
 
 	private Language(String path, String sentence) {
 		this.path = path;
-		this.sentence = sentence;
+		this.sentence = this.replaceColor(sentence);
+	}
+
+	private String replaceColor(String s) {
+		for (ChatColor c : ChatColor.values()) {
+			s = s.replaceAll("§" + c.getChar(), "" + ChatColor.getByChar(c.getChar()));
+		}
+		return s;
 	}
 }
