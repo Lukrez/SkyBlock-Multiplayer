@@ -18,7 +18,7 @@ Copy the SkyBlockMultiplayer.jar into your plugin folder
 Start the server, the plugin creates a folder named SkyBlockMultiplayer, this folder contains the config file and the language folder with the default english.yml
 
 IMPORTANT FOR UPDATING FROM PREVIOUS VERSIONS (< 0.53):
-Due to incompatibilities of the player info saving method between the versions 0.45 and 0.53, the player folder has to be deleted manually within the plugin folder.
+Due to incompatibilities of the player info saving method between the versions 0.45 and 0.53, the player folder has to be deleted manually within the plugin folder if exists.
 That means the player will loose their island and inventory. To save the inventory each player can to put the inventory into a chest before the update.
 The island itself can be given back after the update: Use the stick to click on an island to get the island number. Then use /skyblock setOwner <island number> <player> - to change the owner of the island.
 
