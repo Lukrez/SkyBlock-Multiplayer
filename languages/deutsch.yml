@@ -24,21 +24,21 @@ msgs:
     join: §6/skyblock join§7 - Die Welt Skyblock betreten
     start: §6/skyblock start§7 - Bei Skyblock mitspielen
     leave: §6/skyblock leave§7 - Zur alten Position in der alten Welt zurückkehren
-    newIsland: §6/skyblock newIsland [player]§7 - Gib dir oder einem anderem Spieler eine neue Insel
+    newIsland: §6/skyblock newIsland §a[player]§7 - Gib dir oder einem anderem Spieler eine neue Insel
     setOffline: §6/skyblock set offline§7 - deaktiviere Skyblock
     setOnline: §6/skyblock set online§7 - aktiviere Skyblock
-    setLanguage: §6/skyblock set language <language>§7 - Sprache ändern
+    setLanguage: §6/skyblock set language §c<language>§7 - Sprache ändern
     reset: §6/skyblock reset§7 - Resette Skyblock
     reloadConfig: §6/skyblock reload config§7 - Lade die Config-Datei neu
     reloadLanguage: §6/skyblock reload language§7 - Lade die Sprachdatei neu
     status: §6/skyblock status§7 - Zeige Informationen zu Skyblock
-    setGameMode: §6/skyblock gamemode <option>§7 - <build> oder <pvp>
+    setGameMode: §6/skyblock gamemode §c<option>§7 - §c<build>§7 oder §c<pvp>
     setClosed: §6/skyblock set closed§7 - schliesse SkyBlock, kein Spieler mehr kann joinen
     setOpened: §6/skyblock set opened§7 - öffne SkyBlock, Spieler können wieder joinen
     home: §6/skyblock home§7 - teleportiere dich zurück zu deiner Insel
-    homeAdd: §6/skyblock home add <player>§7- füge einen Spieler zu deiner Freundesliste
-    homeRemove: §6/skyblock home remove <player>§7 - entferne einen Spieler aus deiner Freundesliste
-    homeJoin: §6/skyblock home join <player>§7 - teleportiere dich zu einer Insel deines Freundes
+    homeAdd: §6/skyblock home add §c<player>§7- füge einen Spieler zu deiner Freundesliste
+    homeRemove: §6/skyblock home remove §c<player>§7 - entferne einen Spieler aus deiner Freundesliste
+    homeJoin: §6/skyblock home join §c<player>§7 - teleportiere dich zu einer Insel deines Freundes
     homeList: §6/skyblock home list§7 - zeigt alle deine Freunde aus der Freundesliste
     tower: §6/skyblock tower§7 - teleportiere dich zurück zum Spawnturm
     towerReCreate: §6/skyblock tower recreate§7 - generiert den Spawnturm neu
