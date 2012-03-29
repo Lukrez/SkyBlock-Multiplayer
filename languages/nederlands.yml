@@ -21,25 +21,29 @@ msgs:
   numberOfIslands: 'Aantal eilanden: '
   numberOfPlayers: 'Aantal spelers: '
   commands:
-    join: /skyblock join - Skyblock joinen
-    start: /skyblock start - Een eiland krijgen
-    leave: /skyblock leave - Skyblock verlaten
-    newIsland: /skyblock newIsland [player] - Geef jezelf of iemand anders een nieuw eiland
-    setOffline: /skyblock set offline - Skyblock uitzetten
-    setOnline: /skyblock set online - Skyblock aanzetten
-    setLanguage: /skyblock set language <language> - De taal veranderen
-    setGameMode: /skyblock set gamemode <option> - <build> of <pvp>
-    setClosed: /skyblock set closed - Maak Skyblock dicht zodat geen andere spelers meer kunnen joinen
-    setOpened: /skyblock set opened - Maak Skyblock open zodat andere spelers kunnen joinen
-    reset: /skyblock reset - Skyblock resetten
-    reloadConfig: /skyblock reload config - Config herladen
-    reloadLanguage: /skyblock reload language - De taal herladen
-    status: /skyblock status - Toon de status
-    home: /skyblock home - Terug naar je eiland teleporteren
-    homeAdd: /skyblock home add - Voeg een speler toe aan je vriendenlijst
-    homeRemove: /skyblock home remove - Verwijder een speler uit je vriendenlijst
-    homeJoin: /skyblock home join <player name> - Teleporteer naar het eiland van een vriend
-    homeList: /skyblock home list - Toon alle vrienden van je lijst
+    join: §6/skyblock join§7 - Skyblock joinen
+    start: §6/skyblock start§7 - Een eiland krijgen
+    leave: §6/skyblock leave§7 - Skyblock verlaten
+    tower: §6/skyblock tower§7 - teleport back to spawn tower
+    newIsland: §6/skyblock newIsland [player]§7 - Geef jezelf of iemand anders een nieuw eiland
+    setOffline: §6/skyblock set offline§7 - Skyblock uitzetten
+    setOnline: §6/skyblock set online§7 - Skyblock aanzetten
+    towerReCreate: §6/skyblock tower recreate§7 - recreates the tower
+    setLanguage: §6/skyblock set language §c<language>§7 - De taal veranderen
+    setGameMode: §6/skyblock set gamemode §c<option>§7 - <build> of <pvp>
+    setClosed: §6/skyblock set closed§7 - Maak Skyblock dicht zodat geen andere spelers meer kunnen joinen
+    setOpened: §6/skyblock set opened§7- Maak Skyblock open zodat andere spelers kunnen joinen
+    setOwner: §6/skyblock setOwner §c<island number> <player>§7 - change the owner of a island
+    reset: §6/skyblock reset§7 - Skyblock resetten
+    reloadConfig: §6/skyblock reload config§7 - Config herladen
+    reloadLanguage: §6/skyblock reload language§7 - De taal herladen
+    status: §6/skyblock status§7 - Toon de status
+    home: §6/skyblock home§7 - Terug naar je eiland teleporteren
+    homeAdd: §6/skyblock home add§7 - Voeg een speler toe aan je vriendenlijst
+    homeRemove: §6/skyblock home remove§7 - Verwijder een speler uit je vriendenlijst
+    homeJoin: §6/skyblock home join <player>§7 - Teleporteer naar het eiland van een vriend
+    homeList: §6/skyblock home list§7 - Toon alle vrienden van je lijst
+    homeSet: §6/skyblock home set§7 - change your spawn location
   wrongArgs: incorrecte of te kort argumenten
   welcome1: 'Welkom op de Skyblockmultiplayer wereld! Op dit moment zijn er '
   welcome2: ' Eilanden en  '
@@ -50,8 +54,6 @@ msgs:
   toNewPlayer: Val niet en maak geen obsidian xD.
   showIslandNumber: 'Jij bent op eiland nummer '
   leftSkyblock: Je hebt Skyblock verlaten.
-  noEmptyInventoryLeave: Je kan Skyblock niet verlaten met spullen in je inventory.
-  noEmptyInventoryStart: Je kan niet spelen met spullen in je inventory.
   wrongPlayerName: Er is geen speler met die naam. Of de speler is niet in de Skyblock wereld.
   newIslandPlayer1: 'De speler '
   newIslandPlayer2: ' heeft een nieuw eiland.'
@@ -68,7 +70,6 @@ msgs:
   playerDied2: ' spelers over.'
   playerWinBroadcast1: 'De speler '
   playerWinBroadcast2: ' heeft de game gewonnen. Gefeliciteerd!'
-  noName: Geen speler met deze naam bestaat
   betterSpecify: Er zijn meer spelers die beginnen met deze naam
   gameModeChanged: De gamemode is veranderd
   friendRemoved: Vriend verwijderd
@@ -82,6 +83,10 @@ msgs:
   onlyInBuildMode: Dit werkt alleen in build mode!
   backOnTower: Je bent nu terug op de toren.
   spawnTowerReCreated: De toren is nu opnieuw gemaakt.
-  stillLivesLeft1: 'Je hebt '
-  stillLivesLeft2: ' levens over. '
-  noMoreLivesLeft: Sorry, je hebt geen levens meer.
+  noMoreLivesAndIslands: GAME OVER!!!. No more lives and islands left!
+  invalidIslandNumber: Invalid island number!
+  changedOwnerTo: 'Owner of the island is now '
+  spawnLocationChanged: Your spawn point is changed.
+  changeOfHomeLocationOnlyInOwnArea: You can change your spawn point only in your region.
+  noIslandTeleportImpossible: You have no island, you can not teleport to your friend.
+  areaOfSpawnTower: Area of spawn tower.
