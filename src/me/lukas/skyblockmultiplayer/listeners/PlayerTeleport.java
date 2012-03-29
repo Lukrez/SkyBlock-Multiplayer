@@ -1,5 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
+import me.lukas.skyblockmultiplayer.Language;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
@@ -69,6 +70,7 @@ public class PlayerTeleport implements Listener {
 			player.setHealth(pi.getOldHealth());
 
 			this.plugin.writePlayerFile(player.getName(), pi);
+			player.sendMessage(this.plugin.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
 			return;
 		}
 	}

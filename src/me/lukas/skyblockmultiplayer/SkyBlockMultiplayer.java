@@ -1010,8 +1010,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 
 		this.writePlayerFile(player.getName(), pi);
-
-		player.sendMessage(this.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
 		return true;
 	}
 
