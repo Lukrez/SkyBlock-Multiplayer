@@ -10,4 +10,4 @@ english.yml - updated
 deusch.yml - updated
 
 
-nederlands.yml - updated, This file has been translated from jackkiej.
+nederlands.yml - not fully updated, missing sentences will be in english: This file has been translated from jackkiej.
