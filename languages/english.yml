@@ -30,9 +30,10 @@ msgs:
     setOnline: §6/skyblock set online§7 - activate SkyBlock
     towerReCreate: §6/skyblock tower recreate§7 - recreates the tower
     setLanguage: §6/skyblock set language §c<language>§7 - change language
-    setGameMode: §6/skyblock set gamemode §c<option>§7 - §c<build>§7 or §c<pvp>
+    setGameMode: §6/skyblock set gamemode §c<option>§7 - <build> or <pvp>
     setClosed: §6/skyblock set closed§7 - close SkyBlock to stop players to join
     setOpened: §6/skyblock set opened§7 - open SkyBlock to allow players to join
+    setOwner: §6/skyblock setOwner §c<island number> <player>§7 - change the owner of a island
     reset: §6/skyblock reset§7 - reset SkyBlock
     reloadConfig: §6/skyblock reload config§7 - reload config
     reloadLanguage: §6/skyblock reload language§7 - reload language
@@ -55,7 +56,7 @@ msgs:
   leftSkyblock: You left SkyBlock.
   wrongPlayerName: There is no player with that name.
   newIslandPlayer1: 'The player '
-  newIslandPlayer2: ' has a new island.'
+  newIslandPlayer2: ' has get a new island.'
   gotNewIsland1: 'The player '
   gotNewIsland2: ' has given you a new island.'
   sign1Line1: Welcome to

@@ -544,7 +544,14 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 				PlayerInfo pi = new PlayerInfo(res);
 				if (Settings.players.containsKey(res)) {
-					pi.setOldLocation(Settings.players.get(res).getOldLocation());
+					PlayerInfo oldPi = Settings.players.get(res);
+					pi.setOldLocation(oldPi.getOldLocation());
+					pi.setOldInventory(oldPi.getOldInventory());
+					pi.setOldArmor(pi.getOldArmor());
+					pi.setOldExp(oldPi.getOldExp());
+					pi.setOldLevel(oldPi.getOldLevel());
+					pi.setOldFood(oldPi.getOldFood());
+					pi.setOldHealth(oldPi.getOldHealth());
 					Settings.players.remove(res);
 				}
 
