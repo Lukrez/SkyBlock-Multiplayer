@@ -10,180 +10,305 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerInfo implements Serializable {
+
 	private static final long serialVersionUID = 1L;
+
+	private String playerName;
 
 	private boolean hasIsland;
 	private boolean isDead;
-	private String playerName;
-	private int lives;
 
-	private String worldIsland;
-	private int islandX, islandY, islandZ;
+	private int livesLeft;
+	private int islandsLeft;
 
-	private String worldOld;
-	private int oldX, oldY, oldZ;
+	private String islandLocation;
+	private String homeLocation;
+	private String oldLocation;
+
+	private ArrayList<String> islandInventory;
+	private ArrayList<String> islandArmor;
+
+	private ArrayList<String> oldInventory;
+	private ArrayList<String> oldArmor;
+
 	private ArrayList<String> friends;
 
-	private ArrayList<String> contentsInventory;
-	private ArrayList<String> contentsArmor;
+	private int islandFood;
+	private int oldFood;
+
+	private int islandHealth;
+	private int oldHealth;
+
+	private float islandExp;
+	private float oldExp;
+
+	private int islandLevel;
+	private int oldLevel;
 
 	public PlayerInfo(String playerName) {
 		this.playerName = playerName;
+
 		this.hasIsland = false;
 		this.isDead = false;
-		this.lives = Settings.pvp_livePointsPerPlayer;
-		this.worldIsland = "";
-		this.worldOld = "";
+
+		this.livesLeft = Settings.pvp_livesPerIsland;
+		this.islandsLeft = Settings.pvp_islandsPerPlayer;
+
+		this.islandLocation = null;
+		this.homeLocation = null;
+		this.oldLocation = null;
+
+		this.islandInventory = new ArrayList<String>();
+		this.islandArmor = new ArrayList<String>();
+
+		this.oldInventory = new ArrayList<String>();
+		this.oldArmor = new ArrayList<String>();
+
 		this.friends = new ArrayList<String>();
-		this.contentsArmor = new ArrayList<String>();
-		this.contentsInventory = new ArrayList<String>();
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
+
+		this.islandFood = 0;
+		this.oldFood = 0;
+
+		this.islandHealth = 0;
+		this.oldHealth = 0;
+
+		this.islandExp = 0;
+		this.oldExp = 0;
+
+		this.islandLevel = 0;
+		this.oldLevel = 0;
+
+		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName, this);
 	}
 
-	public void setHasIsland(boolean b) {
-		this.hasIsland = b;
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
-	}
-
-	public boolean getHasIsland() {
-		return this.hasIsland;
-	}
-
-	public void setOldPlayerLocation(Location l) {
-		this.worldOld = l.getWorld().getName();
-		this.oldX = l.getBlockX();
-		this.oldY = l.getBlockY();
-		this.oldZ = l.getBlockZ();
-
-		if (this.worldOld.equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
-			this.setOldPlayerLocation(SkyBlockMultiplayer.instance.getServer().getWorlds().get(0).getSpawnLocation());
-		}
-
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
-	}
-
-	public Location getOldPlayerLocation() {
-		if (this.worldIsland.equalsIgnoreCase("")) {
-			return null;
-		}
-		World w = Bukkit.getWorld(this.worldOld);
-		if (w == null) {
-			return null;
-		}
-		return new Location(w, this.oldX, this.oldY, this.oldZ);
-	}
-
-	public void setDead(boolean b) {
-		this.isDead = b;
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
-	}
-
-	public boolean isDead() {
-		return this.isDead;
-	}
-
-	public void setLives(int i) {
-		this.lives = i;
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
-	}
-
-	public int getLives() {
-		return this.lives;
-	}
-
-	public void setIslandLocation(Location l) {
-		if (l == null) {
-			this.worldIsland = "";
-			this.islandX = 0;
-			this.islandY = 0;
-			this.islandZ = 0;
-			return;
-		}
-
-		this.worldIsland = l.getWorld().getName();
-		this.islandX = l.getBlockX();
-		this.islandY = l.getBlockY();
-		this.islandZ = l.getBlockZ();
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
-	}
-
-	public Location getIslandLocation() {
-		if (this.worldIsland.trim().equalsIgnoreCase("")) {
-			return null;
-		}
-		World w = Bukkit.getServer().getWorld(this.worldIsland);
-		if (w == null) {
-			return null;
-		}
-		return new Location(w, this.islandX, this.islandY, this.islandZ);
-	}
-
-	public boolean addFriend(String playerName) {
-		boolean ret = this.friends.add(playerName);
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
-		return ret;
-	}
-
-	public boolean removeFriend(String playerName) {
-		boolean ret = this.friends.remove(playerName);
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
-		return ret;
-	}
-
-	public ArrayList<String> getFriends() {
-		return this.friends;
+	public void setPlayerName(String s) {
+		this.playerName = s;
 	}
 
 	public Player getPlayer() {
-		return Bukkit.getServer().getPlayer(this.playerName);
+		return Bukkit.getPlayer(this.playerName);
 	}
 
 	public String getPlayerName() {
 		return this.playerName;
 	}
 
-	public void setContentsInventory(ItemStack[] items) {
-		this.contentsInventory = new ArrayList<String>();
+	public void setHasIsland(boolean b) {
+		this.hasIsland = b;
+	}
+
+	public boolean getHasIsland() {
+		return this.hasIsland;
+	}
+
+	public void setDead(boolean b) {
+		this.isDead = b;
+	}
+
+	public boolean isDead() {
+		return this.isDead;
+	}
+
+	public void setLivesLeft(int i) {
+		this.livesLeft = i;
+	}
+
+	public int getLivesLeft() {
+		return this.livesLeft;
+	}
+
+	public void setIslandsLeft(int i) {
+		this.islandsLeft = i;
+	}
+
+	public int getIslandsLeft() {
+		return this.islandsLeft;
+	}
+
+	public void setIslandLocation(Location l) {
+		this.islandLocation = this.getStringLocation(l);
+	}
+
+	public Location getIslandLocation() {
+		return this.getLocationString(this.islandLocation);
+	}
+
+	public void setHomeLocation(Location l) {
+		this.homeLocation = this.getStringLocation(l);
+	}
+
+	public Location getHomeLocation() {
+		return this.getLocationString(this.homeLocation);
+	}
+
+	public void setOldLocation(Location l) {
+		if (!l.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+			this.oldLocation = this.getStringLocation(l);
+		}
+	}
+
+	public Location getOldLocation() {
+		return this.getLocationString(this.oldLocation);
+	}
+
+	public void setIslandInventory(ItemStack[] items) {
+		this.islandInventory = new ArrayList<String>();
 		if (items == null) {
 			return;
 		}
 		for (ItemStack i : items) {
-			this.contentsInventory.add(this.parseItemStackToString(i));
+			this.islandInventory.add(this.parseItemStackToString(i));
 		}
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
 	}
 
-	public ItemStack[] getContentsInventory() {
-		ItemStack[] items = new ItemStack[this.contentsInventory.size()];
+	public ItemStack[] getIslandInventory() {
+		ItemStack[] items = new ItemStack[this.islandInventory.size()];
 		for (int i = 0; i < items.length; i++) {
-			String s = this.contentsInventory.get(i);
+			String s = this.islandInventory.get(i);
 			if (!s.equalsIgnoreCase("")) {
-				items[i] = this.parseStringToItemStack(this.contentsInventory.get(i));
+				items[i] = this.parseStringToItemStack(this.islandInventory.get(i));
 			}
 		}
 		return items;
 	}
 
-	public void setContentsArmor(ItemStack[] items) {
-		this.contentsArmor = new ArrayList<String>();
+	public void setIslandArmor(ItemStack[] items) {
+		this.islandArmor = new ArrayList<String>();
 		if (items == null) {
 			return;
 		}
 		for (ItemStack i : items) {
-			this.contentsArmor.add(this.parseItemStackToString(i));
+			this.islandArmor.add(this.parseItemStackToString(i));
 		}
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName);
 	}
 
-	public ItemStack[] getContentsArmor() {
-		ItemStack[] items = new ItemStack[this.contentsArmor.size()];
+	public ItemStack[] getIslandArmor() {
+		ItemStack[] items = new ItemStack[this.islandArmor.size()];
 		for (int i = 0; i < items.length; i++) {
-			String s = this.contentsArmor.get(i);
+			String s = this.islandArmor.get(i);
 			if (!s.equalsIgnoreCase("")) {
-				items[i] = this.parseStringToItemStack(this.contentsArmor.get(i));
+				items[i] = this.parseStringToItemStack(this.islandArmor.get(i));
 			}
 		}
 		return items;
+	}
+
+	public void setOldInventory(ItemStack[] items) {
+		this.oldInventory = new ArrayList<String>();
+		if (items == null) {
+			return;
+		}
+		for (ItemStack i : items) {
+			this.oldInventory.add(this.parseItemStackToString(i));
+		}
+	}
+
+	public ItemStack[] getOldInventory() {
+		ItemStack[] items = new ItemStack[this.oldInventory.size()];
+		for (int i = 0; i < items.length; i++) {
+			String s = this.oldInventory.get(i);
+			if (!s.equalsIgnoreCase("")) {
+				items[i] = this.parseStringToItemStack(this.oldInventory.get(i));
+			}
+		}
+		return items;
+	}
+
+	public void setOldArmor(ItemStack[] items) {
+		this.oldArmor = new ArrayList<String>();
+		if (items == null) {
+			return;
+		}
+		for (ItemStack i : items) {
+			this.oldArmor.add(this.parseItemStackToString(i));
+		}
+	}
+
+	public ItemStack[] getOldArmor() {
+		ItemStack[] items = new ItemStack[this.oldArmor.size()];
+		for (int i = 0; i < items.length; i++) {
+			String s = this.oldArmor.get(i);
+			if (!s.equalsIgnoreCase("")) {
+				items[i] = this.parseStringToItemStack(this.oldArmor.get(i));
+			}
+		}
+		return items;
+	}
+
+	public void addFriend(String s) {
+		this.friends.add(s);
+	}
+
+	public void removeFriend(String s) {
+		this.friends.remove(s);
+	}
+
+	public ArrayList<String> getFriends() {
+		return this.friends;
+	}
+
+	public void setIslandExp(float i) {
+		this.islandExp = i;
+	}
+
+	public float getIslandExp() {
+		return this.islandExp;
+	}
+
+	public void setOldExp(float i) {
+		this.oldExp = i;
+	}
+
+	public float getOldExp() {
+		return this.oldExp;
+	}
+
+	public void setIslandLevel(int i) {
+		this.islandLevel = i;
+	}
+
+	public int getIslandLevel() {
+		return this.islandLevel;
+	}
+
+	public void setOldLevel(int i) {
+		this.oldLevel = i;
+	}
+
+	public int getOldLevel() {
+		return this.oldLevel;
+	}
+
+	public void setIslandFood(int i) {
+		this.islandFood = i;
+	}
+
+	public int getIslandFood() {
+		return this.islandFood;
+	}
+
+	public void setOldFood(int i) {
+		this.oldFood = i;
+	}
+
+	public int getOldFood() {
+		return this.oldFood;
+	}
+
+	public void setIslandHealth(int i) {
+		this.islandHealth = i;
+	}
+
+	public int getIslandHealth() {
+		return this.islandHealth;
+	}
+
+	public void setOldHealth(int i) {
+		this.oldHealth = i;
+	}
+
+	public int getOldHealth() {
+		return this.oldHealth;
 	}
 
 	private ItemStack parseStringToItemStack(String s) {
@@ -208,5 +333,27 @@ public class PlayerInfo implements Serializable {
 			return "";
 		}
 		return i.getTypeId() + ":" + i.getAmount() + ":" + i.getDurability() + ":" + i.getData().getData();
+	}
+
+	private Location getLocationString(String s) {
+		if (s == null || s.trim() == "") {
+			return null;
+		}
+		String[] parts = s.split(":");
+		if (parts.length == 4) {
+			World w = Bukkit.getServer().getWorld(parts[0]);
+			int x = Integer.parseInt(parts[1]);
+			int y = Integer.parseInt(parts[2]);
+			int z = Integer.parseInt(parts[3]);
+			return new Location(w, x, y, z);
+		}
+		return null;
+	}
+
+	private String getStringLocation(Location l) {
+		if (l == null) {
+			return "";
+		}
+		return l.getWorld().getName() + ":" + l.getBlockX() + ":" + l.getBlockY() + ":" + l.getBlockZ();
 	}
 }

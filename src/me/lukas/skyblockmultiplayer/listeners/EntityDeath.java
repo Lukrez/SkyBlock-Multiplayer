@@ -8,7 +8,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class EntityDeath implements Listener {
@@ -37,27 +36,37 @@ public class EntityDeath implements Listener {
 		}
 
 		if (this.plugin.playerIsOnTower(player)) {
-			if(pi.getIslandLocation() == null) {
-				pi.setContentsInventory(player.getInventory().getContents());
-				pi.setContentsArmor(player.getInventory().getArmorContents());
-				event.getDrops().clear();
-			}
+			pi.setOldInventory(player.getInventory().getContents());
+			pi.setOldArmor(player.getInventory().getArmorContents());
+			pi.setOldExp(player.getExp());
+			pi.setOldLevel(player.getLevel());
+			pi.setOldFood(player.getFoodLevel());
+			pi.setOldHealth(player.getMaxHealth());
+
+			event.getDrops().clear();
+			event.setDroppedExp(0);
+
+			this.plugin.writePlayerFile(player.getName(), pi);
 			return;
 		}
 
 		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD && Settings.build_respawnWithInventory) {
-			pi.setContentsInventory(player.getInventory().getContents());
-			pi.setContentsArmor(player.getInventory().getArmorContents());
+			pi.setIslandInventory(player.getInventory().getContents());
+			pi.setIslandArmor(player.getInventory().getArmorContents());
+			pi.setIslandExp(player.getExp());
+			pi.setIslandLevel(player.getLevel());
+			pi.setIslandFood(player.getFoodLevel());
+			pi.setIslandHealth(player.getMaxHealth());
+
 			event.getDrops().clear();
+			event.setDroppedExp(0);
+
+			this.plugin.writePlayerFile(player.getName(), pi);
+
 			return;
 		}
 
 		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
-			if (event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID) {
-				player.teleport(player.getWorld().getSpawnLocation());
-				player.setHealth(player.getMaxHealth());
-				return;
-			}
 			return;
 		}
 
@@ -66,6 +75,9 @@ public class EntityDeath implements Listener {
 		}
 
 		pi.setDead(true);
+		pi.setLivesLeft(pi.getLivesLeft() - 1);
+
+		this.plugin.writePlayerFile(player.getName(), pi);
 
 		if (Settings.numbersPlayers < 1) {
 			return;

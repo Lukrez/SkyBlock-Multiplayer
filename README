@@ -37,6 +37,7 @@ Commands:
 /skyblock home remove - remove a player from your friend list
 /skyblock home join <player name> - teleport to a friends's island
 /skyblock home list - show all friends from your list
+/skyblock home set - change your spawn location
 /skyblock tower - teleport to the spawn tower
 /skyblock tower recreate - recreates the spawn tower
 
@@ -47,18 +48,19 @@ skyblock.newisland – needed only if PVP is on
 skyblock.reload - needed for reload commands
 skyblock.join - needed to join SkyBlock
 skyblock.build - to build on the spawn tower, to build on other player islands (only needed if build.withProtectedArea is true)
+skyblock.owner.set - needed for changing the owner of a island (neccessary for build mode)
+
+IMPORTANT: Before updating pleae delete the folder players inside the plugin folder. That means the player have not his island and inventory anymore, but you can give the players their islands back. With 
 
 Changelog:
  	- fixed bugs and issues
-	- added setting for pvp mode, livePointsPerPlayer
-	- fixed setting buildWithProtectedArea
-	- ender pearl can not be used to come on the tower
-	- added command skyblock tower - teleport to the spawn tower
-	- added command skyblock tower recreate - recreates the tower
-	- tower won't be recreated anymore after restart of the server, only if the world is deleted
-	- if player fell into void, should not anymore disconnecting the client
+	- added setting for pvp mode: livesPerIslands, islandsPerPlayer
+	- fixed stick
+	- added command /skyblock home set - change your spawn location
 	- language updated
 	- it could be possible, that I forget to mention something...
+	- if allowContent is false, inventory, food level health, exp and level will be saved by joining / leaving, in both cases
+	- added possibility to change the owner of a island, use the stick  to get the island number of the island and then use /skyblok setOwner <number> <player> - to change the owner of the island
 
 Downloads:
 https://github.com/Leseratte91/SkyBlock-Multiplayer/downloads

@@ -1,6 +1,6 @@
 name: SkyBlockMultiplayer
 main: me.lukas.skyblockmultiplayer.SkyBlockMultiplayer
-version: 0.52
+version: 0.53
 
 commands:
   skyblock:
