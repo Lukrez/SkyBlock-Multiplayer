@@ -9,7 +9,8 @@ public enum Permissions {
 	SKYBLOCK_NEWISLAND("skyblock.newisland"),
 	SKYBLOCK_RELOAD("skyblock.reload"),
 	SKYBLOCK_JOIN("skyblock.join"),
-	SKYBLOCK_BUILD("skyblock.build");
+	SKYBLOCK_BUILD("skyblock.build"),
+	SKYBLOCK_OWNER_SET("skyblock.owner.set");
 
 	private final String node;
 

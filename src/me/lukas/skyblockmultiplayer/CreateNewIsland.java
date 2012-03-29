@@ -13,36 +13,88 @@ public class CreateNewIsland {
 	public Location Islandlocation;
 
 	public CreateNewIsland(Player player) {
-
-		Settings.numberIslands += 1;
-		Location l = getIslandPosition(Settings.numberIslands);
+		int numberIslands = 1;
+		//Settings.numberIslands += 1;
+		Location l = getIslandPosition(numberIslands);
 
 		while (this.checkIfOccupied(l)) {
-			Settings.numberIslands += 1;
-			l = getIslandPosition(Settings.numberIslands);
+			//Settings.numberIslands += 1;
+			numberIslands++;
+			l = getIslandPosition(numberIslands);
 		}
 
-		player.sendMessage(Language.MSGS_showIslandNumber.sentence + Settings.numberIslands);
+		player.sendMessage(Language.MSGS_showIslandNumber.sentence + numberIslands);
 		this.createIsland(l);
 		this.Islandlocation = l;
 		// transport player
 		player.teleport(l);
 	}
 
-	/*public CreateNewIsland(int amount) {
-		Location l = getIslandPosition(Settings.numberIslands);
+	public CreateNewIsland(int amount) {
+		int numberIslands = 1;
+		Location l = getIslandPosition(numberIslands);
 		for (int i = 0; i < amount; i++) {
 			while (this.checkIfOccupied(l)) {
-				Settings.numberIslands += 1;
-				l = getIslandPosition(Settings.numberIslands);
-				System.out.println(Settings.numberIslands + " : Location " + SkyBlockMultiplayer.instance.getStringLocation(l));
+				numberIslands++;
+				l = getIslandPosition(numberIslands);
+				//System.out.println(numberIslands + " : Location " + SkyBlockMultiplayer.instance.getStringLocation(l));
 
 			}
 			this.createIsland(l);
 		}
-	}*/
+	}
 
-	public Location getIslandPosition(int n) {
+	public CreateNewIsland() {
+	}
+
+	public int getAmountOfIslands() {
+		int amountIslands = 1;
+		do {
+			Location locIsland = this.getIslandPosition(amountIslands);
+			int px = locIsland.getBlockX();
+			int py = locIsland.getBlockY() - 3;
+			int pz = locIsland.getBlockZ();
+			if (!new Location(SkyBlockMultiplayer.getSkyBlockWorld(), px, py, pz).getBlock().getType().equals(Material.BEDROCK)) {
+				break;
+			}
+			amountIslands++;
+		} while (true);
+		return amountIslands - 1;
+	}
+
+	public int getIslandNumber(Location l) {
+		for (int i = 1; i <= this.getAmountOfIslands(); i++) {
+			Location locIsland = this.getIslandPosition(i);
+			int islandX = locIsland.getBlockX();
+			int islandZ = locIsland.getBlockZ();
+
+			int locationX = l.getBlockX();
+			int locationZ = l.getBlockZ();
+
+			int dist = (Settings.distanceIslands / 2) - 3;
+
+			if (islandX + dist >= locationX && islandX - dist <= locationX) {
+				if (islandZ + dist >= locationZ && islandZ - dist <= locationZ) {
+					if (l.getWorld().getBlockAt(new Location(l.getWorld(), islandX, 61, islandZ)).getType().equals(Material.BEDROCK)) {
+						return i;
+					}
+				}
+			}
+		}
+		return 0;
+	}
+
+	public Location getIslandLocation(int number) {
+		for (int i = 1; i <= this.getAmountOfIslands(); i++) {
+			Location locIsland = this.getIslandPosition(i);
+			if (i == number) {
+				return locIsland;
+			}
+		}
+		return null;
+	}
+
+	private Location getIslandPosition(int n) {
 		//System.out.println("Erstelle Inselnr.: "+n);
 		int posX, posZ;
 		// Suche den momentanen Ring

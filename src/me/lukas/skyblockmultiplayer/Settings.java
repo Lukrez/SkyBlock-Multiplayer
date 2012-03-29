@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class Settings {
 
-	/** OPTIONS GLOBAL **/
+	/* OPTIONS GLOBAL */
 	public static ItemStack[] itemsChest; // Content of the chest
 	public static String language; // Language for the sentences
 	public static boolean allowContent; // Allow or disable content 
@@ -16,10 +16,9 @@ public class Settings {
 	public static int distanceIslands; // Distance between the player spawn locations
 	public static boolean closed; // Lock SkyBlock to maximize the amount of players
 
-	/** Needed for plugin **/
+	/* Needed for plugin */
 	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
 	public static int numbersPlayers; // Amount of players in SkyBlock
-	public static int numberIslands; // Amount of islands in SkyBlock
 
 	public static enum GAMEMODE { // Two game modes
 		BUILD, PVP
@@ -27,11 +26,12 @@ public class Settings {
 
 	public static GAMEMODE gameModeSelected; // Selected game mode
 
-	/** Gamemode is build **/
+	/* Gamemode is build */
 	public static boolean build_respawnWithInventory; // If true save contents of player in SkyBlock in Death
 	public static boolean build_withProtectedArea; // If true, protected Area around of the island and a player can not do anything on another island
 	public static boolean build_allowEnderpearl; // If true, player can use ender pearl
-	
-	/** Gamemode is pvp **/
-	public static int pvp_livePointsPerPlayer; // islands who every player have, 1 = only 1
+
+	/* Gamemode is pvp */
+	public static int pvp_livesPerIsland; // lives points for every island
+	public static int pvp_islandsPerPlayer; // amount of islands who every player can have
 }

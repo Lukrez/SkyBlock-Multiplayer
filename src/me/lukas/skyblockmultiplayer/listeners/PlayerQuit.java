@@ -1,7 +1,7 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 
 import org.bukkit.entity.Player;
@@ -21,20 +21,11 @@ public class PlayerQuit implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 
-		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) {
+		if (!player.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
 			return;
 		}
 
 		PlayerInfo pi = Settings.players.get(player.getName());
-
-		if (!this.plugin.checkIfEmpty(player.getInventory().getContents())) {
-			pi.setContentsInventory(player.getInventory().getContents());
-			player.getInventory().clear();
-		}
-
-		if (!this.plugin.checkIfEmpty(player.getInventory().getArmorContents())) {
-			pi.setContentsArmor(player.getInventory().getArmorContents());
-		}
 
 		if (pi.getIslandLocation() == null) {
 			Settings.players.remove(player.getName());

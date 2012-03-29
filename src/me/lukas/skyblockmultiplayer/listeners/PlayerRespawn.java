@@ -1,7 +1,7 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
-import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
+import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,27 +30,46 @@ public class PlayerRespawn implements Listener {
 			return;
 		}
 
-		if (pi.getIslandLocation() == null) {
-			player.getInventory().setContents(pi.getContentsInventory());
-			player.getInventory().setArmorContents(pi.getContentsArmor());
-			return;
-		}
+		if (Settings.gameModeSelected == Settings.GAMEMODE.PVP || this.plugin.playerIsOnTower(player) || pi.getIslandLocation() == null) {
+			/*player.getInventory().setContents(pi.getOldInventory());
+			player.getInventory().setArmorContents(pi.getOldArmor());
+			player.setExp(pi.getOldExp());
+			player.setLevel(pi.getOldLevel());
+			player.setFoodLevel(pi.getOldFood());
+			player.setHealth(player.getMaxHealth());
+			this.plugin.writePlayerFile(player.getName(), pi);*/
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.PVP || this.plugin.playerIsOnTower(player)) {
 			event.setRespawnLocation(player.getWorld().getSpawnLocation());
 			return;
 		}
 
 		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD && Settings.build_respawnWithInventory) {
-			player.getInventory().setContents(pi.getContentsInventory());
-			player.getInventory().setArmorContents(pi.getContentsArmor());
+			if (!this.plugin.playerIsOnTower(player) && pi.getIslandLocation() != null) {
+				player.getInventory().setContents(pi.getIslandInventory());
+				player.getInventory().setArmorContents(pi.getIslandArmor());
+				player.setExp(pi.getIslandExp());
+				player.setLevel(pi.getIslandLevel());
+				player.setFoodLevel(20);
+				player.setHealth(player.getMaxHealth());
+
+				this.plugin.writePlayerFile(player.getName(), pi);
+
+				if (pi.getHomeLocation() == null) {
+					event.setRespawnLocation(pi.getIslandLocation());
+				} else {
+					event.setRespawnLocation(pi.getHomeLocation());
+				}
+				return;
+			}
 		}
 
-		if (player.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
-			if (pi.getIslandLocation() != null) {
-				event.setRespawnLocation(pi.getIslandLocation());
-			} else {
-				event.setRespawnLocation(player.getWorld().getSpawnLocation());
+		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
+			if (!this.plugin.playerIsOnTower(player)) {
+				if (pi.getHomeLocation() == null) {
+					event.setRespawnLocation(pi.getIslandLocation());
+				} else {
+					event.setRespawnLocation(pi.getHomeLocation());
+				}
 			}
 		}
 	}

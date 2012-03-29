@@ -1,8 +1,8 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
+import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Permissions;
-import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
