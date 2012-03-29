@@ -17,6 +17,12 @@ How to install the plugin:
 Copy the SkyBlockMultiplayer.jar into your plugin folder
 Start the server, the plugin creates a folder named SkyBlockMultiplayer, this folder contains the config file and the language folder with the default english.yml
 
+IMPORTANT FOR UPDATING FROM PREVIOUS VERSIONS (< 0.53):
+Due to incompatibilities of the player info saving method between the versions 0.45 and 0.53, the player folder has to be deleted manually within the plugin folder.
+That means the player will loose their island and inventory. To save the inventory each player can to put the inventory into a chest before the update.
+The island itself can be given back after the update: Use the stick to click on an island to get the island number. Then use /skyblock setOwner <island number> <player> - to change the owner of the island.
+
+
 Commands:
 /skyblock – shows the version
 /skyblock join - join Skyblock
@@ -49,19 +55,17 @@ skyblock.newisland – needed only if PVP is on
 skyblock.reload - needed for reload commands
 skyblock.join - needed to join SkyBlock
 skyblock.build - to build on the spawn tower, to build on other player islands (only needed if build.withProtectedArea is true)
-skyblock.owner.set - needed for changing the owner of a island (neccessary for build mode)
-
-IMPORTANT: Before updating please, every user should save his inventory into chests, then delete the folder players inside the plugin folder. That means the player have not their island and inventory anymore, but you can give the players their islands back. With 
+skyblock.owner.set - needed for command /skyblock setowner <island number> <player>
 
 Changelog:
+	- IMPORTANT: player info saving method incompatible with previous version, please read installation note! 
  	- fixed bugs and issues
 	- added setting for pvp mode: livesPerIslands, islandsPerPlayer
 	- fixed stick
 	- added command /skyblock home set - change your spawn location
 	- language updated
-	- it could be possible, that I forget to mention something...
 	- if allowContent is false, inventory, food level health, exp and level will be saved by joining / leaving, in both cases
-	- added possibility to change the owner of a island, use the stick  to get the island number of the island and then use /skyblok setOwner <number> <player> - to change the owner of the island
+	- added possibility to change the owner of a island, with the command /skyblock setOwner <island number> <player>
 
 Downloads:
 https://github.com/Leseratte91/SkyBlock-Multiplayer/downloads
