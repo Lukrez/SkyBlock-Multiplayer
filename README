@@ -40,6 +40,7 @@ Commands:
 /skyblock home set - change your spawn location
 /skyblock tower - teleport to the spawn tower
 /skyblock tower recreate - recreates the spawn tower
+/skyblock setowner <island number> <player> - change the owner of a island
 
 Permissions:
 skyblock.set – needed for set commands
@@ -48,9 +49,10 @@ skyblock.newisland – needed only if PVP is on
 skyblock.reload - needed for reload commands
 skyblock.join - needed to join SkyBlock
 skyblock.build - to build on the spawn tower, to build on other player islands (only needed if build.withProtectedArea is true)
-skyblock.owner.set - needed for changing the owner of a island (neccessary for build mode)
+skyblock.owner.set - needed for command /skyblock setowner <island number> <player>
 
-IMPORTANT: Before updating pleae delete the folder players inside the plugin folder. That means the player have not his island and inventory anymore, but you can give the players their islands back. With 
+IMPORTANT: Before updating pleae delete the folder players inside the plugin folder. That means the player have not his island and inventory anymore, but you can give the players their islands back.
+Use the stick click on a island to get the island number. Then use /skyblock setOwner <island number> <player> - to change the owner of the island.
 
 Changelog:
  	- fixed bugs and issues
@@ -60,7 +62,7 @@ Changelog:
 	- language updated
 	- it could be possible, that I forget to mention something...
 	- if allowContent is false, inventory, food level health, exp and level will be saved by joining / leaving, in both cases
-	- added possibility to change the owner of a island, use the stick  to get the island number of the island and then use /skyblok setOwner <number> <player> - to change the owner of the island
+	- added possibility to change the owner of a island, with the command /skyblock setOwner <island number> <player>
 
 Downloads:
 https://github.com/Leseratte91/SkyBlock-Multiplayer/downloads
