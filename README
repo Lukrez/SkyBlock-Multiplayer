@@ -28,6 +28,7 @@ Commands:
 /skyblock set gamemode <option> - <build> or <pvp>
 /skyblock set closed - close SkyBlock to stop players to join
 /skyblock set opened - open SkyBlock to allow players to join
+/skyblock setOwner <island number> <player> - change the owner of a island
 /skyblock reset - reset Skyblock
 /skyblock reload config - reload config
 /skyblock reload language - reload language
@@ -50,7 +51,7 @@ skyblock.join - needed to join SkyBlock
 skyblock.build - to build on the spawn tower, to build on other player islands (only needed if build.withProtectedArea is true)
 skyblock.owner.set - needed for changing the owner of a island (neccessary for build mode)
 
-IMPORTANT: Before updating pleae delete the folder players inside the plugin folder. That means the player have not his island and inventory anymore, but you can give the players their islands back. With 
+IMPORTANT: Before updating please, every user should save his inventory into chests, then delete the folder players inside the plugin folder. That means the player have not their island and inventory anymore, but you can give the players their islands back. With 
 
 Changelog:
  	- fixed bugs and issues
