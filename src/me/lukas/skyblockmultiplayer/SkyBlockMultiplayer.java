@@ -542,11 +542,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					return true;
 				}
 
+				PlayerInfo pi = new PlayerInfo(res);
 				if (Settings.players.containsKey(res)) {
+					pi.setOldLocation(Settings.players.get(res).getOldLocation());
 					Settings.players.remove(res);
 				}
 
-				PlayerInfo pi = new PlayerInfo(res);
 				pi.setIslandLocation(new CreateNewIsland().getIslandLocation(islandNumber));
 				pi.setHasIsland(true);
 
@@ -1404,6 +1405,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			pi.setLivesLeft(Settings.pvp_livesPerIsland);
 			pi.setIslandLocation(null);
 			pi.setDead(false);
+			pi.setIslandFood(20);
 			pi.setIslandExp(0);
 			pi.setIslandLevel(0);
 

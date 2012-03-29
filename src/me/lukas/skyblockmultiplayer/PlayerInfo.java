@@ -77,8 +77,6 @@ public class PlayerInfo implements Serializable {
 
 		this.islandLevel = 0;
 		this.oldLevel = 0;
-
-		SkyBlockMultiplayer.instance.writePlayerFile(this.playerName, this);
 	}
 
 	public void setPlayerName(String s) {
