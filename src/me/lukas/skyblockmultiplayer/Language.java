@@ -38,6 +38,7 @@ public enum Language {
 	MSGS_CMDSETGAMEMODE("msgs.commands.setGameMode", "§6/skyblock set gamemode <option>§7 - <build> or <pvp>"),
 	MSGS_CMDSETCLOSED("msgs.commands.setClosed", "§6/skyblock set closed§7 - close SkyBlock to stop players to join"),
 	MSGS_CMDSETOPENED("msgs.commands.setOpened", "§6/skyblock set opened§7 - open SkyBlock to allow players to join"),
+	MSGS_CMDSETOWNER("msgs.commands.setOwner", "§6/skyblock setOwner <island number <player>§7 - change the owner of a island"),
 	MSGS_CMDRESET("msgs.commands.reset", "§6/skyblock reset§7 - reset SkyBlock"),
 	MSGS_CMDRELOADCONFIG("msgs.commands.reloadConfig", "§6/skyblock reload config§7 - reload config"),
 	MSGS_CMDRELOADLANGUAGE("msgs.commands.reloadLanguage", "§6/skyblock reload language§7 - reload language"),
