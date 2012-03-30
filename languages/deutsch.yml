@@ -83,7 +83,7 @@ msgs:
   onlyInBuildMode: Dies funktioniert nur in Build mode!
   backOnTower: Du bist nun zurück auf dem Spawnturm.
   spawnTowerReCreated: Der Spawnturm wurde neu generiert.
-  noMoreLivesAndIslands: GAME OVER!!!. Keine Lebenspunkte und Inseln mehr übrig.!
+  noMoreLivesAndIslands: GAME OVER!!! Keine Lebenspunkte und Inseln mehr übrig!
   invalidIslandNumber: Ungültige Inselnummer!
   changedOwnerTo: 'Eigentümer der Insel ist nun '
   spawnLocationChanged: Dein Spawnpunkt wurde geändert.
