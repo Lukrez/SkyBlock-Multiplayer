@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -88,6 +89,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		this.loadPlayerFiles();
 
 		this.log.info("v" + pluginFile.getVersion() + " enabled.");
+	}
+
+	public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+		return new SkyBlockChunkGenerator();
 	}
 
 	/**
@@ -397,7 +402,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	public static World getSkyBlockWorld() {
 		if (skyBlockWorld == null) {
 			boolean folderExists = new File(Settings.worldName).exists();
-			skyBlockWorld = WorldCreator.name(Settings.worldName).type(WorldType.NORMAL).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
+			skyBlockWorld = WorldCreator.name(Settings.worldName).type(WorldType.FLAT).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
 			if (!folderExists) {
 				SkyBlockMultiplayer.createSpawnTower();
 			}
@@ -617,8 +622,14 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				player.setExp(pi.getOldExp());
 				player.setLevel(pi.getOldLevel());
 				player.setFoodLevel(pi.getOldFood());
-				player.setHealth(pi.getOldHealth());
 
+				// check hp of player
+				if (pi.getOldHealth() <= 0) {
+					player.setHealth(player.getMaxHealth());
+					pi.setOldHealth(player.getMaxHealth());
+				} else {
+					player.setHealth(pi.getOldHealth());
+				}
 				this.writePlayerFile(player.getName(), pi);
 
 				player.teleport(player.getWorld().getSpawnLocation());
@@ -1097,6 +1108,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				return true;
 			}
 
+			// player has a island
 			if (!Settings.allowContent) {
 				// save before joining inventory, exp, level, food and health
 				pi.setOldInventory(player.getInventory().getContents());

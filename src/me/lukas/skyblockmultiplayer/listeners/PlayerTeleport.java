@@ -67,7 +67,14 @@ public class PlayerTeleport implements Listener {
 			player.setExp(pi.getOldExp());
 			player.setLevel(pi.getOldLevel());
 			player.setFoodLevel(pi.getOldFood());
-			player.setHealth(pi.getOldHealth());
+
+			// check hp of player
+			if (pi.getOldHealth() <= 0) {
+				player.setHealth(player.getMaxHealth());
+				pi.setOldHealth(player.getMaxHealth());
+			} else {
+				player.setHealth(pi.getOldHealth());
+			}
 
 			this.plugin.writePlayerFile(player.getName(), pi);
 			player.sendMessage(this.plugin.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
