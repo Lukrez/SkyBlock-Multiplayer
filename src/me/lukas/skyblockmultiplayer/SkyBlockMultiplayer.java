@@ -940,8 +940,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			pi.setHasIsland(false);
-
 			this.writePlayerFile(player.getName(), pi);
+
+			//this.playerStart(player);
 
 			player.sendMessage(this.pName + Language.MSGS_NEWISLANDPLAYER1.sentence + pi.getPlayer().getName() + Language.MSGS_NEWISLANDPLAYER2.sentence);
 			return true;
@@ -1304,9 +1305,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return true;
 		}
 
-		if (!Permissions.SKYBLOCK_JOIN.has(player)) {
+		/*if (!Permissions.SKYBLOCK_JOIN.has(player)) {
 			return this.notAuthorized(player);
-		}
+		}*/
 
 		if (Settings.closed) {
 			player.sendMessage(this.pName + Language.MSGS_ISCLOSED.sentence);
