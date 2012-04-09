@@ -66,7 +66,14 @@ public class PlayerTeleport implements Listener {
 			player.getInventory().setArmorContents(pi.getOldArmor());
 			player.setExp(pi.getOldExp());
 			player.setLevel(pi.getOldLevel());
-			player.setFoodLevel(pi.getOldFood());
+
+			// check food of player
+			if (pi.getOldFood() <= 0) {
+				player.setFoodLevel(20);
+				pi.setOldFood(20);
+			} else {
+				player.setFoodLevel(pi.getOldFood());
+			}
 
 			// check hp of player
 			if (pi.getOldHealth() <= 0) {
@@ -77,7 +84,7 @@ public class PlayerTeleport implements Listener {
 			}
 
 			this.plugin.writePlayerFile(player.getName(), pi);
-			player.sendMessage(this.plugin.pName + Language.MSGS_LEFTSKYBLOCK.sentence);
+			player.sendMessage(this.plugin.pName + Language.MSGS_LEFT_SKYBLOCK.sentence);
 			return;
 		}
 	}

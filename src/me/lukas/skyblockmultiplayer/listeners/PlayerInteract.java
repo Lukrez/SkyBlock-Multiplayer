@@ -82,11 +82,13 @@ public class PlayerInteract implements Listener {
 
 						if (i == 0) {
 							if (this.plugin.locationIsOnTower(player.getLocation())) {
-								player.sendMessage(this.plugin.pName + Language.MSGS_AREAOFSPAWNTOWER.sentence);
+								player.sendMessage(this.plugin.pName + Language.MSGS_AREA_OFSPAWN_TOWER.sentence);
+								event.setCancelled(true);
 								return;
 							}
 
-							player.sendMessage(Language.MSGS_AREABORDERS.sentence);
+							player.sendMessage(Language.MSGS_AREA_BORDERS.sentence);
+							event.setCancelled(true);
 							return;
 						}
 						player.sendMessage("Island number: " + i);
@@ -101,7 +103,8 @@ public class PlayerInteract implements Listener {
 						}
 
 						if (i == -1) {
-							player.sendMessage(Language.MSGS_AREABORDERS.sentence);
+							player.sendMessage(Language.MSGS_AREA_BORDERS.sentence);
+							event.setCancelled(true);
 							return;
 						}
 						player.sendMessage("Island number: " + i);

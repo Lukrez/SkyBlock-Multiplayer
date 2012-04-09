@@ -87,7 +87,7 @@ public class EntityDeath implements Listener {
 
 		for (PlayerInfo pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
-				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERDIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYERDIED2.sentence);
+				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_DIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYER_DIED2.sentence);
 			}
 		}
 
@@ -101,7 +101,7 @@ public class EntityDeath implements Listener {
 
 			for (PlayerInfo pInfo : Settings.players.values()) {
 				if (pInfo.getPlayer() != null) {
-					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYERWINBROADCAST1.sentence + winner + Language.MSGS_PLAYERWINBROADCAST2.sentence);
+					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_WIN_BROADCAST1.sentence + winner + Language.MSGS_PLAYER_WIN_BROADCAST2.sentence);
 				}
 			}
 			return;
