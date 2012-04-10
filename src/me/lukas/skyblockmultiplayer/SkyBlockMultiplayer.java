@@ -156,7 +156,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						int id = Integer.parseInt(dataValues[0]);
 						int amount = Integer.parseInt(dataValues[1]);
 
-						if (id >= 1 && id <= 124 || id >= 256 && id <= 385 || id >= 2256 && id <= 2266) {
+						Material m = Material.matchMaterial("" + dataValues[0]);
+						if (m != null) {
 							if (dataValues.length == 2) {
 								alitemsChest.add(new ItemStack(id, amount));
 							} else if (dataValues.length == 3) {
