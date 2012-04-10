@@ -125,6 +125,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.build_withProtectedArea = false;
 			Settings.build_allowEnderpearl = false;
 			Settings.worldName = this.pluginFile.getName();
+			Settings.messagesOutside = false;
 
 			for (ConfigPlugin c : ConfigPlugin.values()) {
 				this.setStringbyPath(this.configPlugin, this.filePlugin, c.path, c.value);
@@ -201,6 +202,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.build_allowEnderpearl = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_BUILD_ALLOWENDERPEARL.path, false, true));
 			Settings.worldName = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_WORLDNAME.path, this.pluginFile.getName(), true);
 			Settings.closed = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_CLOSED.path, false, true));
+			Settings.messagesOutside = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_MESSAGES_OUTSIDE.path, false, true));
 		}
 	}
 
@@ -425,6 +427,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			if (args.length == 0) {
 				sender.sendMessage(this.pluginFile.getName() + " v" + this.pluginFile.getVersion());
 				sender.sendMessage(Language.MSGS_SKYBLOCK.sentence);
+				return true;
+			}
+
+			if (args[0].equalsIgnoreCase("show")) {
+				sender.sendMessage("" + Settings.messagesOutside);
 				return true;
 			}
 
@@ -1122,7 +1129,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				// send message to all
 				for (PlayerInfo pInfo : Settings.players.values()) {
 					if (pInfo.getPlayer() != null) {
-						if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || Permissions.SKYBLOCK_MESSAGE.has(player)) {
+						if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || (Permissions.SKYBLOCK_MESSAGES.has(pInfo.getPlayer()) && Settings.messagesOutside)) {
 							pInfo.getPlayer().sendMessage(this.pName + Language.MSGS_WELCOME_BROADCAST1.sentence + player.getName() + Language.MSGS_WELCOME_BROADCAST2.sentence);
 						}
 					}
@@ -1338,7 +1345,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		// Message to all
 		for (PlayerInfo pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
-				if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || Permissions.SKYBLOCK_MESSAGE.has(player)) {
+				if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || (Permissions.SKYBLOCK_MESSAGES.has(pInfo.getPlayer()) && Settings.messagesOutside)) {
 					pInfo.getPlayer().sendMessage(this.pName + Language.MSGS_WELCOME_BROADCAST1.sentence + player.getName() + Language.MSGS_WELCOME_BROADCAST2.sentence);
 				}
 			}

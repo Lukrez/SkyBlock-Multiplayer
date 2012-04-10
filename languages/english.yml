@@ -90,3 +90,6 @@ msgs:
   changeOfHomeLocationOnlyInOwnArea: You can change your spawn point only in your region.
   noIslandTeleportImpossible: You have no island, you can not teleport to your friend.
   areaOfSpawnTower: Area of spawn tower.
+  onlyOnTower: This command works only on the tower.
+  onlyOutsideOfSb: This command works only outside of SkyBlock.
+  onlyInsideOfSb: This command works only inside of SkyBlock.

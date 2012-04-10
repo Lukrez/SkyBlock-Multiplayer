@@ -47,7 +47,7 @@ msgs:
   wrongArgs: Falsche oder fehlende Argumente
   welcome1: 'Willkommen auf der Welt SkyBlock für Multiplayer! Es gibt momentan '
   welcome2: ' Inseln und '
-  welcome3: ' Spieler. Gib \"/skyblock start\" ein um eine eigene Insel zu bekommen.'
+  welcome3: ' Spieler. Gib "/skyblock start" ein um eine eigene Insel zu bekommen.'
   welcomeBack: 'Willkommen zurück '
   welcomeBroadcast1: 'Der Spieler '
   welcomeBroadcast2: ' spielt mit.'
@@ -83,10 +83,13 @@ msgs:
   onlyInBuildMode: Dies funktioniert nur in Build mode!
   backOnTower: Du bist nun zurück auf dem Spawnturm.
   spawnTowerReCreated: Der Spawnturm wurde neu generiert.
-  noMoreLivesAndIslands: GAME OVER!!! Keine Lebenspunkte und Inseln mehr übrig!
+  noMoreLivesAndIslands: GAME OVER!!!. Keine Lebenspunkte und Inseln mehr übrig.!
   invalidIslandNumber: Ungültige Inselnummer!
   changedOwnerTo: 'Eigentümer der Insel ist nun '
   spawnLocationChanged: Dein Spawnpunkt wurde geändert.
   changeOfHomeLocationOnlyInOwnArea: Du kannst dein Spawnpunkt nur in deiner Region ändern.
   noIslandTeleportImpossible: Du hast keine Insel, teleportieren nicht möglich.
   areaOfSpawnTower: Gebiet des Spawnturms.
+  onlyOnTower: Dieser Befehl funktioniert nur vom Tower aus.
+  onlyOutsideOfSb: Dieser Befehl funktioniert nur außerhalb von SkyBlock.
+  onlyInsideOfSb: Dieser Befehl funktioniert nur innerhalb von SkyBlock.

@@ -10,6 +10,7 @@ public enum ConfigPlugin {
 	OPTIONS_GAMEMODE("options.gameMode", "build"),
 	OPTIONS_WORLDNAME("options.worldName", Settings.worldName),
 	OPTIONS_CLOSED("options.closed", false),
+	OPTIONS_MESSAGES_OUTSIDE("options.messagesOutside", false),
 	OPTIONS_PVP("options.pvp", ""),
 	OPTIONS_PVP_LIVESPERISLAND("options.pvp.livesPerIsland", 1),
 	OPTIONS_PVP_ISLANDSPERPLAYER("options.pvp.islandsPerPlayer", 1),

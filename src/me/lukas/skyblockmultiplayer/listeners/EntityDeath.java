@@ -88,7 +88,7 @@ public class EntityDeath implements Listener {
 
 		for (PlayerInfo pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
-				if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || Permissions.SKYBLOCK_MESSAGE.has(player)) {
+				if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || (Permissions.SKYBLOCK_MESSAGES.has(pInfo.getPlayer()) && Settings.messagesOutside)) {
 					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_DIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYER_DIED2.sentence);
 				}
 			}
@@ -104,7 +104,7 @@ public class EntityDeath implements Listener {
 
 			for (PlayerInfo pInfo : Settings.players.values()) {
 				if (pInfo.getPlayer() != null) {
-					if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || Permissions.SKYBLOCK_MESSAGE.has(player)) {
+					if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || (Permissions.SKYBLOCK_MESSAGES.has(pInfo.getPlayer()) && Settings.messagesOutside)) {
 						pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_WIN_BROADCAST1.sentence + winner + Language.MSGS_PLAYER_WIN_BROADCAST2.sentence);
 					}
 				}
