@@ -428,6 +428,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				return true;
 			}
 
+			// only for testing
 			/*if (args[0].equalsIgnoreCase("create")) {
 				new CreateNewIsland(Integer.parseInt(args[1]));
 				return true;
@@ -572,6 +573,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 			if (args[0].equalsIgnoreCase("tower")) {
 				if (!player.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+					player.sendMessage(this.pName + Language.MSGS_ONLY_INSIDE_OF_SB.sentence);
 					return true;
 				}
 
@@ -586,19 +588,21 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						pi = new PlayerInfo(player.getName());
 						pi.setOldLocation(player.getLocation());
 
-						pi.setIslandInventory(player.getInventory().getContents());
-						pi.setIslandArmor(player.getInventory().getArmorContents());
-						pi.setIslandExp(player.getExp());
-						pi.setIslandLevel(player.getLevel());
-						pi.setIslandFood(player.getFoodLevel());
-						pi.setIslandHealth(player.getHealth());
+						if (!Settings.allowContent) {
+							pi.setIslandInventory(player.getInventory().getContents());
+							pi.setIslandArmor(player.getInventory().getArmorContents());
+							pi.setIslandExp(player.getExp());
+							pi.setIslandLevel(player.getLevel());
+							pi.setIslandFood(player.getFoodLevel());
+							pi.setIslandHealth(player.getHealth());
 
-						player.getInventory().setContents(pi.getOldInventory());
-						player.getInventory().setArmorContents(pi.getOldArmor());
-						player.setExp(pi.getOldExp());
-						player.setLevel(pi.getOldLevel());
-						player.setFoodLevel(20);
-						player.setHealth(player.getMaxHealth());
+							player.getInventory().setContents(pi.getOldInventory());
+							player.getInventory().setArmorContents(pi.getOldArmor());
+							player.setExp(pi.getOldExp());
+							player.setLevel(pi.getOldLevel());
+							player.setFoodLevel(20);
+							player.setHealth(player.getMaxHealth());
+						}
 
 						Settings.players.put(player.getName(), pi);
 						this.writePlayerFile(player.getName(), pi);
@@ -610,33 +614,36 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					Settings.players.put(player.getName(), pi);
 				}
 
-				pi.setIslandInventory(player.getInventory().getContents());
-				pi.setIslandArmor(player.getInventory().getArmorContents());
-				pi.setIslandExp(player.getExp());
-				pi.setIslandLevel(player.getLevel());
-				pi.setIslandFood(player.getFoodLevel());
-				pi.setIslandHealth(player.getHealth());
+				if (!Settings.allowContent) {
+					pi.setIslandInventory(player.getInventory().getContents());
+					pi.setIslandArmor(player.getInventory().getArmorContents());
+					pi.setIslandExp(player.getExp());
+					pi.setIslandLevel(player.getLevel());
+					pi.setIslandFood(player.getFoodLevel());
+					pi.setIslandHealth(player.getHealth());
 
-				player.getInventory().setContents(pi.getOldInventory());
-				player.getInventory().setArmorContents(pi.getOldArmor());
-				player.setExp(pi.getOldExp());
-				player.setLevel(pi.getOldLevel());
+					player.getInventory().setContents(pi.getOldInventory());
+					player.getInventory().setArmorContents(pi.getOldArmor());
+					player.setExp(pi.getOldExp());
+					player.setLevel(pi.getOldLevel());
 
-				// check food od player
-				if (pi.getOldFood() <= 0) {
-					player.setFoodLevel(20);
-					pi.setOldFood(20);
-				} else {
-					player.setFoodLevel(pi.getOldFood());
+					// check food od player
+					if (pi.getOldFood() <= 0) {
+						player.setFoodLevel(20);
+						pi.setOldFood(20);
+					} else {
+						player.setFoodLevel(pi.getOldFood());
+					}
+
+					// check hp of player
+					if (pi.getOldHealth() <= 0) {
+						player.setHealth(player.getMaxHealth());
+						pi.setOldHealth(player.getMaxHealth());
+					} else {
+						player.setHealth(pi.getOldHealth());
+					}
 				}
 
-				// check hp of player
-				if (pi.getOldHealth() <= 0) {
-					player.setHealth(player.getMaxHealth());
-					pi.setOldHealth(player.getMaxHealth());
-				} else {
-					player.setHealth(pi.getOldHealth());
-				}
 				this.writePlayerFile(player.getName(), pi);
 
 				player.teleport(player.getWorld().getSpawnLocation());
@@ -1025,7 +1032,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.players.put(player.getName(), pi);
 		}
 
-		if (this.playerIsOnTower(player)) {
+		if (!this.playerIsOnTower(player)) {
 			player.sendMessage(this.pName + Language.MSGS_ONLY_ON_TOWER.sentence);
 			return true;
 		}
@@ -1098,21 +1105,26 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					pi.setOldFood(player.getFoodLevel());
 					pi.setOldHealth(player.getHealth());
 
-					// clear values
+					// clear inventory
 					player.getInventory().clear();
 					this.clearArmorContents(player);
+
 					player.setExp(0);
 					player.setLevel(0);
 					player.setFoodLevel(20);
 					player.setHealth(player.getMaxHealth());
 				}
 
+				// teleport player
+				player.teleport(pi.getIslandLocation());
 				Settings.numbersPlayers++;
 
 				// send message to all
 				for (PlayerInfo pInfo : Settings.players.values()) {
 					if (pInfo.getPlayer() != null) {
-						pInfo.getPlayer().sendMessage(this.pName + Language.MSGS_WELCOME_BROADCAST1.sentence + player.getName() + Language.MSGS_WELCOME_BROADCAST2.sentence);
+						if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || Permissions.SKYBLOCK_MESSAGE.has(player)) {
+							pInfo.getPlayer().sendMessage(this.pName + Language.MSGS_WELCOME_BROADCAST1.sentence + player.getName() + Language.MSGS_WELCOME_BROADCAST2.sentence);
+						}
 					}
 				}
 
@@ -1202,15 +1214,16 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					pi.setDead(false);
 					pi.setHasIsland(true);
 
-					Settings.numbersPlayers++;
 					player.teleport(pi.getIslandLocation());
+					Settings.numbersPlayers++;
+					player.sendMessage(this.pName + "You have " + pi.getLivesLeft() + " lives on this island and " + pi.getIslandsLeft() + " islands left.");
 
 					this.writePlayerFile(player.getName(), pi);
 					player.sendMessage(this.pName + Language.MSGS_TO_NEW_PLAYER.sentence);
 					return true;
 				}
 
-				// lives left
+				// lives on island left
 				pi.setDead(false);
 				if (!Settings.allowContent) {
 					// save before joining inventory, exp, level, food and health
@@ -1235,6 +1248,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				// teleport player
 				player.teleport(pi.getIslandLocation());
 				Settings.numbersPlayers++;
+				player.sendMessage(this.pName + "You have " + pi.getLivesLeft() + " lives on this island and " + pi.getIslandsLeft() + " islands left.");
 
 				this.writePlayerFile(player.getName(), pi);
 				player.sendMessage(this.pName + Language.MSGS_WELCOME_BACK.sentence + player.getName());
@@ -1256,7 +1270,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				player.setExp(pi.getIslandExp());
 				player.setLevel(pi.getIslandLevel());
 
-				// check food od player
+				// check food of player
 				if (pi.getIslandFood() <= 0) {
 					player.setFoodLevel(20);
 					pi.setIslandFood(20);
@@ -1276,6 +1290,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			// teleport player
 			player.teleport(pi.getIslandLocation());
 			Settings.numbersPlayers++;
+			player.sendMessage(this.pName + "You have " + pi.getLivesLeft() + " lives on this island and " + pi.getIslandsLeft() + " islands left.");
 
 			this.writePlayerFile(player.getName(), pi);
 			player.sendMessage(this.pName + Language.MSGS_WELCOME_BACK.sentence + player.getName());
@@ -1312,16 +1327,20 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		pi.setDead(false);
 		pi.setIslandsLeft(pi.getIslandsLeft() - 1);
 
-		this.writePlayerFile(player.getName(), pi);
-
 		// teleport player
 		player.teleport(pi.getIslandLocation());
+		Settings.numbersPlayers++;
+		this.writePlayerFile(player.getName(), pi);
+
 		player.sendMessage(this.pName + Language.MSGS_TO_NEW_PLAYER.sentence);
+		player.sendMessage(this.pName + "You have " + pi.getLivesLeft() + " lives on this island and " + pi.getIslandsLeft() + " islands left.");
 
 		// Message to all
 		for (PlayerInfo pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
-				pInfo.getPlayer().sendMessage(this.pName + Language.MSGS_WELCOME_BROADCAST1.sentence + player.getName() + Language.MSGS_WELCOME_BROADCAST2.sentence);
+				if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || Permissions.SKYBLOCK_MESSAGE.has(player)) {
+					pInfo.getPlayer().sendMessage(this.pName + Language.MSGS_WELCOME_BROADCAST1.sentence + player.getName() + Language.MSGS_WELCOME_BROADCAST2.sentence);
+				}
 			}
 		}
 		return true;

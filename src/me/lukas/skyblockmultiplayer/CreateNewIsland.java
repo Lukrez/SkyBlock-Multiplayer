@@ -13,11 +13,9 @@ public class CreateNewIsland {
 
 	public CreateNewIsland(Player player) {
 		int numberIslands = 1;
-		//Settings.numberIslands += 1;
 		Location l = getIslandPosition(numberIslands);
 
 		while (this.checkIfOccupied(l)) {
-			//Settings.numberIslands += 1;
 			numberIslands++;
 			l = getIslandPosition(numberIslands);
 		}
@@ -25,10 +23,13 @@ public class CreateNewIsland {
 		player.sendMessage(Language.MSGS_SHOW_ISLAND_NUMBER.sentence + numberIslands);
 		this.createIsland(l);
 		this.Islandlocation = l;
-		// transport player
-		player.teleport(l);
 	}
 
+	/**
+	 * Creates a specified amount of islands , only for testing.
+	 * 
+	 * @param amount
+	 */
 	public CreateNewIsland(int amount) {
 		int numberIslands = 1;
 		Location l = getIslandPosition(numberIslands);

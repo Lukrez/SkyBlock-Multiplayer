@@ -1,5 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
+import me.lukas.skyblockmultiplayer.Permissions;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Language;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
@@ -87,7 +88,9 @@ public class EntityDeath implements Listener {
 
 		for (PlayerInfo pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
-				pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_DIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYER_DIED2.sentence);
+				if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || Permissions.SKYBLOCK_MESSAGE.has(player)) {
+					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_DIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYER_DIED2.sentence);
+				}
 			}
 		}
 
@@ -101,7 +104,9 @@ public class EntityDeath implements Listener {
 
 			for (PlayerInfo pInfo : Settings.players.values()) {
 				if (pInfo.getPlayer() != null) {
-					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_WIN_BROADCAST1.sentence + winner + Language.MSGS_PLAYER_WIN_BROADCAST2.sentence);
+					if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || Permissions.SKYBLOCK_MESSAGE.has(player)) {
+						pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_WIN_BROADCAST1.sentence + winner + Language.MSGS_PLAYER_WIN_BROADCAST2.sentence);
+					}
 				}
 			}
 			return;

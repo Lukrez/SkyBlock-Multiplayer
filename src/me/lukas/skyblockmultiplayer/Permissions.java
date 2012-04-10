@@ -10,7 +10,8 @@ public enum Permissions {
 	SKYBLOCK_RELOAD("skyblock.reload"),
 	SKYBLOCK_JOIN("skyblock.join"),
 	SKYBLOCK_BUILD("skyblock.build"),
-	SKYBLOCK_OWNER_SET("skyblock.owner.set");
+	SKYBLOCK_OWNER_SET("skyblock.owner.set"),
+	SKYBLOCK_MESSAGE("skyblock.message");
 
 	private final String node;
 
