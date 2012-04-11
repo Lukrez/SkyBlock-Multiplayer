@@ -93,3 +93,6 @@ msgs:
   changeOfHomeLocationOnlyInOwnArea: Je kan je home locatie alleen veranderen in je eigen gebied.
   noIslandTeleportImpossible: Je hebt geen eiland, je kan niet teleporteren naar je vriend.
   areaOfSpawnTower: Gebied van de toren.
+  onlyOnTower: This command works only on the tower.
+  onlyOutsideOfSb: This command works only outside of SkyBlock.
+  onlyInsideOfSb: This command works only inside of SkyBlock.
