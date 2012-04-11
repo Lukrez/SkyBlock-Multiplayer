@@ -1,7 +1,7 @@
 Description:
 
 This plugin is a multiplayer version of the singleplayer version of SkyBlock which contains two different game modes:
-(1) PvP mode, where each player can have one or more islands
+(1) PvP mode, where each player can have a defined finite number of islands or lives
 (2) build mode with endless lifes
 
 The plugin creates an empty minecraft world with the name "SkyBlockMultiplayer" additional to your existing worlds.
@@ -16,6 +16,13 @@ These files can be copied into the folder SkyBlockMultiplayer/languages and can 
 How to install the plugin:
 Copy the SkyBlockMultiplayer.jar into your plugin folder
 Start the server, the plugin creates a folder named SkyBlockMultiplayer, this folder contains the config file and the language folder with the default english.yml
+
+Important for Multiverse users:
+To import the world within multiverse use: /mv import SkyBlockMultiplayer normal -g SkyBlockMultiplayer
+At the moment there is an issue regarding the chunkgenerator that creates the empty world for this plugin. 
+In multiverse the generator can potentially be overwritten by multiverse and original minecraft chunks are generated. 
+If this happens, please use the CleanRoomGenerator instead: /mv import SkyBlockMultiplayer normal -g CleanRoomGenerator
+
 
 Commands:
 /skyblock – shows the version
