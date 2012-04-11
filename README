@@ -17,12 +17,6 @@ How to install the plugin:
 Copy the SkyBlockMultiplayer.jar into your plugin folder
 Start the server, the plugin creates a folder named SkyBlockMultiplayer, this folder contains the config file and the language folder with the default english.yml
 
-IMPORTANT FOR UPDATING FROM PREVIOUS VERSIONS (< 0.53):
-Due to incompatibilities of the player info saving method between the versions 0.45 and 0.53, the player folder has to be deleted manually within the plugin folder if exists.
-That means the player will loose their island and inventory. To save the inventory each player can to put the inventory into a chest before the update.
-The island itself can be given back after the update: Use the stick to click on an island to get the island number. Then use /skyblock setOwner <island number> <player> - to change the owner of the island.
-
-
 Commands:
 /skyblock – shows the version
 /skyblock join - join Skyblock
@@ -56,16 +50,17 @@ skyblock.reload - needed for reload commands
 skyblock.join - needed to join SkyBlock
 skyblock.build - to build on the spawn tower, to build on other player islands (only needed if build.withProtectedArea is true)
 skyblock.owner.set - needed for command /skyblock setowner <island number> <player>
+skyblock.messages - needed to get messages outside from SkyBlock
 
 Changelog:
-	- IMPORTANT: player info saving method incompatible with previous version, please read installation note! 
- 	- fixed bugs and issues
-	- added setting for pvp mode: livesPerIslands, islandsPerPlayer
-	- fixed stick
-	- added command /skyblock home set - change your spawn location
-	- language updated
-	- if allowContent is false, inventory, food level health, exp and level will be saved by joining / leaving, in both cases
-	- added possibility to change the owner of a island, with the command /skyblock setOwner <island number> <player>
+ 	- fixed issues if allowContent is true
+	- fixed issues player could have after leaving, joining SkyBlock 0 health, food
+	- fixed problem with the generator, if server have running multiverse, if you have a older version of SkyBlock use: 
+		- /mv import SkyBlockMultiplayer normal -g SkyBlockMultiplayer
+	- leaving of SkyBlock only works now from tower, do first /skyblock tower then the command with that you want to leave SkyBlock
+	- Don't get anymore messages outside from SkyBlock, only with permissions skyblock.messages and if setting messagesOutside is true
+	- fixed language reading and saving
+	- updated language
 
 Downloads:
 https://github.com/Leseratte91/SkyBlock-Multiplayer/downloads
