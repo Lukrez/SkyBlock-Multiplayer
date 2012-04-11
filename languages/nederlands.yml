@@ -24,7 +24,7 @@ msgs:
     join: §6/skyblock join§7 - Skyblock joinen
     start: §6/skyblock start§7 - Een eiland krijgen
     leave: §6/skyblock leave§7 - Skyblock verlaten
-    newIsland: §6/skyblock newIsland §a[player]§7 - Geef jezelf of iemand anders een nieuw eiland
+    newIsland: §6/skyblock newIsland §c[player]§7 - Geef jezelf of iemand anders een nieuw eiland
     setOffline: §6/skyblock set offline§7 - Skyblock uitzetten
     setOnline: §6/skyblock set online§7 - Skyblock aanzetten
     setLanguage: §6/skyblock set language §c<language>§7 - De taal veranderen
@@ -93,6 +93,6 @@ msgs:
   changeOfHomeLocationOnlyInOwnArea: Je kan je home locatie alleen veranderen in je eigen gebied.
   noIslandTeleportImpossible: Je hebt geen eiland, je kan niet teleporteren naar je vriend.
   areaOfSpawnTower: Gebied van de toren.
-  onlyOnTower: This command works only on the tower.
-  onlyOutsideOfSb: This command works only outside of SkyBlock.
-  onlyInsideOfSb: This command works only inside of SkyBlock.
+  onlyOnTower: Deze command werkt alleen als je op de toren bent.
+  onlyOutsideOfSb: Deze command werkt alleen buiten de Skyblock wereld.
+  onlyInsideOfSb: Deze command werkt alleen binnen de Skyblock wereld.
