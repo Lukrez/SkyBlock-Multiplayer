@@ -32,7 +32,7 @@ msgs:
     setGameMode: §6/skyblock gamemode §c<option>§7 - <build> oder <pvp>
     setClosed: §6/skyblock set closed§7 - schliesse SkyBlock, kein Spieler mehr kann joinen
     setOpened: §6/skyblock set opened§7 - öffne SkyBlock, Spieler können wieder joinen
-    setOwner: §6/skyblock setOwner §c<island number> <player>§7 - change the owner of a island
+    setOwner: §6/skyblock setOwner §c<island number> <player>§7 - ändere, setzte den Eigentümer einer Insel
     reset: §6/skyblock reset§7 - Resette Skyblock
     reloadConfig: §6/skyblock reload config§7 - Lade die Config-Datei neu
     reloadLanguage: §6/skyblock reload language§7 - Lade die Sprachdatei neu
