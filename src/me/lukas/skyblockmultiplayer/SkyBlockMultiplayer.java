@@ -1615,7 +1615,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 
 		String pluginName = this.pName.replace("[", "").replace("]", "");
-		if (page == 1 || page < 1) {
+		if (page <= 1) {
 			String top = ChatColor.GOLD + "----- " + pluginName + " help index (1/2) " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
 			String msgs = top + sb_join + sb_start + sb_tower + sb_leave + sb_status + sb_home + sb_home_add + sb_home_remove + sb_home_join + sb_home_list + sb_home_set;
 
