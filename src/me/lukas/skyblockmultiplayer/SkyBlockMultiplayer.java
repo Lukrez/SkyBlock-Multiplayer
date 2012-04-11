@@ -6,8 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 import me.lukas.skyblockmultiplayer.listeners.EntityDeath;
@@ -79,7 +82,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		this.configLanguage = new YamlConfiguration();
 		this.fileLanguage = new File(this.getDataFolder() + File.separator + "language", Settings.language + ".yml");
-		this.loadLanguageConfig();
+		try {
+			this.loadLanguageConfig();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		this.directoryPlayers = new File(this.getDataFolder() + File.separator + "players");
 		if (!this.directoryPlayers.exists()) {
@@ -262,43 +269,41 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * Loads the language file, that is setted in conig.yml
 	 * 
 	 */
-	private void loadLanguageConfig() {
+	private void loadLanguageConfig() throws Exception {
 		if (!new File(this.getDataFolder() + File.separator + "language").exists()) {
 			new File(this.getDataFolder() + File.separator + "language").mkdirs();
 		}
 
 		if (!this.fileLanguage.exists()) {
-			try {
-				this.fileLanguage.createNewFile(); //create file
-				this.writeLanguageConfig(); //write standard language	
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				this.configLanguage.load(this.fileLanguage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.fileLanguage.createNewFile(); //create file
+			this.writeLanguageConfig(); //write standard language
 		} else {
-			try {
-				this.configLanguage.load(this.fileLanguage);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return;
+			Scanner scanner = new Scanner(new FileInputStream(this.fileLanguage), "Cp1252");
+			String contentToRead = "";
+			while (scanner.hasNextLine()) {
+				contentToRead += scanner.nextLine() + System.getProperty("line.separator");
 			}
+			scanner.close();
 
+			// this.configLanguage.load(this.fileLanguage);
+			this.configLanguage.loadFromString(contentToRead);
+			boolean missingSentences = false;
 			for (Language g : Language.values()) {
 				String path = g.path;
 				if (!this.configLanguage.contains(path)) {
 					this.configLanguage.set(path, g.sentence);
-					try {
-						this.configLanguage.save(this.fileLanguage);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					missingSentences = true;
 				} else {
 					g.sentence = this.replaceColor(this.configLanguage.getString(path));
 				}
+			}
+
+			if (missingSentences) {
+				String contentToSave = this.configLanguage.saveToString();
+				Writer out = new OutputStreamWriter(new FileOutputStream(this.fileLanguage), "Cp1252");
+				out.write(contentToSave);
+				out.flush();
+				out.close();
 			}
 		}
 		SkyBlockMultiplayer.getSkyBlockWorld();
@@ -347,18 +352,20 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 	/**
 	 * This writes the the language yml file.
+	 * @throws IOException 
 	 * 
 	 */
-	private void writeLanguageConfig() {
+	private void writeLanguageConfig() throws IOException {
 		for (Language g : Language.values()) {
 			String path = g.path;
 			this.configLanguage.set(path, g.sentence);
 		}
-		try {
-			this.configLanguage.save(this.fileLanguage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		String contentToSave = this.configLanguage.saveToString();
+		Writer out = new OutputStreamWriter(new FileOutputStream(this.fileLanguage), "Cp1252");
+		out.write(contentToSave);
+		out.flush();
+		out.close();
 	}
 
 	/**
@@ -1443,13 +1450,18 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * 
 	 * @param sender that types the command.
 	 * @return returns true.
+	 * @throws  
 	 */
 	private boolean reloadLanguage(CommandSender sender) {
 		if (!Permissions.SKYBLOCK_RELOAD.has(sender)) {
 			return this.notAuthorized(sender);
 		}
 
-		this.loadLanguageConfig();
+		try {
+			this.loadLanguageConfig();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		sender.sendMessage(this.pName + Language.MSGS_LANGUAGE_RELOADED.sentence);
 		return true;
 	}
