@@ -926,7 +926,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return true;
 
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			this.log.warning(ex.getMessage());
 			sender.sendMessage(this.pName + Language.MSGS_ERROR_OCCURED.sentence);
 			return true;
 		}
@@ -1423,7 +1423,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			if (f.exists()) {
 				try {
 					this.fileLanguage = f;
-					this.configLanguage.load(f);
+					Scanner scanner = new Scanner(new FileInputStream(this.fileLanguage), "Cp1252");
+					String contentToRead = "";
+					while (scanner.hasNextLine()) {
+						contentToRead += scanner.nextLine() + System.getProperty("line.separator");
+					}
+					scanner.close();
+					this.configLanguage.loadFromString(contentToRead);
 					this.loadLanguageConfig();
 					Settings.language = s;
 					this.setStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_LANGUAGE.path, s);
@@ -1654,7 +1660,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					this.getAllFiles(f.getAbsolutePath());
 				}
 			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
+				this.log.warning(ex.getMessage());
 			}
 		}
 	}
