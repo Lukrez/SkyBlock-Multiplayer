@@ -33,7 +33,10 @@ public class EntityDeath implements Listener {
 
 		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) { // Check, if player is in playerlist
-			return;
+			pi = SkyBlockMultiplayer.instance.readPlayerFile(player.getName());
+			if (pi == null) {
+				return;
+			}
 		}
 
 		if (this.plugin.playerIsOnTower(player)) {
@@ -77,6 +80,9 @@ public class EntityDeath implements Listener {
 
 		pi.setDead(true);
 		pi.setLivesLeft(pi.getLivesLeft() - 1);
+		if (pi.getLivesLeft() != 0 || pi.getIslandsLeft() != 0) {
+			return;
+		}
 
 		this.plugin.writePlayerFile(player.getName(), pi);
 

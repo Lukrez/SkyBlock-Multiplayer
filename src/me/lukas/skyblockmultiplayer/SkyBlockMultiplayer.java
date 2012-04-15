@@ -26,6 +26,10 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -694,9 +698,22 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				if (args.length == 1) {
 					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
-						return true;
+						pi = this.readPlayerFile(player.getName());
+						if (pi == null) {
+							return true;
+						}
+						Settings.players.put(player.getName(), pi);
 					}
-					player.teleport(pi.getIslandLocation());
+					if (pi.getHomeLocation() == null) {
+						player.teleport(pi.getIslandLocation());
+					} else {
+						Location l = pi.getHomeLocation();
+						if (l.getBlockY() == 0 && l.getBlock().getType().equals(Material.AIR)) {
+							player.teleport(pi.getIslandLocation());
+						} else {
+							player.teleport(pi.getHomeLocation());
+						}
+					}
 					return true;
 				}
 
@@ -707,11 +724,16 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
-						return true;
+						pi = this.readPlayerFile(player.getName());
+						if (pi == null) {
+							return true;
+						}
+						Settings.players.put(player.getName(), pi);
 					}
 
 					if (SkyBlockMultiplayer.canPlayerDoThat(pi, player.getLocation())) {
 						pi.setHomeLocation(player.getLocation());
+						this.writePlayerFile(player.getName(), pi);
 						player.sendMessage(this.pName + Language.MSGS_SPAWN_LOCATION_CHANGED.sentence);
 						return true;
 					} else {
@@ -723,7 +745,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				if (args[1].equalsIgnoreCase("list")) {
 					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
-						return true;
+						pi = this.readPlayerFile(player.getName());
+						if (pi == null) {
+							return true;
+						}
+						Settings.players.put(player.getName(), pi);
 					}
 
 					String list = "";
@@ -817,7 +843,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
-						return true;
+						pi = this.readPlayerFile(player.getName());
+						if (pi == null) {
+							return true;
+						}
 					}
 
 					pi.addFriend(res);
@@ -846,7 +875,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
-						return true;
+						pi = this.readPlayerFile(player.getName());
+						if (pi == null) {
+							return true;
+						}
 					}
 
 					pi.removeFriend(res);
@@ -964,13 +996,44 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
 			PlayerInfo pi = Settings.players.get(player.getName());
 			if (pi == null) {
-				player.sendMessage(this.pName + Language.MSGS_WRONGE_PLAYER_NAME.sentence);
-				return true;
+				pi = this.readPlayerFile(player.getName());
+				if (pi == null) {
+					return true;
+				}
 			}
 
 			pi.setHasIsland(false);
-			this.writePlayerFile(player.getName(), pi);
 
+			Location l = pi.getIslandLocation();
+			if (l != null) {
+				int px = l.getBlockX();
+				int py = l.getBlockY();
+				int pz = l.getBlockZ();
+				for (int x = -15; x <= 15; x++) {
+					for (int y = -15; y <= 15; y++) {
+						for (int z = -15; z <= 15; z++) {
+							Block b = new Location(l.getWorld(), px + x, py + y, pz + z).getBlock();
+							if (!b.getType().equals(Material.AIR)) {
+								if (b.getType().equals(Material.CHEST)) {
+									Chest c = (Chest) b.getState();
+									ItemStack[] items = new ItemStack[c.getInventory().getContents().length];
+									c.getInventory().setContents(items);
+								} else if (b.getType().equals(Material.FURNACE)) {
+									Furnace f = (Furnace) b.getState();
+									ItemStack[] items = new ItemStack[f.getInventory().getContents().length];
+									f.getInventory().setContents(items);
+								} else if (b.getType().equals(Material.DISPENSER)) {
+									Dispenser d = (Dispenser) b.getState();
+									ItemStack[] items = new ItemStack[d.getInventory().getContents().length];
+									d.getInventory().setContents(items);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			this.writePlayerFile(player.getName(), pi);
 			this.playerStart(player);
 			// player.sendMessage(this.pName + Language.MSGS_NEWISLANDPLAYER1.sentence + pi.getPlayer().getName() + Language.MSGS_NEWISLANDPLAYER2.sentence);
 			return true;
@@ -1036,7 +1099,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 
 		PlayerInfo pi = Settings.players.get(player.getName());
-
 		if (pi == null) {
 			pi = this.readPlayerFile(player.getName());
 			if (pi == null) {
@@ -1905,4 +1967,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 		return false;
 	}
+
+	/*public static PlayerInfo getOrLoadPlayer(String playerName) {
+		if (Settings.players.containsKey(playerName)) {
+			return Settings.players.get(playerName);
+		}
+		return SkyBlockMultiplayer.instance.readPlayerFile(playerName);
+	}*/
 }

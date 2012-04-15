@@ -21,7 +21,7 @@ public class CreateNewIsland {
 		}
 
 		player.sendMessage(Language.MSGS_SHOW_ISLAND_NUMBER.sentence + numberIslands);
-		this.createIsland(l);
+		this.createDefaultIsland(l);
 		this.Islandlocation = l;
 	}
 
@@ -40,7 +40,7 @@ public class CreateNewIsland {
 				//System.out.println(numberIslands + " : Location " + SkyBlockMultiplayer.instance.getStringLocation(l));
 
 			}
-			this.createIsland(l);
+			this.createDefaultIsland(l);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class CreateNewIsland {
 		return new Location(SkyBlockMultiplayer.getSkyBlockWorld(), posX, CreateNewIsland.posY, posZ);
 	}
 
-	private void createIsland(Location l) {
+	private void createDefaultIsland(Location l) {
 		// Erstelle unterste Erdebene
 		createLayer(l, 61, Material.DIRT);
 		//Erstelle mittlere Erdebene

@@ -29,8 +29,12 @@ public class PlayerRespawn implements Listener {
 
 		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) {
-			event.setRespawnLocation(player.getWorld().getSpawnLocation());
-			return;
+			pi = SkyBlockMultiplayer.instance.readPlayerFile(player.getName());
+			if (pi == null) {
+				event.setRespawnLocation(player.getWorld().getSpawnLocation());
+				return;
+			}
+			Settings.players.put(player.getName(), pi);
 		}
 
 		if (this.plugin.playerIsOnTower(player)) {

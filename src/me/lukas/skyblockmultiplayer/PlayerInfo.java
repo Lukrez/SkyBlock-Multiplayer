@@ -140,7 +140,7 @@ public class PlayerInfo implements Serializable {
 	}
 
 	public void setOldLocation(Location l) {
-		if (!l.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+		if (!l.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
 			this.oldLocation = this.getStringLocation(l);
 		}
 	}
