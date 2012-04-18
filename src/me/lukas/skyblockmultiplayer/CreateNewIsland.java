@@ -67,8 +67,9 @@ public class CreateNewIsland {
 
 	public void createIsland(Location l) {
 		try {
-			if (new File(Settings.islandFileName).exists()) {
-				this.createStructure(l, new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.islandFileName));
+			File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.islandFileName);
+			if (f.exists() && f.isFile()) {
+				this.createStructure(l, f);
 			} else {
 				this.createDeafaultIsland(l);
 			}
@@ -410,6 +411,19 @@ public class CreateNewIsland {
 			throw new Exception(key + " tag is not of tag type " + expected.getName());
 		}
 		return expected.cast(tag);
+	}
+
+	private static boolean containsOneBedrock(byte[] blocks) {
+		int amount = 0;
+		for (byte b : blocks) {
+			if (b == 7) {
+				amount++;
+			}
+		}
+		if (amount == 1) {
+			return true;
+		}
+		return false;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

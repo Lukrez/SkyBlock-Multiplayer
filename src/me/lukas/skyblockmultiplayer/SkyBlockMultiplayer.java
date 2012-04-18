@@ -433,14 +433,15 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			boolean folderExists = new File(Settings.worldName).exists();
 			skyBlockWorld = WorldCreator.name(Settings.worldName).type(WorldType.FLAT).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
 			if (!folderExists) {
-				if (!new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName).exists()) {
-					SkyBlockMultiplayer.createSpawnTower();
-				} else {
+				File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName);
+				if (f.exists() && f.isFile()) {
 					try {
-						new CreateNewIsland().createStructure(new Location(getSkyBlockWorld(), 0, 80, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), "tower2.schematic"));
+						new CreateNewIsland().createStructure(new Location(getSkyBlockWorld(), 0, 80, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else {
+					SkyBlockMultiplayer.createSpawnTower();
 				}
 			}
 			skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
@@ -451,7 +452,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	/**
 	 * If a command is called, this code will be running.
 	 * 	
-	 * @param sender that types the command.
+	 * @param sender that types the com mand.
 	 * @param cmd the typed command.
 	 * @param label 
 	 * @param  args array that includes all given arguments.
@@ -911,11 +912,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					player.sendMessage(this.pName + Language.MSGS_FRIEND_REMOVED.sentence);
 					return true;
 				}
-			}
-
-			if (args[0].equalsIgnoreCase("check")) {
-
-				return true;
 			}
 
 			player.sendMessage(this.pName + Language.MSGS_WRONG_ARGS.sentence);

@@ -80,7 +80,7 @@ public class EntityDeath implements Listener {
 
 		pi.setDead(true);
 		pi.setLivesLeft(pi.getLivesLeft() - 1);
-		if (!(pi.getLivesLeft() == 0 || pi.getIslandsLeft() == 0)) {
+		if (pi.getIslandsLeft() != 0 || pi.getLivesLeft() != 0) {
 			return;
 		}
 
