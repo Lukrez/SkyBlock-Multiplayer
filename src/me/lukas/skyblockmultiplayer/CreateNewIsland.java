@@ -1,15 +1,40 @@
 package me.lukas.skyblockmultiplayer;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.CreatureSpawner;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.BlockVector;
+import org.jnbt.ByteArrayTag;
+import org.jnbt.CompoundTag;
+import org.jnbt.IntTag;
+import org.jnbt.ListTag;
+import org.jnbt.NBTInputStream;
+import org.jnbt.ShortTag;
+import org.jnbt.StringTag;
+import org.jnbt.Tag;
 
 public class CreateNewIsland {
 	private static int posY = 64;
 	public Location Islandlocation;
+
+	public CreateNewIsland() {
+	}
 
 	public CreateNewIsland(Player player) {
 		int numberIslands = 1;
@@ -21,15 +46,11 @@ public class CreateNewIsland {
 		}
 
 		player.sendMessage(Language.MSGS_SHOW_ISLAND_NUMBER.sentence + numberIslands);
-		this.createDefaultIsland(l);
-		this.Islandlocation = l;
+		this.createIsland(l);
+		this.Islandlocation = new Location(SkyBlockMultiplayer.getSkyBlockWorld(), l.getBlockX(), SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockAt(l.getBlockX(), l.getBlockZ()).getLocation().getBlockY(), l.getBlockZ());
 	}
 
-	/**
-	 * Creates a specified amount of islands , only for testing.
-	 * 
-	 * @param amount
-	 */
+	/*
 	public CreateNewIsland(int amount) {
 		int numberIslands = 1;
 		Location l = getIslandPosition(numberIslands);
@@ -40,11 +61,21 @@ public class CreateNewIsland {
 				//System.out.println(numberIslands + " : Location " + SkyBlockMultiplayer.instance.getStringLocation(l));
 
 			}
-			this.createDefaultIsland(l);
+			this.createIsland(l);
 		}
-	}
+	}*/
 
-	public CreateNewIsland() {
+	public void createIsland(Location l) {
+		try {
+			if (new File(Settings.islandFileName).exists()) {
+				this.createStructure(l, new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.islandFileName));
+			} else {
+				this.createDeafaultIsland(l);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.createDeafaultIsland(l);
+		}
 	}
 
 	public int getAmountOfIslands() {
@@ -128,10 +159,10 @@ public class CreateNewIsland {
 		//System.out.println("Die Insel befindet sich auf "+posZ+" in Z-Richtung.");
 
 		// create location for island
-		return new Location(SkyBlockMultiplayer.getSkyBlockWorld(), posX, CreateNewIsland.posY, posZ);
+		return new Location(SkyBlockMultiplayer.getSkyBlockWorld(), posX, posY, posZ);
 	}
 
-	private void createDefaultIsland(Location l) {
+	private void createDeafaultIsland(Location l) {
 		// Erstelle unterste Erdebene
 		createLayer(l, 61, Material.DIRT);
 		//Erstelle mittlere Erdebene
@@ -191,5 +222,243 @@ public class CreateNewIsland {
 			}
 		}
 		return false;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void createStructure(Location loc, File path) throws Exception {
+		FileInputStream stream = new FileInputStream(path);
+		NBTInputStream nbtStream = new NBTInputStream(new GZIPInputStream(stream));
+
+		// Schematic tag
+		CompoundTag schematicTag = (CompoundTag) nbtStream.readTag();
+		if (!schematicTag.getName().equals("Schematic")) {
+			throw new Exception("Tag \"Schematic\" does not exist or is not first");
+		}
+
+		// Check
+		Map<String, Tag> schematic = schematicTag.getValue();
+		if (!schematic.containsKey("Blocks")) {
+			throw new Exception("Schematic file is missing a \"Blocks\" tag");
+		}
+
+		// Get information
+		short width = getChildTag(schematic, "Width", ShortTag.class).getValue();
+		short length = getChildTag(schematic, "Length", ShortTag.class).getValue();
+		short height = getChildTag(schematic, "Height", ShortTag.class).getValue();
+
+		// Check type of Schematic
+		String materials = getChildTag(schematic, "Materials", StringTag.class).getValue();
+		if (!materials.equals("Alpha")) {
+			throw new Exception("Schematic file is not an Alpha schematic");
+		}
+
+		// Get blocks
+		byte[] blocks = getChildTag(schematic, "Blocks", ByteArrayTag.class).getValue();
+		byte[] blockData = getChildTag(schematic, "Data", ByteArrayTag.class).getValue();
+
+		List<Tag> tileEntities = ((ListTag) getChildTag(schematic, "TileEntities", ListTag.class)).getValue();
+
+		Map tileEntitiesMap = new HashMap();
+
+		for (Tag tag : tileEntities) {
+			if ((tag instanceof CompoundTag)) {
+				CompoundTag t = (CompoundTag) tag;
+
+				int x = 0;
+				int y = 0;
+				int z = 0;
+
+				Map values = new HashMap();
+				for (Map.Entry entry : t.getValue().entrySet()) {
+					if (((String) entry.getKey()).equals("x")) {
+						if ((entry.getValue() instanceof IntTag)) {
+							x = ((IntTag) entry.getValue()).getValue().intValue();
+						}
+
+					} else if (((String) entry.getKey()).equals("y")) {
+						if ((entry.getValue() instanceof IntTag)) {
+							y = ((IntTag) entry.getValue()).getValue().intValue();
+						}
+
+					} else if ((((String) entry.getKey()).equals("z")) && ((entry.getValue() instanceof IntTag))) {
+						z = ((IntTag) entry.getValue()).getValue().intValue();
+					}
+
+					values.put(entry.getKey(), entry.getValue());
+				}
+
+				BlockVector vec = new BlockVector(x, y, z);
+				tileEntitiesMap.put(vec, values);
+			}
+		}
+
+		int xB = 0, yB = 0, zB = 0;
+		for (int x = 0; x < width; ++x) {
+			for (int y = 0; y < height; ++y) {
+				for (int z = 0; z < length; ++z) {
+					int index = y * width * length + z * width + x;
+					if (blocks[index] == 7) {
+						xB = x;
+						yB = y;
+						zB = z;
+						break;
+					}
+				}
+			}
+		}
+
+		for (int x = 0; x < width; ++x) {
+			for (int y = 0; y < height; ++y) {
+				for (int z = 0; z < length; ++z) {
+					int index = y * width * length + z * width + x;
+					int id = blocks[index];
+					int dat = blockData[index];
+
+					int lx = loc.getBlockX();
+					int ly = loc.getBlockY();
+					int lz = loc.getBlockZ();
+					Block b = SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(lx + x - xB, ly + y - yB, lz + z - zB);
+
+					b.setTypeIdAndData(id, (byte) dat, true);
+					b.getState().update(true);
+
+					BlockVector vec = new BlockVector(x, y, z);
+					if (id == 63 || id == 68) { // sign
+						if (id == 63) {
+							b.setType(Material.SIGN_POST);
+						} else {
+							b.setType(Material.WALL_SIGN);
+						}
+						Sign s = (Sign) b.getState();
+						if (tileEntitiesMap.containsKey(vec)) {
+							Map<String, Tag> values = (Map<String, Tag>) tileEntitiesMap.get(vec);
+							String l1 = (String) values.get("Text1").getValue();
+							String l2 = (String) values.get("Text2").getValue();
+							String l3 = (String) values.get("Text3").getValue();
+							String l4 = (String) values.get("Text4").getValue();
+
+							s.setLine(0, l1);
+							s.setLine(1, l2);
+							s.setLine(2, l3);
+							s.setLine(3, l4);
+							s.update(true);
+						}
+					}
+
+					if (id == 54) { // chest
+						b.setType(Material.CHEST);
+						Chest c = (Chest) b.getState();
+						c.getData().setData((byte) dat);
+						c.getInventory().setContents(CreateNewIsland.getContent(c.getInventory().getContents(), tileEntitiesMap, vec));
+						c.update(true);
+					}
+					if (id == 23) { // dispenser
+						b.setType(Material.DISPENSER);
+						Dispenser d = (Dispenser) b.getState();
+						d.getData().setData((byte) dat);
+						d.getInventory().setContents(CreateNewIsland.getContent(d.getInventory().getContents(), tileEntitiesMap, vec));
+						d.update(true);
+					}
+					/*if (id == 25) { // note block, need to be finished, note
+						b.setType(Material.NOTE_BLOCK);
+						NoteBlock n = (NoteBlock) b.getState();
+						n.getData().setData((byte) dat);
+						if (tileEntitiesMap.containsKey(vec)) {
+							Map<String, Tag> values = (Map<String, Tag>) tileEntitiesMap.get(vec);
+							byte note = (Byte) values.get("note").getValue();
+							n.set
+						}
+						n.update(true);
+					}*/
+					if (id == 61 || id == 62) { // furnace
+						b.setType(Material.FURNACE);
+						Furnace f = (Furnace) b.getState();
+						f.getData().setData((byte) dat);
+						f.getInventory().setContents(CreateNewIsland.getContent(f.getInventory().getContents(), tileEntitiesMap, vec));
+						if (tileEntitiesMap.containsKey(vec)) {
+							Map<String, Tag> values = (Map<String, Tag>) tileEntitiesMap.get(vec);
+							short burn_time = (Short) values.get("BurnTime").getValue();
+							short cook_time = (Short) values.get("CookTime").getValue();
+							f.setBurnTime(burn_time);
+							f.setCookTime(cook_time);
+						}
+						f.update(true);
+					}
+					if (id == 52) { // mob spawner
+						b.setType(Material.MOB_SPAWNER);
+						CreatureSpawner c = (CreatureSpawner) b.getState();
+						c.getData().setData((byte) dat);
+						if (tileEntitiesMap.containsKey(vec)) {
+							Map<String, Tag> values = (Map<String, Tag>) tileEntitiesMap.get(vec);
+							String entity = (String) values.get("EntityId").getValue();
+							c.setCreatureTypeByName(entity);
+						}
+						c.update(true);
+					}
+				}
+			}
+		}
+	}
+
+	private static <T extends Tag> T getChildTag(Map<String, Tag> items, String key, Class<T> expected) throws Exception {
+
+		if (!items.containsKey(key)) {
+			throw new Exception("Schematic file is missing a \"" + key + "\" tag");
+		}
+		Tag tag = items.get(key);
+		if (!expected.isInstance(tag)) {
+			throw new Exception(key + " tag is not of tag type " + expected.getName());
+		}
+		return expected.cast(tag);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static ItemStack[] getContent(ItemStack[] source, Map tileEntitiesMap, BlockVector vec) {
+		ItemStack[] items = new ItemStack[source.length];
+		short id = 0;
+		short damage = 0;
+		int amount = 0;
+		int slot = 0;
+		Map<Enchantment, Integer> listEnchantments = new HashMap<Enchantment, Integer>();
+
+		if (tileEntitiesMap.containsKey(vec)) {
+			Map<String, Tag> values = (Map<String, Tag>) tileEntitiesMap.get(vec);
+			for (Tag item : ((ListTag) values.get("Items")).getValue()) {
+				if (item instanceof CompoundTag) {
+					CompoundTag t = (CompoundTag) item;
+					Map<String, Tag> itemContent = t.getValue();
+					if (itemContent.containsKey("id"))
+						id = (Short) itemContent.get("id").getValue();
+					if (itemContent.containsKey("Damage"))
+						damage = (Short) itemContent.get("Damage").getValue();
+					if (itemContent.containsKey("Count"))
+						amount = (Byte) itemContent.get("Count").getValue();
+					if (itemContent.containsKey("Slot"))
+						slot = (Byte) itemContent.get("Slot").getValue();
+					if (itemContent.containsKey("tag")) {
+						Tag tE = itemContent.get("tag");
+						listEnchantments = new HashMap<Enchantment, Integer>();
+						Map<String, Tag> mE = (Map<String, Tag>) tE.getValue();
+						if (mE.containsKey("ench")) {
+							for (Tag enchs : ((ListTag) mE.get("ench")).getValue()) {
+								CompoundTag ctEnchItem = (CompoundTag) enchs;
+								Map<String, Tag> mapEnchs = ctEnchItem.getValue();
+
+								int ench_id = (Short) mapEnchs.get("id").getValue();
+								int ench_lvl = (Short) mapEnchs.get("lvl").getValue();
+								listEnchantments.put(Enchantment.getById(ench_id), ench_lvl);
+							}
+						}
+					}
+				}
+				ItemStack i = new ItemStack(id);
+				i.setAmount(amount);
+				i.setDurability(damage);
+				i.addUnsafeEnchantments(listEnchantments);
+				items[slot] = i;
+			}
+		}
+
+		return items;
 	}
 }

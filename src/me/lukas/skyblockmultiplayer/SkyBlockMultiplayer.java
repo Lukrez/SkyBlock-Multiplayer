@@ -137,6 +137,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.build_allowEnderpearl = false;
 			Settings.worldName = this.pluginFile.getName();
 			Settings.messagesOutside = false;
+			Settings.islandFileName = "";
+			Settings.towerFileName = "";
+			Settings.towerHeight = 80;
 
 			for (ConfigPlugin c : ConfigPlugin.values()) {
 				this.setStringbyPath(this.configPlugin, this.filePlugin, c.path, c.value);
@@ -204,6 +207,15 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				Settings.pvp_islandsPerPlayer = 1;
 			}
 
+			try {
+				Settings.towerHeight = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_TOWER_HEIGHT.path, 80, true));
+				if (Settings.towerHeight < 0) {
+					Settings.towerHeight = 80;
+				}
+			} catch (Exception e) {
+				Settings.towerHeight = 80;
+			}
+
 			Settings.itemsChest = itemsChest;
 			Settings.skyBlockOnline = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SKYBLOCKONLINE.path, true, true));
 			Settings.language = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_LANGUAGE.path, "english", true);
@@ -215,6 +227,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.worldName = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_WORLDNAME.path, this.pluginFile.getName(), true);
 			Settings.closed = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_CLOSED.path, false, true));
 			Settings.messagesOutside = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_MESSAGES_OUTSIDE.path, false, true));
+			Settings.islandFileName = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_ISLAND_FILENAME.path, "", true);
+			Settings.towerFileName = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_TOWER_FILENAME.path, "", true);
 		}
 	}
 
@@ -418,7 +432,15 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			boolean folderExists = new File(Settings.worldName).exists();
 			skyBlockWorld = WorldCreator.name(Settings.worldName).type(WorldType.FLAT).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
 			if (!folderExists) {
-				SkyBlockMultiplayer.createSpawnTower();
+				if (!new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName).exists()) {
+					SkyBlockMultiplayer.createSpawnTower();
+				} else {
+					try {
+						new CreateNewIsland().createStructure(new Location(getSkyBlockWorld(), 0, 80, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), "tower2.schematic"));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
 		}

@@ -15,6 +15,9 @@ public class Settings {
 	public static boolean skyBlockOnline; // SkyBlock online or offline
 	public static int distanceIslands; // Distance between the player spawn locations
 	public static boolean closed; // Lock SkyBlock to maximize the amount of players
+	public static String islandFileName; // schematic file name for island
+	public static String towerFileName; // schematic file name for tower
+	public static int towerHeight; // tower height
 
 	/* Needed for plugin */
 	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo

@@ -16,7 +16,10 @@ public enum ConfigPlugin {
 	OPTIONS_PVP_ISLANDSPERPLAYER("options.pvp.islandsPerPlayer", 1),
 	OPTIONS_BUILD_RESPAWNWITHINVENTORY("options.build.respawnWithInventory", true),
 	OPTIONS_BUILD_WITHPROTECTEDAREA("options.build.withProtectedArea", true),
-	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl", false);
+	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl", false),
+	OPTIONS_SCHEMATIC_ISLAND_FILENAME("options.schematic.island.fileName", ""),
+	OPTIONS_SCHEMATIC_TOWER_FILENAME("options.schematic.tower.fileName", ""),
+	OPTIONS_SCHEMATIC_TOWER_HEIGHT("options.schematic.tower.height", 80);
 
 	String path;
 	Object value;
