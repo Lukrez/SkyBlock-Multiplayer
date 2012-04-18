@@ -34,6 +34,7 @@ public class Settings {
 	public static boolean build_respawnWithInventory; // If true save contents of player in SkyBlock in Death
 	public static boolean build_withProtectedArea; // If true, protected Area around of the island and a player can not do anything on another island
 	public static boolean build_allowEnderpearl; // If true, player can use ender pearl
+	public static boolean build_withProtectedBorder; // if true the border is protected
 
 	/* Gamemode is pvp */
 	public static int pvp_livesPerIsland; // lives points for every island

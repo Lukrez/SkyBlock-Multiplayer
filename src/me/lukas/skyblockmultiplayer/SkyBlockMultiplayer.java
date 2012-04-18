@@ -224,6 +224,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.build_respawnWithInventory = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_BUILD_RESPAWNWITHINVENTORY.path, true, true));
 			Settings.build_withProtectedArea = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_BUILD_WITHPROTECTEDAREA.path, true, true));
 			Settings.build_allowEnderpearl = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_BUILD_ALLOWENDERPEARL.path, false, true));
+			Settings.build_withProtectedBorder = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_BUILD_WITHPROTECTEDBORDER.path, true, true));
 			Settings.worldName = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_WORLDNAME.path, this.pluginFile.getName(), true);
 			Settings.closed = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_CLOSED.path, false, true));
 			Settings.messagesOutside = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_MESSAGES_OUTSIDE.path, false, true));
@@ -1957,7 +1958,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					int blockX = l.getBlockX();
 					int blockZ = l.getBlockZ();
 
-					int dist = (Settings.distanceIslands / 2) - 3;
+					int dist = 0;
+					if (Settings.build_withProtectedBorder) {
+						dist = (Settings.distanceIslands / 2) - 3;
+					} else {
+						dist = Settings.distanceIslands / 2;
+					}
 
 					if (islandX + dist >= blockX && islandX - dist <= blockX) {
 						if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
@@ -1980,7 +1986,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		int blockX = l.getBlockX();
 		int blockZ = l.getBlockZ();
 
-		int dist = (Settings.distanceIslands / 2) - 3;
+		int dist = 0;
+		if (Settings.build_withProtectedBorder) {
+			dist = (Settings.distanceIslands / 2) - 3;
+		} else {
+			dist = Settings.distanceIslands / 2;
+		}
 
 		if (islandX + dist >= blockX && islandX - dist <= blockX) {
 			if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
@@ -1989,11 +2000,4 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 		return false;
 	}
-
-	/*public static PlayerInfo getOrLoadPlayer(String playerName) {
-		if (Settings.players.containsKey(playerName)) {
-			return Settings.players.get(playerName);
-		}
-		return SkyBlockMultiplayer.instance.readPlayerFile(playerName);
-	}*/
 }
