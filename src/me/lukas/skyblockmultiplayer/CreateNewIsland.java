@@ -38,7 +38,7 @@ public class CreateNewIsland {
 
 	public CreateNewIsland(Player player) {
 		int numberIslands = 1;
-		Location l = getIslandPosition(numberIslands);
+		Location l = CreateNewIsland.getIslandPosition(numberIslands);
 
 		while (this.checkIfOccupied(l)) {
 			numberIslands++;
@@ -69,7 +69,16 @@ public class CreateNewIsland {
 		try {
 			File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.islandFileName);
 			if (f.exists() && f.isFile()) {
-				this.createStructure(l, f);
+				int res = this.createStructure(l, f);
+				if (res != 1) {
+					this.createDeafaultIsland(l);
+					if (res == 0) {
+						SkyBlockMultiplayer.instance.log.warning("Island contains no bedrock.");
+					} else {
+						SkyBlockMultiplayer.instance.log.warning("Island contains too much bedrock.");
+					}
+					return;
+				}
 			} else {
 				this.createDeafaultIsland(l);
 			}
@@ -79,12 +88,12 @@ public class CreateNewIsland {
 		}
 	}
 
-	public int getAmountOfIslands() {
+	public static int getAmountOfIslands() {
 		int amountIslands = 1;
 		do {
-			Location locIsland = this.getIslandPosition(amountIslands);
+			Location locIsland = CreateNewIsland.getIslandPosition(amountIslands);
 			int px = locIsland.getBlockX();
-			int py = locIsland.getBlockY() - 3;
+			int py = locIsland.getBlockY() - 3; // 61
 			int pz = locIsland.getBlockZ();
 			if (!new Location(SkyBlockMultiplayer.getSkyBlockWorld(), px, py, pz).getBlock().getType().equals(Material.BEDROCK)) {
 				break;
@@ -94,9 +103,9 @@ public class CreateNewIsland {
 		return amountIslands - 1;
 	}
 
-	public int getIslandNumber(Location l) {
-		for (int i = 1; i <= this.getAmountOfIslands(); i++) {
-			Location locIsland = this.getIslandPosition(i);
+	public static int getIslandNumber(Location l) {
+		for (int i = 1; i <= CreateNewIsland.getAmountOfIslands(); i++) {
+			Location locIsland = CreateNewIsland.getIslandPosition(i);
 			int islandX = locIsland.getBlockX();
 			int islandZ = locIsland.getBlockZ();
 
@@ -117,8 +126,8 @@ public class CreateNewIsland {
 	}
 
 	public Location getIslandLocation(int number) {
-		for (int i = 1; i <= this.getAmountOfIslands(); i++) {
-			Location locIsland = this.getIslandPosition(i);
+		for (int i = 1; i <= CreateNewIsland.getAmountOfIslands(); i++) {
+			Location locIsland = CreateNewIsland.getIslandPosition(i);
 			if (i == number) {
 				return locIsland;
 			}
@@ -126,7 +135,7 @@ public class CreateNewIsland {
 		return null;
 	}
 
-	private Location getIslandPosition(int n) {
+	private static Location getIslandPosition(int n) {
 		//System.out.println("Erstelle Inselnr.: "+n);
 		int posX, posZ;
 		// Suche den momentanen Ring
@@ -226,7 +235,7 @@ public class CreateNewIsland {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void createStructure(Location loc, File path) throws Exception {
+	public int createStructure(Location loc, File path) throws Exception {
 		FileInputStream stream = new FileInputStream(path);
 		NBTInputStream nbtStream = new NBTInputStream(new GZIPInputStream(stream));
 
@@ -260,6 +269,20 @@ public class CreateNewIsland {
 		List<Tag> tileEntities = ((ListTag) getChildTag(schematic, "TileEntities", ListTag.class)).getValue();
 
 		Map tileEntitiesMap = new HashMap();
+
+		int amount = 0;
+		for (byte b : blocks) {
+			if (b == 7) {
+				amount++;
+			}
+		}
+		if (amount == 0) {
+			return 0;
+		}
+
+		if (amount > 1) {
+			return 2;
+		}
 
 		for (Tag tag : tileEntities) {
 			if ((tag instanceof CompoundTag)) {
@@ -399,6 +422,7 @@ public class CreateNewIsland {
 				}
 			}
 		}
+		return 1;
 	}
 
 	private static <T extends Tag> T getChildTag(Map<String, Tag> items, String key, Class<T> expected) throws Exception {
@@ -411,19 +435,6 @@ public class CreateNewIsland {
 			throw new Exception(key + " tag is not of tag type " + expected.getName());
 		}
 		return expected.cast(tag);
-	}
-
-	private static boolean containsOneBedrock(byte[] blocks) {
-		int amount = 0;
-		for (byte b : blocks) {
-			if (b == 7) {
-				amount++;
-			}
-		}
-		if (amount == 1) {
-			return true;
-		}
-		return false;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

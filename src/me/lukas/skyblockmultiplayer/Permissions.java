@@ -11,7 +11,8 @@ public enum Permissions {
 	SKYBLOCK_JOIN("skyblock.join"),
 	SKYBLOCK_BUILD("skyblock.build"),
 	SKYBLOCK_OWNER_SET("skyblock.owner.set"),
-	SKYBLOCK_MESSAGES("skyblock.messages");
+	SKYBLOCK_MESSAGES("skyblock.messages"),
+	SKYBLOCK_REMOVE_ISLAND("skyblock.remove");
 
 	private final String node;
 

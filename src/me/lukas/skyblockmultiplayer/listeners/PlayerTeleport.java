@@ -36,7 +36,6 @@ public class PlayerTeleport implements Listener {
 		}
 
 		PlayerInfo pi = Settings.players.get(player.getName());
-
 		if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
 			if (this.plugin.locationIsOnTower(event.getTo())) {
 				event.setCancelled(true);
@@ -62,39 +61,6 @@ public class PlayerTeleport implements Listener {
 		if (!event.getTo().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) && !this.plugin.playerIsOnTower(player)) {
 			event.setCancelled(true);
 			player.sendMessage(this.plugin.pName + Language.MSGS_ONLY_ON_TOWER.sentence);
-			/*if (!Settings.allowContent) {
-				pi.setIslandInventory(player.getInventory().getContents());
-				pi.setIslandArmor(player.getInventory().getArmorContents());
-				pi.setIslandExp(player.getExp());
-				pi.setIslandLevel(player.getLevel());
-				pi.setIslandFood(player.getFoodLevel());
-				pi.setIslandHealth(player.getHealth());
-
-				player.getInventory().setContents(pi.getOldInventory());
-				player.getInventory().setArmorContents(pi.getOldArmor());
-				player.setExp(pi.getOldExp());
-				player.setLevel(pi.getOldLevel());
-
-				// check food of player
-				if (pi.getOldFood() <= 0) {
-					player.setFoodLevel(20);
-					pi.setOldFood(20);
-				} else {
-					player.setFoodLevel(pi.getOldFood());
-				}
-
-				// check hp of player
-				if (pi.getOldHealth() <= 0) {
-					player.setHealth(player.getMaxHealth());
-					pi.setOldHealth(player.getMaxHealth());
-				} else {
-					player.setHealth(pi.getOldHealth());
-				}
-			}
-
-			this.plugin.writePlayerFile(player.getName(), pi);
-			player.sendMessage(this.plugin.pName + Language.MSGS_LEFT_SKYBLOCK.sentence);
-			return;*/
 		}
 	}
 }

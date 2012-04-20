@@ -553,6 +553,34 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				}
 			}
 
+			if (args[0].equalsIgnoreCase("remove")) {
+				if (!Permissions.SKYBLOCK_REMOVE_ISLAND.has(sender)) {
+					return this.notAuthorized(sender);
+				}
+
+				if (args.length == 0) {
+					sender.sendMessage(this.pName + Language.MSGS_WRONG_ARGS.sentence);
+					return true;
+				}
+
+				int islandNumber = 0;
+				try {
+					islandNumber = Integer.parseInt(args[1]);
+				} catch (Exception e) {
+					sender.sendMessage(this.pName + Language.MSGS_INVALID_ISLAND_NUMBER.sentence);
+					return true;
+				}
+
+				if (islandNumber <= 0 || islandNumber > CreateNewIsland.getAmountOfIslands()) {
+					sender.sendMessage(this.pName + Language.MSGS_INVALID_ISLAND_NUMBER.sentence);
+					return true;
+				}
+
+				this.removeIsland(new CreateNewIsland().getIslandLocation(islandNumber));
+				sender.sendMessage(this.pName + "Island removed!");
+				return true;
+			}
+
 			if (!(sender instanceof Player)) {
 				return true;
 			}
@@ -572,7 +600,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				int islandNumber = -1;
 				try {
 					islandNumber = Integer.parseInt(args[1]);
-					if (islandNumber > new CreateNewIsland().getAmountOfIslands() || islandNumber <= 0) {
+					if (islandNumber > CreateNewIsland.getAmountOfIslands() || islandNumber <= 0) {
 						player.sendMessage(this.pName + Language.MSGS_INVALID_ISLAND_NUMBER.sentence);
 						return true;
 					}
@@ -714,11 +742,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			if (args[0].equalsIgnoreCase("home")) {
-				if (Settings.gameModeSelected == Settings.GAMEMODE.PVP) {
-					player.sendMessage(this.pName + Language.MSGS_ONLY_INBUILD_MODE.sentence);
-					return true;
-				}
-
 				if (args.length == 1) {
 					PlayerInfo pi = Settings.players.get(player.getName());
 					if (pi == null) {
@@ -764,6 +787,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						player.sendMessage(this.pName + Language.MSGS_HOME_CHANGE_ONYL_INOWN_AREA.sentence);
 						return true;
 					}
+				}
+
+				if (Settings.gameModeSelected == Settings.GAMEMODE.PVP) {
+					player.sendMessage(this.pName + Language.MSGS_ONLY_INBUILD_MODE.sentence);
+					return true;
 				}
 
 				if (args[1].equalsIgnoreCase("list")) {
@@ -1024,33 +1052,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			pi.setHasIsland(false);
 
 			Location l = pi.getIslandLocation();
-			if (l != null) {
-				int px = l.getBlockX();
-				int py = l.getBlockY();
-				int pz = l.getBlockZ();
-				for (int x = -15; x <= 15; x++) {
-					for (int y = -15; y <= 15; y++) {
-						for (int z = -15; z <= 15; z++) {
-							Block b = new Location(l.getWorld(), px + x, py + y, pz + z).getBlock();
-							if (!b.getType().equals(Material.AIR)) {
-								if (b.getType().equals(Material.CHEST)) {
-									Chest c = (Chest) b.getState();
-									ItemStack[] items = new ItemStack[c.getInventory().getContents().length];
-									c.getInventory().setContents(items);
-								} else if (b.getType().equals(Material.FURNACE)) {
-									Furnace f = (Furnace) b.getState();
-									ItemStack[] items = new ItemStack[f.getInventory().getContents().length];
-									f.getInventory().setContents(items);
-								} else if (b.getType().equals(Material.DISPENSER)) {
-									Dispenser d = (Dispenser) b.getState();
-									ItemStack[] items = new ItemStack[d.getInventory().getContents().length];
-									d.getInventory().setContents(items);
-								}
-							}
-						}
-					}
-				}
-			}
+			this.removeIsland(l);
 
 			this.writePlayerFile(player.getName(), pi);
 			this.playerStart(player);
@@ -1481,7 +1483,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.players.put(player.getName(), pi);
 		}
 
-		int islands = new CreateNewIsland().getAmountOfIslands();
+		int islands = CreateNewIsland.getAmountOfIslands();
 
 		this.writePlayerFile(player.getName(), pi);
 
@@ -1649,7 +1651,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			sender.sendMessage(Language.MSGS_STATUS_ONLINE.sentence);
 		}
 
-		int islands = new CreateNewIsland().getAmountOfIslands();
+		int islands = CreateNewIsland.getAmountOfIslands();
 
 		sender.sendMessage(Language.MSGS_NUMBER_OF_ISLANDS.sentence + islands);
 		sender.sendMessage(Language.MSGS_NUMBER_OF_PLAYERS.sentence + Settings.players.size());
@@ -1799,6 +1801,36 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		else if (amount > 1)
 			return "0";
 		return "-1";
+	}
+
+	private void removeIsland(Location l) {
+		if (l != null) {
+			int px = l.getBlockX();
+			int py = l.getBlockY();
+			int pz = l.getBlockZ();
+			for (int x = -15; x <= 15; x++) {
+				for (int y = -15; y <= 15; y++) {
+					for (int z = -15; z <= 15; z++) {
+						Block b = new Location(l.getWorld(), px + x, py + y, pz + z).getBlock();
+						if (!b.getType().equals(Material.AIR)) {
+							if (b.getType().equals(Material.CHEST)) {
+								Chest c = (Chest) b.getState();
+								ItemStack[] items = new ItemStack[c.getInventory().getContents().length];
+								c.getInventory().setContents(items);
+							} else if (b.getType().equals(Material.FURNACE)) {
+								Furnace f = (Furnace) b.getState();
+								ItemStack[] items = new ItemStack[f.getInventory().getContents().length];
+								f.getInventory().setContents(items);
+							} else if (b.getType().equals(Material.DISPENSER)) {
+								Dispenser d = (Dispenser) b.getState();
+								ItemStack[] items = new ItemStack[d.getInventory().getContents().length];
+								d.getInventory().setContents(items);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
