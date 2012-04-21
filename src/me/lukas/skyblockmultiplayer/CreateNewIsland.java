@@ -33,9 +33,6 @@ public class CreateNewIsland {
 	private static int posY = 64;
 	public Location Islandlocation;
 
-	public CreateNewIsland() {
-	}
-
 	public CreateNewIsland(Player player) {
 		int numberIslands = 1;
 		Location l = CreateNewIsland.getIslandPosition(numberIslands);
@@ -125,17 +122,7 @@ public class CreateNewIsland {
 		return 0;
 	}
 
-	public Location getIslandLocation(int number) {
-		for (int i = 1; i <= CreateNewIsland.getAmountOfIslands(); i++) {
-			Location locIsland = CreateNewIsland.getIslandPosition(i);
-			if (i == number) {
-				return locIsland;
-			}
-		}
-		return null;
-	}
-
-	private static Location getIslandPosition(int n) {
+	public static Location getIslandPosition(int n) {
 		//System.out.println("Erstelle Inselnr.: "+n);
 		int posX, posZ;
 		// Suche den momentanen Ring
@@ -235,7 +222,7 @@ public class CreateNewIsland {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public int createStructure(Location loc, File path) throws Exception {
+	public static int createStructure(Location loc, File path) throws Exception {
 		FileInputStream stream = new FileInputStream(path);
 		NBTInputStream nbtStream = new NBTInputStream(new GZIPInputStream(stream));
 

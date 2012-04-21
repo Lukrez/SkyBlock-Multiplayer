@@ -78,9 +78,9 @@ public class PlayerInteract implements Listener {
 					if (owner == null) {
 						int i = -1;
 						if (b == null) {
-							i = new CreateNewIsland().getIslandNumber(player.getLocation());
+							i = CreateNewIsland.getIslandNumber(player.getLocation());
 						} else {
-							i = new CreateNewIsland().getIslandNumber(b.getLocation());
+							i = CreateNewIsland.getIslandNumber(b.getLocation());
 						}
 
 						if (i == 0) {
@@ -100,9 +100,9 @@ public class PlayerInteract implements Listener {
 					} else {
 						int i = -1;
 						if (b == null) {
-							i = new CreateNewIsland().getIslandNumber(player.getLocation());
+							i = CreateNewIsland.getIslandNumber(player.getLocation());
 						} else {
-							i = new CreateNewIsland().getIslandNumber(b.getLocation());
+							i = CreateNewIsland.getIslandNumber(b.getLocation());
 						}
 
 						if (i == -1) {

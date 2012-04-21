@@ -97,7 +97,14 @@ public class PlayerRespawn implements Listener {
 				if (pi.getHomeLocation() == null) {
 					event.setRespawnLocation(pi.getIslandLocation());
 				} else {
-					event.setRespawnLocation(pi.getHomeLocation());
+					Location l = pi.getHomeLocation();
+					Location yLoc = player.getWorld().getHighestBlockAt(l.getBlockX(), l.getBlockZ()).getLocation();
+
+					if (yLoc.getBlockY() == 0 && yLoc.getBlock().getType().equals(Material.AIR)) {
+						event.setRespawnLocation(pi.getIslandLocation());
+					} else {
+						event.setRespawnLocation(pi.getHomeLocation());
+					}
 				}
 				return;
 			}

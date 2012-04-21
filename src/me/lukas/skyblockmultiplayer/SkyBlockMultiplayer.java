@@ -436,7 +436,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName);
 				if (f.exists() && f.isFile()) {
 					try {
-						new CreateNewIsland().createStructure(new Location(getSkyBlockWorld(), 0, 80, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName));
+						CreateNewIsland.createStructure(new Location(getSkyBlockWorld(), 0, 80, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -553,34 +553,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				}
 			}
 
-			if (args[0].equalsIgnoreCase("remove")) {
-				if (!Permissions.SKYBLOCK_REMOVE_ISLAND.has(sender)) {
-					return this.notAuthorized(sender);
-				}
-
-				if (args.length == 0) {
-					sender.sendMessage(this.pName + Language.MSGS_WRONG_ARGS.sentence);
-					return true;
-				}
-
-				int islandNumber = 0;
-				try {
-					islandNumber = Integer.parseInt(args[1]);
-				} catch (Exception e) {
-					sender.sendMessage(this.pName + Language.MSGS_INVALID_ISLAND_NUMBER.sentence);
-					return true;
-				}
-
-				if (islandNumber <= 0 || islandNumber > CreateNewIsland.getAmountOfIslands()) {
-					sender.sendMessage(this.pName + Language.MSGS_INVALID_ISLAND_NUMBER.sentence);
-					return true;
-				}
-
-				this.removeIsland(new CreateNewIsland().getIslandLocation(islandNumber));
-				sender.sendMessage(this.pName + "Island removed!");
-				return true;
-			}
-
 			if (!(sender instanceof Player)) {
 				return true;
 			}
@@ -632,7 +604,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					Settings.players.remove(res);
 				}
 
-				pi.setIslandLocation(new CreateNewIsland().getIslandLocation(islandNumber));
+				pi.setIslandLocation(CreateNewIsland.getIslandPosition(islandNumber));
 				pi.setHasIsland(true);
 
 				this.writePlayerFile(res, pi);
@@ -741,6 +713,53 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				return this.playerNewIsland(player, s);
 			}
 
+			if (args[0].equalsIgnoreCase("remove")) {
+				if (!Settings.skyBlockOnline) {
+					player.sendMessage(this.pName + Language.MSGS_IS_OFFLINE.sentence);
+					return true;
+				}
+
+				if (!Permissions.SKYBLOCK_REMOVE_ISLAND.has(player)) {
+					return this.notAuthorized(player);
+				}
+
+				if (args.length == 0) {
+					player.sendMessage(this.pName + Language.MSGS_WRONG_ARGS.sentence);
+					return true;
+				}
+
+				int islandNumber = 0;
+				try {
+					islandNumber = Integer.parseInt(args[1]);
+				} catch (Exception e) {
+					player.sendMessage(this.pName + Language.MSGS_INVALID_ISLAND_NUMBER.sentence);
+					return true;
+				}
+
+				if (islandNumber <= 0 || islandNumber > CreateNewIsland.getAmountOfIslands()) {
+					player.sendMessage(this.pName + Language.MSGS_INVALID_ISLAND_NUMBER.sentence);
+					return true;
+				}
+
+				PlayerInfo pi = SkyBlockMultiplayer.getOwner(CreateNewIsland.getIslandPosition(islandNumber));
+				if (pi != null) {
+					pi.setDead(false);
+					pi.setHasIsland(false);
+					pi.setIslandArmor(null);
+					pi.setIslandInventory(null);
+					pi.setIslandExp(0);
+					pi.setIslandLevel(0);
+					pi.setIslandHealth(player.getMaxHealth());
+					pi.setIslandFood(20);
+					pi.setIslandLocation(null);
+					pi.setHomeLocation(null);
+				}
+
+				this.removeIsland(CreateNewIsland.getIslandPosition(islandNumber));
+				player.sendMessage(this.pName + "Island removed!");
+				return true;
+			}
+
 			if (args[0].equalsIgnoreCase("home")) {
 				if (args.length == 1) {
 					PlayerInfo pi = Settings.players.get(player.getName());
@@ -751,11 +770,50 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						}
 						Settings.players.put(player.getName(), pi);
 					}
+
+					if (this.playerIsOnTower(player)) {
+						// player has a island
+						if (!Settings.allowContent) {
+							// save before joining inventory, exp, level, food and health
+							pi.setOldInventory(player.getInventory().getContents());
+							pi.setOldArmor(player.getInventory().getArmorContents());
+							pi.setOldExp(player.getExp());
+							pi.setOldLevel(player.getLevel());
+							pi.setOldFood(player.getFoodLevel());
+							pi.setOldHealth(player.getHealth());
+
+							// load from island inventory, exp, level, food and health
+							player.getInventory().setContents(pi.getIslandInventory());
+							player.getInventory().setArmorContents(pi.getIslandArmor());
+							player.setExp(pi.getIslandExp());
+							player.setLevel(pi.getIslandLevel());
+
+							// check food od player
+							if (pi.getIslandFood() <= 0) {
+								player.setFoodLevel(20);
+								pi.setIslandFood(20);
+							} else {
+								player.setFoodLevel(pi.getIslandFood());
+							}
+
+							// check hp of player
+							if (pi.getIslandHealth() <= 0) {
+								player.setHealth(player.getMaxHealth());
+								pi.setIslandHealth(player.getMaxHealth());
+							} else {
+								player.setHealth(pi.getIslandHealth());
+							}
+						}
+					}
+
 					if (pi.getHomeLocation() == null) {
 						player.teleport(pi.getIslandLocation());
 					} else {
+
 						Location l = pi.getHomeLocation();
-						if (l.getBlockY() == 0 && l.getBlock().getType().equals(Material.AIR)) {
+						Location yLoc = player.getWorld().getHighestBlockAt(l.getBlockX(), l.getBlockZ()).getLocation();
+
+						if (yLoc.getBlockY() == 0 && yLoc.getBlock().getType().equals(Material.AIR)) {
 							player.teleport(pi.getIslandLocation());
 						} else {
 							player.teleport(pi.getHomeLocation());
@@ -1037,6 +1095,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	private boolean playerNewIsland(Player player, String target) {
 		if (!Settings.skyBlockOnline) {
 			player.sendMessage(this.pName + Language.MSGS_IS_OFFLINE.sentence);
+			return true;
+		}
+
+		if (!this.playerIsOnTower(player)) {
+			player.sendMessage(this.pName + Language.MSGS_ONLY_ON_TOWER.sentence);
 			return true;
 		}
 
@@ -1804,6 +1867,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	private void removeIsland(Location l) {
+		System.out.println("called");
 		if (l != null) {
 			int px = l.getBlockX();
 			int py = l.getBlockY();
@@ -1826,6 +1890,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 								ItemStack[] items = new ItemStack[d.getInventory().getContents().length];
 								d.getInventory().setContents(items);
 							}
+							b.setType(Material.AIR);
 						}
 					}
 				}
