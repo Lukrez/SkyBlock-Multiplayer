@@ -66,7 +66,7 @@ public class CreateNewIsland {
 		try {
 			File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.islandFileName);
 			if (f.exists() && f.isFile()) {
-				int res = this.createStructure(l, f);
+				int res = CreateNewIsland.createStructure(l, f);
 				if (res != 1) {
 					this.createDeafaultIsland(l);
 					if (res == 0) {
