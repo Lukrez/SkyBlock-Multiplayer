@@ -746,7 +746,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	public static boolean canPlayerDoThat(PlayerInfo pi, Location l) {
-		if (pi == null) {
+		if (pi == null || pi.getIslandLocation() == null) {
 			return false;
 		}
 		int islandX = pi.getIslandLocation().getBlockX();
