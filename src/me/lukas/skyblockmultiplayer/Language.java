@@ -60,7 +60,7 @@ public enum Language {
 	MSGS_TO_NEW_PLAYER("msgs.toNewPlayer", "Do not fall and make no obsidian :-)."),
 	MSGS_SHOW_ISLAND_NUMBER("msgs.showIslandNumber", "You are on island number "),
 	MSGS_LEFT_SKYBLOCK("msgs.leftSkyblock", "You left SkyBlock."),
-	MSGS_WRONGE_PLAYER_NAME("msgs.wrongPlayerName", "There is no player with that name."),
+	MSGS_WRONG_PLAYER_NAME("msgs.wrongPlayerName", "There is no player with that name."),
 	MSGS_NEW_ISLAND_PLAYER1("msgs.newIslandPlayer1", "The player "),
 	MSGS_NEW_ISLAND_PLAYER2("msgs.newIslandPlayer2", " has get a new island."),
 	MSGS_GOT_NEW_ISLAND1("msgs.gotNewIsland1", "The player "),

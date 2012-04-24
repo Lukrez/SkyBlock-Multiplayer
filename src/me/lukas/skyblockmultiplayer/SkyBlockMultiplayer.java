@@ -30,12 +30,12 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -210,7 +210,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			try {
-				Settings.towerHeight = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_TOWER_HEIGHT.path, 80, true));
+				Settings.towerHeight = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_TOWER_YHEIGHT.path, 80, true));
 				if (Settings.towerHeight < 0) {
 					Settings.towerHeight = 80;
 				}
@@ -295,19 +295,31 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			new File(this.getDataFolder() + File.separator + "language").mkdirs();
 		}
 
+		String encoding = "UTF-8";
 		if (!this.fileLanguage.exists()) {
 			this.fileLanguage.createNewFile(); //create file
 			this.writeLanguageConfig(); //write standard language
 		} else {
-			Scanner scanner = new Scanner(new FileInputStream(this.fileLanguage), "Cp1252");
+			Scanner scanner = new Scanner(new FileInputStream(this.fileLanguage), encoding);
 			String contentToRead = "";
 			while (scanner.hasNextLine()) {
 				contentToRead += scanner.nextLine() + System.getProperty("line.separator");
 			}
 			scanner.close();
 
-			// this.configLanguage.load(this.fileLanguage);
-			this.configLanguage.loadFromString(contentToRead);
+			try {
+				this.configLanguage.loadFromString(contentToRead);
+			} catch (InvalidConfigurationException e) {
+				encoding = "Cp1252";
+				scanner = new Scanner(new FileInputStream(this.fileLanguage), encoding);
+				contentToRead = "";
+				while (scanner.hasNextLine()) {
+					contentToRead += scanner.nextLine() + System.getProperty("line.separator");
+				}
+				scanner.close();
+				this.configLanguage.loadFromString(contentToRead);
+			}
+
 			boolean missingSentences = false;
 			for (Language g : Language.values()) {
 				String path = g.path;
@@ -321,7 +333,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 			if (missingSentences) {
 				String contentToSave = this.configLanguage.saveToString();
-				Writer out = new OutputStreamWriter(new FileOutputStream(this.fileLanguage), "Cp1252");
+				Writer out = new OutputStreamWriter(new FileOutputStream(this.fileLanguage), encoding);
 				out.write(contentToSave);
 				out.flush();
 				out.close();
@@ -383,7 +395,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 
 		String contentToSave = this.configLanguage.saveToString();
-		Writer out = new OutputStreamWriter(new FileOutputStream(this.fileLanguage), "Cp1252");
+		Writer out = new OutputStreamWriter(new FileOutputStream(this.fileLanguage), "UTF-8");
 		out.write(contentToSave);
 		out.flush();
 		out.close();
@@ -457,8 +469,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * @param player
 	 */
 	public void clearArmorContents(Player player) {
-		ItemStack[] items = new ItemStack[player.getInventory().getArmorContents().length];
-		player.getInventory().setArmorContents(items);
+		player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
 	}
 
 	private ArrayList<File> sfiles;
@@ -505,7 +516,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	/**
-	 * Check if player is on tower.
+	 * Check if a location is on tower.
 	 * 
 	 * @param player
 	 * @return boolean true if player is on tower, false if not
@@ -542,8 +553,33 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return "-1";
 	}
 
+	/**
+	 * Returns a location who 2 blocks are air.
+	 * 
+	 * @param l
+	 * @return
+	 */
+	public Location getYLocation(Location l) {
+		for (int y = 0; y < 255; y++) {
+			int px = l.getBlockX();
+			int py = y;
+			int pz = l.getBlockZ();
+			Block b1 = new Location(l.getWorld(), px, py, pz).getBlock();
+			Block b2 = new Location(l.getWorld(), px, py + 1, pz).getBlock();
+			Block b3 = new Location(l.getWorld(), px, py + 2, pz).getBlock();
+			if (!b1.getType().equals(Material.AIR) && b2.getType().equals(Material.AIR) && b3.getType().equals(Material.AIR)) {
+				return b2.getLocation();
+			}
+		}
+		return l;
+	}
+
+	/**
+	 * Remove a island from SkyBlock.
+	 * 
+	 * @param l given location
+	 */
 	public void removeIsland(Location l) {
-		System.out.println("called");
 		if (l != null) {
 			int px = l.getBlockX();
 			int py = l.getBlockY();

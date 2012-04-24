@@ -74,7 +74,6 @@ public class CreateNewIsland {
 					} else {
 						SkyBlockMultiplayer.instance.log.warning("Island contains too much bedrock.");
 					}
-					return;
 				}
 			} else {
 				this.createDeafaultIsland(l);
@@ -183,7 +182,6 @@ public class CreateNewIsland {
 			try {
 				chest.getInventory().addItem(Settings.itemsChest[i]);
 			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
 			}
 		}
 
