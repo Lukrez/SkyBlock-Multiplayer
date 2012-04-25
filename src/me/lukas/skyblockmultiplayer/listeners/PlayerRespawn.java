@@ -37,7 +37,7 @@ public class PlayerRespawn implements Listener {
 			Settings.players.put(player.getName(), pi);
 		}
 
-		if (this.plugin.playerIsOnTower(player)) {
+		if (this.plugin.playerIsOnTower(player) || Settings.gameModeSelected == Settings.GameMode.PVP || pi.getIslandLocation() == null) {
 			player.getInventory().setContents(pi.getOldInventory());
 			player.getInventory().setArmorContents(pi.getOldArmor());
 			player.setExp(pi.getOldExp());
@@ -51,20 +51,7 @@ public class PlayerRespawn implements Listener {
 			return;
 		}
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.PVP || pi.getIslandLocation() == null) {
-			/*player.getInventory().setContents(pi.getOldInventory());
-			player.getInventory().setArmorContents(pi.getOldArmor());
-			player.setExp(pi.getOldExp());
-			player.setLevel(pi.getOldLevel());
-			player.setFoodLevel(pi.getOldFood());
-			player.setHealth(player.getMaxHealth());
-			this.plugin.writePlayerFile(player.getName(), pi);*/
-
-			event.setRespawnLocation(player.getWorld().getSpawnLocation());
-			return;
-		}
-
-		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD && Settings.build_respawnWithInventory) {
+		if (Settings.gameModeSelected == Settings.GameMode.BUILD && Settings.build_respawnWithInventory) {
 			if (!this.plugin.playerIsOnTower(player) && pi.getIslandLocation() != null) {
 				player.getInventory().setContents(pi.getIslandInventory());
 				player.getInventory().setArmorContents(pi.getIslandArmor());
@@ -110,12 +97,19 @@ public class PlayerRespawn implements Listener {
 			}
 		}
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
+		if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
 			if (!this.plugin.playerIsOnTower(player)) {
 				if (pi.getHomeLocation() == null) {
 					event.setRespawnLocation(pi.getIslandLocation());
 				} else {
-					event.setRespawnLocation(pi.getHomeLocation());
+					Location l = pi.getHomeLocation();
+					Location yLoc = player.getWorld().getHighestBlockAt(l.getBlockX(), l.getBlockZ()).getLocation();
+
+					if (yLoc.getBlockY() == 0 && yLoc.getBlock().getType().equals(Material.AIR)) {
+						event.setRespawnLocation(pi.getIslandLocation());
+					} else {
+						event.setRespawnLocation(pi.getHomeLocation());
+					}
 				}
 			}
 		}

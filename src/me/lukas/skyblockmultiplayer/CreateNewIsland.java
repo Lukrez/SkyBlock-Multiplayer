@@ -66,9 +66,10 @@ public class CreateNewIsland {
 		try {
 			File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.islandFileName);
 			if (f.exists() && f.isFile()) {
-				int res = CreateNewIsland.createStructure(l, f);
+				Location islandLoc = new Location(l.getWorld(), l.getBlockX(), l.getBlockY() - 3, l.getBlockZ());
+				int res = CreateNewIsland.createStructure(islandLoc, f);
 				if (res != 1) {
-					this.createDeafaultIsland(l);
+					this.createDefaultIsland(l);
 					if (res == 0) {
 						SkyBlockMultiplayer.instance.log.warning("Island contains no bedrock.");
 					} else {
@@ -76,11 +77,11 @@ public class CreateNewIsland {
 					}
 				}
 			} else {
-				this.createDeafaultIsland(l);
+				this.createDefaultIsland(l);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			this.createDeafaultIsland(l);
+			this.createDefaultIsland(l);
 		}
 	}
 
@@ -158,7 +159,7 @@ public class CreateNewIsland {
 		return new Location(SkyBlockMultiplayer.getSkyBlockWorld(), posX, posY, posZ);
 	}
 
-	private void createDeafaultIsland(Location l) {
+	private void createDefaultIsland(Location l) {
 		// Erstelle unterste Erdebene
 		createLayer(l, 61, Material.DIRT);
 		//Erstelle mittlere Erdebene

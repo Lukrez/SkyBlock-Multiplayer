@@ -131,7 +131,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.skyBlockOnline = true;
 			Settings.allowContent = false;
 			Settings.language = "english";
-			Settings.gameModeSelected = Settings.GAMEMODE.BUILD;
+			Settings.gameModeSelected = Settings.GameMode.BUILD;
 			Settings.pvp_livesPerIsland = 1;
 			Settings.pvp_islandsPerPlayer = 1;
 			Settings.build_respawnWithInventory = true;
@@ -141,7 +141,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.messagesOutside = false;
 			Settings.islandFileName = "";
 			Settings.towerFileName = "";
-			Settings.towerHeight = 80;
+			Settings.towerYHeight = 80;
 
 			for (ConfigPlugin c : ConfigPlugin.values()) {
 				this.setStringbyPath(this.configPlugin, this.filePlugin, c.path, c.value);
@@ -210,19 +210,19 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 
 			try {
-				Settings.towerHeight = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_TOWER_YHEIGHT.path, 80, true));
-				if (Settings.towerHeight < 0) {
-					Settings.towerHeight = 80;
+				Settings.towerYHeight = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_TOWER_YHEIGHT.path, 80, true));
+				if (Settings.towerYHeight < 0) {
+					Settings.towerYHeight = 80;
 				}
 			} catch (Exception e) {
-				Settings.towerHeight = 80;
+				Settings.towerYHeight = 80;
 			}
 
 			Settings.itemsChest = itemsChest;
 			Settings.skyBlockOnline = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SKYBLOCKONLINE.path, true, true));
 			Settings.language = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_LANGUAGE.path, "english", true);
 			Settings.allowContent = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_ALLOWCONTENT.path, false, true));
-			Settings.gameModeSelected = Settings.GAMEMODE.valueOf(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_GAMEMODE.path, "build", true).toUpperCase());
+			Settings.gameModeSelected = Settings.GameMode.valueOf(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_GAMEMODE.path, "build", true).toUpperCase());
 			Settings.build_respawnWithInventory = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_BUILD_RESPAWNWITHINVENTORY.path, true, true));
 			Settings.build_withProtectedArea = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_BUILD_WITHPROTECTEDAREA.path, true, true));
 			Settings.build_allowEnderpearl = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_BUILD_ALLOWENDERPEARL.path, false, true));
@@ -450,7 +450,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName);
 				if (f.exists() && f.isFile()) {
 					try {
-						CreateNewIsland.createStructure(new Location(getSkyBlockWorld(), 0, 80, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName));
+						CreateNewIsland.createStructure(new Location(getSkyBlockWorld(), 0, Settings.towerYHeight, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -573,6 +573,25 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 		return l;
 	}
+
+	/*public void removeEntities(Location l) {
+		int px = l.getBlockX();
+		int py = l.getBlockY();
+		int pz = l.getBlockZ();
+
+		for (int x = -10; x <= 10; x++) {
+			for (int y = -10; y <= 10; y++) {
+				for (int z = -10; z <= 10; z++) {
+					Location lChunk = new Location(l.getWorld(), px + x, py + y, pz + z);
+					for (Entity e : lChunk.getChunk().getEntities()) {
+						if (e.getType() == EntityType.SPIDER || e.getType() == EntityType.CREEPER || e.getType() == EntityType.ENDERMAN || e.getType() == EntityType.SKELETON || e.getType() == EntityType.ZOMBIE) {
+							e.remove();
+						}
+					}
+				}
+			}
+		}
+	}*/
 
 	/**
 	 * Remove a island from SkyBlock.

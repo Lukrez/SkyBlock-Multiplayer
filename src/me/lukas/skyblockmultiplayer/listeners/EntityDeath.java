@@ -37,6 +37,7 @@ public class EntityDeath implements Listener {
 			if (pi == null) {
 				return;
 			}
+			Settings.players.put(player.getName(), pi);
 		}
 
 		if (this.plugin.playerIsOnTower(player)) {
@@ -54,7 +55,7 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD && Settings.build_respawnWithInventory) {
+		if (Settings.gameModeSelected == Settings.GameMode.BUILD && Settings.build_respawnWithInventory) {
 			pi.setIslandInventory(player.getInventory().getContents());
 			pi.setIslandArmor(player.getInventory().getArmorContents());
 			pi.setIslandExp(player.getExp());
@@ -66,23 +67,26 @@ public class EntityDeath implements Listener {
 			event.setDroppedExp(0);
 
 			this.plugin.writePlayerFile(player.getName(), pi);
-
 			return;
 		}
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
-			return;
-		}
-
-		if (!pi.getHasIsland() || pi.isDead()) {
+		if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
 			return;
 		}
 
 		pi.setDead(true);
+		if (!pi.getHasIsland()) {
+			return;
+		}
+
 		pi.setLivesLeft(pi.getLivesLeft() - 1);
+		System.out.println("IslandsLeft: " + pi.getIslandsLeft());
+		System.out.println("LivesLeft: " + pi.getLivesLeft());
 		if (pi.getIslandsLeft() != 0 || pi.getLivesLeft() != 0) {
 			return;
 		}
+
+		System.out.println("called counting");
 
 		this.plugin.writePlayerFile(player.getName(), pi);
 
@@ -90,6 +94,7 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
+		System.out.println("numbersPlayers: " + Settings.numbersPlayers);
 		Settings.numbersPlayers--;
 
 		for (PlayerInfo pInfo : Settings.players.values()) {

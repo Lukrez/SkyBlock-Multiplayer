@@ -17,18 +17,18 @@ public class Settings {
 	public static boolean closed; // Lock SkyBlock to maximize the amount of players
 	public static String islandFileName; // schematic file name for island
 	public static String towerFileName; // schematic file name for tower
-	public static int towerHeight; // tower height
+	public static int towerYHeight; // tower height
 
 	/* Needed for plugin */
 	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
 	public static int numbersPlayers; // Amount of players in SkyBlock
 	public static boolean messagesOutside; // to get messages from SkyBlock.
 
-	public static enum GAMEMODE { // Two game modes
+	public static enum GameMode { // Two game modes
 		BUILD, PVP
 	}
 
-	public static GAMEMODE gameModeSelected; // Selected game mode
+	public static GameMode gameModeSelected; // Selected game mode
 
 	/* Gamemode is build */
 	public static boolean build_respawnWithInventory; // If true save contents of player in SkyBlock in Death

@@ -43,11 +43,11 @@ public class PlayerBreackBlockListener implements Listener {
 			}
 		}
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.PVP) {
+		if (Settings.gameModeSelected == Settings.GameMode.PVP) {
 			return;
 		}
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
+		if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
 			if (Settings.build_withProtectedArea) {
 				PlayerInfo pi = Settings.players.get(player.getName());
 				if (pi == null) {

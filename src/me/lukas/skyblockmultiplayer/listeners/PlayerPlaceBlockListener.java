@@ -45,7 +45,7 @@ public class PlayerPlaceBlockListener implements Listener {
 			}
 		}
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.PVP || !Settings.build_withProtectedArea) {
+		if (Settings.gameModeSelected == Settings.GameMode.PVP || !Settings.build_withProtectedArea) {
 			return;
 		}
 

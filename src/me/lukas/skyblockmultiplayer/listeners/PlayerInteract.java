@@ -53,7 +53,7 @@ public class PlayerInteract implements Listener {
 		}
 
 		if (item != null) {
-			if (Settings.gameModeSelected == Settings.GAMEMODE.BUILD) {
+			if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
 				if (item.getType().equals(Material.ENDER_PEARL)) {
 					if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
 						if (Settings.build_allowEnderpearl) {
@@ -142,7 +142,7 @@ public class PlayerInteract implements Listener {
 			return;
 		}
 
-		if (Settings.gameModeSelected == Settings.GAMEMODE.PVP || !Settings.build_withProtectedArea) {
+		if (Settings.gameModeSelected == Settings.GameMode.PVP || !Settings.build_withProtectedArea) {
 			return;
 		}
 
