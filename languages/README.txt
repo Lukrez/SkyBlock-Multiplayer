@@ -10,4 +10,5 @@ english.yml - updated
 deusch.yml - updated
 
 
-nederlands.yml - updated : This file has been translated from jackkiej.
+nederlands.yml - updated : This file has been written from jackkiej.
+portuguese - updated : This file has been written from JotaFaD.

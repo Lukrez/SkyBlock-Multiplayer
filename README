@@ -1,7 +1,7 @@
 Description:
 
 This plugin is a multiplayer version of the singleplayer version of SkyBlock which contains two different game modes:
-(1) PvP mode, where each player can have a defined finite number of islands or lives
+(1) PvP mode, where each player can have one or more islands
 (2) build mode with endless lifes
 
 The plugin creates an empty minecraft world with the name "SkyBlockMultiplayer" additional to your existing worlds.
@@ -17,13 +17,6 @@ How to install the plugin:
 Copy the SkyBlockMultiplayer.jar into your plugin folder
 Start the server, the plugin creates a folder named SkyBlockMultiplayer, this folder contains the config file and the language folder with the default english.yml
 
-Important for Multiverse users:
-To import the world within multiverse use: /mv import SkyBlockMultiplayer normal -g SkyBlockMultiplayer
-At the moment there is an issue regarding the chunkgenerator that creates the empty world for this plugin. 
-In multiverse the generator can potentially be overwritten by multiverse and original minecraft chunks are generated. 
-If this happens, please use the CleanRoomGenerator instead: /mv import SkyBlockMultiplayer normal -g CleanRoomGenerator
-
-
 Commands:
 /skyblock – shows the version
 /skyblock join - join Skyblock
@@ -37,6 +30,7 @@ Commands:
 /skyblock set opened - open SkyBlock to allow players to join
 /skyblock setOwner <island number> <player> - change the owner of a island
 /skyblock reset - reset Skyblock
+/skyblock remove <island number> - removes an area of 15 blocks in each direction of the spawn location
 /skyblock reload config - reload config
 /skyblock reload language - reload language
 /skyblock status - show status
@@ -58,16 +52,19 @@ skyblock.join - needed to join SkyBlock
 skyblock.build - to build on the spawn tower, to build on other player islands (only needed if build.withProtectedArea is true)
 skyblock.owner.set - needed for command /skyblock setowner <island number> <player>
 skyblock.messages - needed to get messages outside from SkyBlock
+skyblock.remove - needed for remove command
 
 Changelog:
- 	- fixed issues if allowContent is true
-	- fixed issues player could have after leaving, joining SkyBlock 0 health, food
-	- fixed problem with the generator, if server have running multiverse, if you have a older version of SkyBlock use: 
-		- /mv import SkyBlockMultiplayer normal -g SkyBlockMultiplayer
-	- leaving of SkyBlock only works now from tower, do first /skyblock tower then the command with that you want to leave SkyBlock
-	- Don't get anymore messages outside from SkyBlock, only with permissions skyblock.messages and if setting messagesOutside is true
-	- fixed language reading and saving
-	- updated language
+	- fixed home commands
+	- fixed pvp issues
+	- fixed teleport issues 
+	- added command /skyblock remove <island number> - with this you can remove a island over the island number
+	- The newisland command removes an area of 15 blocks in each direction of the spawn location, it also used the island remove function
+	- added new settings for schematic files:
+		- The schematic has to have one (and only one) bedrock block, which is used as spawn location.
+		  If the schematic contains no or more than one bedrock the default island/tower will be generated.
+	- fixed another problems with encoding of language files
+
 
 Downloads:
 https://github.com/Leseratte91/SkyBlock-Multiplayer/downloads
