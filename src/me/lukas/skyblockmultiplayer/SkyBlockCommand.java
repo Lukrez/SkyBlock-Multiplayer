@@ -35,11 +35,6 @@ public class SkyBlockCommand implements CommandExecutor {
 				return true;
 			}
 
-			if (args[0].equalsIgnoreCase("show")) {
-				System.out.println(Settings.numbersPlayers);
-				return true;
-			}
-
 			if (args[0].equalsIgnoreCase("help")) {
 				if (args.length == 1) {
 					return this.getListCommands(sender, "1");
