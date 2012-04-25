@@ -80,21 +80,15 @@ public class EntityDeath implements Listener {
 		}
 
 		pi.setLivesLeft(pi.getLivesLeft() - 1);
-		System.out.println("IslandsLeft: " + pi.getIslandsLeft());
-		System.out.println("LivesLeft: " + pi.getLivesLeft());
 		if (pi.getIslandsLeft() != 0 || pi.getLivesLeft() != 0) {
 			return;
 		}
-
-		System.out.println("called counting");
 
 		this.plugin.writePlayerFile(player.getName(), pi);
 
 		if (Settings.numbersPlayers < 1) {
 			return;
 		}
-
-		System.out.println("numbersPlayers: " + Settings.numbersPlayers);
 		Settings.numbersPlayers--;
 
 		for (PlayerInfo pInfo : Settings.players.values()) {
