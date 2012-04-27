@@ -341,7 +341,6 @@ public class CreateNewIsland {
 						}
 						Sign s = (Sign) b.getState();
 						s.setRawData((byte) dat);
-						s.update(true);
 						if (tileEntitiesMap.containsKey(vec)) {
 							Map<String, Tag> values = (Map<String, Tag>) tileEntitiesMap.get(vec);
 							String l1 = (String) values.get("Text1").getValue();
