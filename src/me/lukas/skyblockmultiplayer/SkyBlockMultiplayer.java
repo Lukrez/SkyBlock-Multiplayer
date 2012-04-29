@@ -451,14 +451,15 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				if (f.exists() && f.isFile()) {
 					try {
 						CreateNewIsland.createStructure(new Location(getSkyBlockWorld(), 0, Settings.towerYHeight, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName));
+						skyBlockWorld.setSpawnLocation(0, SkyBlockMultiplayer.instance.getYLocation(new Location(SkyBlockMultiplayer.getSkyBlockWorld(), 0, 80, 0)).getBlockY(), 0);
+						return skyBlockWorld;
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else {
-					SkyBlockMultiplayer.createSpawnTower();
 				}
+				SkyBlockMultiplayer.createSpawnTower();
+				skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
 			}
-			skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
 		}
 		return skyBlockWorld;
 	}

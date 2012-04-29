@@ -60,7 +60,20 @@ public class SkyBlockCommand implements CommandExecutor {
 						if (!Permissions.SKYBLOCK_BUILD.has(sender)) {
 							return this.notAuthorized(sender);
 						}
-						SkyBlockMultiplayer.createSpawnTower();
+						File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName);
+						if (Settings.islandFileName.equalsIgnoreCase("")) {
+							SkyBlockMultiplayer.createSpawnTower();
+						} else {
+							if (f.exists() && f.isFile()) {
+								try {
+									CreateNewIsland.createStructure(new Location(SkyBlockMultiplayer.getSkyBlockWorld(), 0, Settings.towerYHeight, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName));
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							} else {
+								SkyBlockMultiplayer.createSpawnTower();
+							}
+						}
 						sender.sendMessage(SkyBlockMultiplayer.instance.pName + Language.MSGS_SPAWN_TOWER_RECREATED.sentence);
 						return true;
 					}
