@@ -698,7 +698,7 @@ public class SkyBlockCommand implements CommandExecutor {
 				}
 
 				// teleport player
-				SkyBlockMultiplayer.getInstance().removeEntities(pi.getIslandLocation());
+				SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 				player.teleport(pi.getIslandLocation());
 				Settings.numbersPlayers++;
 
@@ -751,7 +751,7 @@ public class SkyBlockCommand implements CommandExecutor {
 
 			// teleport player
 			if (pi.getHomeLocation() == null) {
-				SkyBlockMultiplayer.getInstance().removeEntities(pi.getIslandLocation());
+				SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 				player.teleport(pi.getIslandLocation());
 			} else {
 				Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi);
@@ -759,7 +759,7 @@ public class SkyBlockCommand implements CommandExecutor {
 					player.sendMessage("Cannot teleport to your home location, your island is probably missing.");
 					return true;
 				}
-				SkyBlockMultiplayer.getInstance().removeEntities(homeSweetHome);
+				SkyBlockMultiplayer.getInstance().removeCreatures(homeSweetHome);
 				player.teleport(homeSweetHome);
 			}
 
@@ -840,7 +840,7 @@ public class SkyBlockCommand implements CommandExecutor {
 				}
 
 				// teleport player
-				SkyBlockMultiplayer.getInstance().removeEntities(pi.getIslandLocation());
+				SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 				player.teleport(pi.getIslandLocation());
 				player.sendMessage(SkyBlockMultiplayer.getInstance().pName + "You have " + pi.getLivesLeft() + " lives on this island and " + pi.getIslandsLeft() + " islands left.");
 
@@ -882,7 +882,7 @@ public class SkyBlockCommand implements CommandExecutor {
 			}
 
 			// teleport player
-			SkyBlockMultiplayer.getInstance().removeEntities(pi.getIslandLocation());
+			SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 			player.teleport(pi.getIslandLocation());
 			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + "You have " + pi.getLivesLeft() + " lives on this island and " + pi.getIslandsLeft() + " islands left.");
 
@@ -1314,7 +1314,7 @@ public class SkyBlockCommand implements CommandExecutor {
 		}
 
 		if (pi.getHomeLocation() == null) {
-			SkyBlockMultiplayer.getInstance().removeEntities(pi.getIslandLocation());
+			SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 			player.teleport(pi.getIslandLocation());
 		} else {
 			Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi);
@@ -1323,7 +1323,7 @@ public class SkyBlockCommand implements CommandExecutor {
 				return true;
 			}
 			
-			SkyBlockMultiplayer.getInstance().removeEntities(homeSweetHome);
+			SkyBlockMultiplayer.getInstance().removeCreatures(homeSweetHome);
 			player.teleport(homeSweetHome);
 		}
 		return true;
@@ -1463,7 +1463,7 @@ public class SkyBlockCommand implements CommandExecutor {
 		}
 
 		if (pTarget.getHomeLocation() == null) {
-			SkyBlockMultiplayer.getInstance().removeEntities(pTarget.getIslandLocation());
+			SkyBlockMultiplayer.getInstance().removeCreatures(pTarget.getIslandLocation());
 			player.teleport(pTarget.getIslandLocation());
 		} else {
 			Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pTarget);
@@ -1472,7 +1472,7 @@ public class SkyBlockCommand implements CommandExecutor {
 				return true;
 			}
 
-			SkyBlockMultiplayer.getInstance().removeEntities(homeSweetHome);
+			SkyBlockMultiplayer.getInstance().removeCreatures(homeSweetHome);
 			player.teleport(homeSweetHome);
 
 		}

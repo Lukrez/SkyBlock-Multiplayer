@@ -20,12 +20,13 @@ public class Settings {
 	public static String islandFileName; // schematic file name for island
 	public static String towerFileName; // schematic file name for tower
 	public static int towerYHeight; // tower height
+	public static boolean removeCreaturesByTeleport; // remove creatures by teleport to island
 
 	/* Needed for plugin */
 	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
 	public static int numbersPlayers; // Amount of players in SkyBlock
 	public static boolean messagesOutside; // to get messages from SkyBlock.
-	public static Map<String, ArrayList<Location>> islandLocations = new HashMap<String, ArrayList<Location>>(); 
+	public static Map<String, ArrayList<Location>> islandLocations = new HashMap<String, ArrayList<Location>>();
 
 	public static enum GameMode { // Two game modes
 		BUILD, PVP

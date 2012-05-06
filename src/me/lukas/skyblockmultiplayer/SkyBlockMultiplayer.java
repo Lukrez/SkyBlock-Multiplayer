@@ -106,7 +106,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		this.log.info("v" + pluginFile.getVersion() + " enabled.");
 	}
-	
+
 	public static SkyBlockMultiplayer getInstance() {
 		return instance;
 	}
@@ -147,6 +147,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.build_allowEnderpearl = false;
 			Settings.worldName = this.pluginFile.getName();
 			Settings.messagesOutside = false;
+			Settings.removeCreaturesByTeleport = true;
 			Settings.islandFileName = "";
 			Settings.towerFileName = "";
 			Settings.towerYHeight = 80;
@@ -238,6 +239,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.worldName = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_WORLDNAME.path, this.pluginFile.getName(), true);
 			Settings.closed = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_CLOSED.path, false, true));
 			Settings.messagesOutside = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_MESSAGES_OUTSIDE.path, false, true));
+			Settings.removeCreaturesByTeleport = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_REMOVECREATURESBYTELEPORT.path, true, true));
 			Settings.islandFileName = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_ISLAND_FILENAME.path, "", true);
 			Settings.towerFileName = this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_TOWER_FILENAME.path, "", true);
 		}
@@ -639,7 +641,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * 
 	 * @param l
 	 */
-	public void removeEntities(Location l) {
+	public void removeCreatures(Location l) {
+		if (!Settings.removeCreaturesByTeleport) {
+			return;
+		}
+
 		int px = l.getBlockX();
 		int py = l.getBlockY();
 		int pz = l.getBlockZ();

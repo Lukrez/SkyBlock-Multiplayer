@@ -82,7 +82,7 @@ public class PlayerRespawn implements Listener {
 				}
 
 				if (pi.getHomeLocation() == null) {
-					SkyBlockMultiplayer.getInstance().removeEntities(pi.getIslandLocation());
+					SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 					event.setRespawnLocation(pi.getIslandLocation());
 				} else {
 
@@ -93,7 +93,7 @@ public class PlayerRespawn implements Listener {
 						return;
 					}
 
-					SkyBlockMultiplayer.getInstance().removeEntities(homeSweetHome);
+					SkyBlockMultiplayer.getInstance().removeCreatures(homeSweetHome);
 					event.setRespawnLocation(homeSweetHome);
 				}
 				return;
@@ -111,7 +111,7 @@ public class PlayerRespawn implements Listener {
 						return;
 					}
 
-					SkyBlockMultiplayer.getInstance().removeEntities(homeSweetHome);
+					SkyBlockMultiplayer.getInstance().removeCreatures(homeSweetHome);
 					event.setRespawnLocation(homeSweetHome);
 				}
 			}
