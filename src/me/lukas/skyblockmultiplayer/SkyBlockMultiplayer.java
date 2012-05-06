@@ -26,6 +26,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
@@ -561,7 +562,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * @return
 	 */
 	public Location getYLocation(Location l) {
-		for (int y = 0; y < 255; y++) {
+		for (int y = 0; y < 254; y++) {
 			int px = l.getBlockX();
 			int py = y;
 			int pz = l.getBlockZ();
@@ -573,6 +574,57 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 		return l;
+	}
+
+	public Location getSafeHomeLocation(PlayerInfo p) {
+
+		// a) check original location
+		Location home = p.getHomeLocation();
+		if (this.isSafeLocation(home))
+			return home;
+		// b) check if a suitable y exists on this x and z
+		for (int y = home.getBlockY(); y > 0; y--) {
+			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
+			if (this.isSafeLocation(n))
+				return n;
+		}
+		for (int y = home.getBlockY(); y < 255; y++) {
+			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
+			if (this.isSafeLocation(n))
+				return n;
+		}
+
+		// c) check island Location
+		Location island = p.getIslandLocation();
+		if (this.isSafeLocation(island))
+			return island;
+		for (int y = island.getBlockY(); y > 0; y--) {
+			Location n = new Location(island.getWorld(), island.getBlockX(), y, island.getBlockZ());
+			if (this.isSafeLocation(n))
+				return n;
+		}
+		for (int y = island.getBlockY(); y < 255; y++) {
+			Location n = new Location(island.getWorld(), island.getBlockX(), y, island.getBlockZ());
+			if (this.isSafeLocation(n))
+				return n;
+		}
+		return null;
+	}
+
+	public boolean isSafeLocation(Location l) {
+		Block ground = l.getBlock().getRelative(BlockFace.DOWN);
+		Block air1 = l.getBlock();
+		Block air2 = l.getBlock().getRelative(BlockFace.UP);
+
+		if (ground.getType().equals(Material.AIR))
+			return false;
+		if (ground.getType().equals(Material.LAVA))
+			return false;
+		if (ground.getType().equals(Material.WATER))
+			return false;
+		if (air1.getType().equals(Material.AIR) && air2.getType().equals(Material.AIR))
+			return true;
+		return false;
 	}
 
 	/*public void removeEntities(Location l) {

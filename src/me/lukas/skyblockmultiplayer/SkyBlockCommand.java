@@ -9,7 +9,6 @@ import java.util.Scanner;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,13 +17,13 @@ import org.bukkit.entity.Player;
 public class SkyBlockCommand implements CommandExecutor {
 
 	/**
-	 * If a command is called, SkyBlockMultiplayer.instance code will be running.
+	 * If a command is called, this code will be running.
 	 * 	
 	 * @param sender that types the com mand.
-	 * @param cmd the typed command.
+	 * @param cmd
 	 * @param label 
 	 * @param  args array that includes all given arguments.
-	 * @return boolean command was successfull or not
+	 * @return boolean command exists or not
 	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -753,14 +752,13 @@ public class SkyBlockCommand implements CommandExecutor {
 			if (pi.getHomeLocation() == null) {
 				player.teleport(pi.getIslandLocation());
 			} else {
-				Location l = pi.getHomeLocation();
-				Location yLoc = player.getWorld().getHighestBlockAt(l.getBlockX(), l.getBlockZ()).getLocation();
-
-				if (yLoc.getBlockY() == 0 && yLoc.getBlock().getType().equals(Material.AIR)) {
-					player.teleport(pi.getIslandLocation());
-				} else {
-					player.teleport(pi.getHomeLocation());
+				Location homeSweetHome = SkyBlockMultiplayer.instance.getSafeHomeLocation(pi);
+				if (homeSweetHome == null){ // if null, island is missing and home location returns no safe block
+					player.sendMessage("Cannot teleport to your home location, your island is probably missing.");
+					return true;
 				}
+
+				player.teleport(homeSweetHome);
 			}
 
 			SkyBlockMultiplayer.instance.writePlayerFile(player.getName(), pi);
@@ -1314,14 +1312,13 @@ public class SkyBlockCommand implements CommandExecutor {
 		if (pi.getHomeLocation() == null) {
 			player.teleport(pi.getIslandLocation());
 		} else {
-			Location l = pi.getHomeLocation();
-			Location yLoc = player.getWorld().getHighestBlockAt(l.getBlockX(), l.getBlockZ()).getLocation();
-
-			if (yLoc.getBlockY() == 0 && yLoc.getBlock().getType().equals(Material.AIR)) {
-				player.teleport(pi.getIslandLocation());
-			} else {
-				player.teleport(pi.getHomeLocation());
+			Location homeSweetHome = SkyBlockMultiplayer.instance.getSafeHomeLocation(pi);
+			if (homeSweetHome == null){ // if null, island is missing and home location returns no safe block
+				player.sendMessage("Cannot teleport to your home location, your island is probably missing.");
+				return true;
 			}
+
+			player.teleport(homeSweetHome);
 		}
 		return true;
 	}
@@ -1462,14 +1459,14 @@ public class SkyBlockCommand implements CommandExecutor {
 		if (pTarget.getHomeLocation() == null) {
 			player.teleport(pTarget.getIslandLocation());
 		} else {
-			Location l = pTarget.getHomeLocation();
-			Location yLoc = player.getWorld().getHighestBlockAt(l.getBlockX(), l.getBlockZ()).getLocation();
-
-			if (yLoc.getBlockY() == 0 && yLoc.getBlock().getType().equals(Material.AIR)) {
-				player.teleport(pTarget.getIslandLocation());
-			} else {
-				player.teleport(pTarget.getHomeLocation());
+			Location homeSweetHome = SkyBlockMultiplayer.instance.getSafeHomeLocation(pTarget);
+			if (homeSweetHome == null){ // if null, island is missing and home location returns no safe block
+				player.sendMessage("Cannot teleport to the friend home location, his island is probably missing.");
+				return true;
 			}
+
+			player.teleport(homeSweetHome);
+
 		}
 		return true;
 	}
