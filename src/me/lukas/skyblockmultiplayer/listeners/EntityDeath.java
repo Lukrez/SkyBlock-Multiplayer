@@ -33,7 +33,7 @@ public class EntityDeath implements Listener {
 
 		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) { // Check, if player is in playerlist
-			pi = SkyBlockMultiplayer.instance.readPlayerFile(player.getName());
+			pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
 			if (pi == null) {
 				return;
 			}

@@ -51,7 +51,7 @@ public class PlayerBreackBlockListener implements Listener {
 			if (Settings.build_withProtectedArea) {
 				PlayerInfo pi = Settings.players.get(player.getName());
 				if (pi == null) {
-					pi = SkyBlockMultiplayer.instance.readPlayerFile(player.getName());
+					pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
 					if (pi == null) {
 						return;
 					}

@@ -155,7 +155,7 @@ public class PlayerInfo implements Serializable {
 			return;
 		}
 		for (ItemStack i : items) {
-			this.islandInventory.add(this.parseItemStackToString(i));
+			this.islandInventory.add(ItemParser.parseItemStackToString(i));
 		}
 	}
 
@@ -164,7 +164,11 @@ public class PlayerInfo implements Serializable {
 		for (int i = 0; i < items.length; i++) {
 			String s = this.islandInventory.get(i);
 			if (!s.equalsIgnoreCase("")) {
-				items[i] = this.parseStringToItemStack(this.islandInventory.get(i));
+				if (s.contains("amount")) {
+					items[i] = ItemParser.getItemStackfromString(s);
+				} else {
+					items[i] = this.parseStringToItemStack(this.islandInventory.get(i));
+				}
 			}
 		}
 		return items;
@@ -176,7 +180,7 @@ public class PlayerInfo implements Serializable {
 			return;
 		}
 		for (ItemStack i : items) {
-			this.islandArmor.add(this.parseItemStackToString(i));
+			this.islandArmor.add(ItemParser.parseItemStackToString(i));
 		}
 	}
 
@@ -185,7 +189,11 @@ public class PlayerInfo implements Serializable {
 		for (int i = 0; i < items.length; i++) {
 			String s = this.islandArmor.get(i);
 			if (!s.equalsIgnoreCase("")) {
-				items[i] = this.parseStringToItemStack(this.islandArmor.get(i));
+				if (s.contains("amount")) {
+					items[i] = ItemParser.getItemStackfromString(s);
+				} else {
+					items[i] = this.parseStringToItemStack(this.islandArmor.get(i));
+				}
 			}
 		}
 		return items;
@@ -197,7 +205,7 @@ public class PlayerInfo implements Serializable {
 			return;
 		}
 		for (ItemStack i : items) {
-			this.oldInventory.add(this.parseItemStackToString(i));
+			this.oldInventory.add(ItemParser.parseItemStackToString(i));
 		}
 	}
 
@@ -206,7 +214,11 @@ public class PlayerInfo implements Serializable {
 		for (int i = 0; i < items.length; i++) {
 			String s = this.oldInventory.get(i);
 			if (!s.equalsIgnoreCase("")) {
-				items[i] = this.parseStringToItemStack(this.oldInventory.get(i));
+				if (s.contains("amount")) {
+					items[i] = ItemParser.getItemStackfromString(s);
+				} else {
+					items[i] = this.parseStringToItemStack(this.oldInventory.get(i));
+				}
 			}
 		}
 		return items;
@@ -218,7 +230,7 @@ public class PlayerInfo implements Serializable {
 			return;
 		}
 		for (ItemStack i : items) {
-			this.oldArmor.add(this.parseItemStackToString(i));
+			this.oldArmor.add(ItemParser.parseItemStackToString(i));
 		}
 	}
 
@@ -227,7 +239,11 @@ public class PlayerInfo implements Serializable {
 		for (int i = 0; i < items.length; i++) {
 			String s = this.oldArmor.get(i);
 			if (!s.equalsIgnoreCase("")) {
-				items[i] = this.parseStringToItemStack(this.oldArmor.get(i));
+				if (s.contains("amount")) {
+					items[i] = ItemParser.getItemStackfromString(s);
+				} else {
+					items[i] = this.parseStringToItemStack(this.oldArmor.get(i));
+				}
 			}
 		}
 		return items;
@@ -326,12 +342,12 @@ public class PlayerInfo implements Serializable {
 		return null;
 	}
 
-	private String parseItemStackToString(ItemStack i) {
+	/*private String parseItemStackToString(ItemStack i) {
 		if (i == null) {
 			return "";
 		}
 		return i.getTypeId() + ":" + i.getAmount() + ":" + i.getDurability() + ":" + i.getData().getData();
-	}
+	}*/
 
 	private Location getLocationString(String s) {
 		if (s == null || s.trim() == "") {

@@ -29,7 +29,7 @@ public class PlayerRespawn implements Listener {
 
 		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) {
-			pi = SkyBlockMultiplayer.instance.readPlayerFile(player.getName());
+			pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
 			if (pi == null) {
 				event.setRespawnLocation(player.getWorld().getSpawnLocation());
 				return;
@@ -82,15 +82,18 @@ public class PlayerRespawn implements Listener {
 				}
 
 				if (pi.getHomeLocation() == null) {
+					SkyBlockMultiplayer.getInstance().removeEntities(pi.getIslandLocation());
 					event.setRespawnLocation(pi.getIslandLocation());
 				} else {
 
-					Location homeSweetHome = SkyBlockMultiplayer.instance.getSafeHomeLocation(pi);
+					Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi);
+					
 					if (homeSweetHome == null) { // if null, island is missing and home location returns no safe block
 						player.sendMessage("Cannot teleport to your home location, your island is probably missing.");
 						return;
 					}
 
+					SkyBlockMultiplayer.getInstance().removeEntities(homeSweetHome);
 					event.setRespawnLocation(homeSweetHome);
 				}
 				return;
@@ -102,12 +105,13 @@ public class PlayerRespawn implements Listener {
 				if (pi.getHomeLocation() == null) {
 					event.setRespawnLocation(pi.getIslandLocation());
 				} else {
-					Location homeSweetHome = SkyBlockMultiplayer.instance.getSafeHomeLocation(pi);
+					Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi);
 					if (homeSweetHome == null) { // if null, island is missing and home location returns no safe block
 						player.sendMessage("Cannot teleport to your home location, your island is probably missing.");
 						return;
 					}
 
+					SkyBlockMultiplayer.getInstance().removeEntities(homeSweetHome);
 					event.setRespawnLocation(homeSweetHome);
 				}
 			}

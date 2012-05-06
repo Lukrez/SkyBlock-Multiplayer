@@ -55,7 +55,7 @@ public class CreateNewIsland {
 			while (this.checkIfOccupied(l)) {
 				numberIslands++;
 				l = getIslandPosition(numberIslands);
-				//System.out.println(numberIslands + " : Location " + SkyBlockMultiplayer.instance.getStringLocation(l));
+				//System.out.println(numberIslands + " : Location " + SkyBlockMultiplayer.getInstance().getStringLocation(l));
 
 			}
 			this.createIsland(l);
@@ -64,16 +64,16 @@ public class CreateNewIsland {
 
 	public void createIsland(Location l) {
 		try {
-			File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.islandFileName);
+			File f = new File(SkyBlockMultiplayer.getInstance().getDataFolder(), Settings.islandFileName);
 			if (f.exists() && f.isFile()) {
 				Location islandLoc = new Location(l.getWorld(), l.getBlockX(), l.getBlockY() - 3, l.getBlockZ());
 				int res = CreateNewIsland.createStructure(islandLoc, f);
 				if (res != 1) {
 					this.createDefaultIsland(l);
 					if (res == 0) {
-						SkyBlockMultiplayer.instance.log.warning("Island contains no bedrock.");
+						SkyBlockMultiplayer.getInstance().log.warning("Island contains no bedrock.");
 					} else {
-						SkyBlockMultiplayer.instance.log.warning("Island contains too much bedrock.");
+						SkyBlockMultiplayer.getInstance().log.warning("Island contains too much bedrock.");
 					}
 				}
 			} else {

@@ -42,7 +42,7 @@ public class PlayerInteract implements Listener {
 
 		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) {
-			pi = SkyBlockMultiplayer.instance.readPlayerFile(player.getName());
+			pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
 		}
 		PlayerInfo owner = null;
 

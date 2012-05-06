@@ -19,6 +19,7 @@ import me.lukas.skyblockmultiplayer.listeners.PlayerRespawn;
 import me.lukas.skyblockmultiplayer.listeners.PlayerTeleport;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -34,6 +35,8 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
@@ -46,7 +49,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	public Logger log;
 
 	static World skyBlockWorld = null;
-	public static SkyBlockMultiplayer instance;
+	private static SkyBlockMultiplayer instance;
 
 	public FileConfiguration configPlugin;
 	public File filePlugin;
@@ -102,6 +105,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
 
 		this.log.info("v" + pluginFile.getVersion() + " enabled.");
+	}
+	
+	public static SkyBlockMultiplayer getInstance() {
+		return instance;
 	}
 
 	/**
@@ -627,24 +634,26 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return false;
 	}
 
-	/*public void removeEntities(Location l) {
+	/**
+	 * Remove creatures from chunk at and around the given location.
+	 * 
+	 * @param l
+	 */
+	public void removeEntities(Location l) {
 		int px = l.getBlockX();
 		int py = l.getBlockY();
 		int pz = l.getBlockZ();
-
-		for (int x = -10; x <= 10; x++) {
-			for (int y = -10; y <= 10; y++) {
-				for (int z = -10; z <= 10; z++) {
-					Location lChunk = new Location(l.getWorld(), px + x, py + y, pz + z);
-					for (Entity e : lChunk.getChunk().getEntities()) {
-						if (e.getType() == EntityType.SPIDER || e.getType() == EntityType.CREEPER || e.getType() == EntityType.ENDERMAN || e.getType() == EntityType.SKELETON || e.getType() == EntityType.ZOMBIE) {
-							e.remove();
-						}
+		for (int x = -1; x <= 1; x++) {
+			for (int z = -1; z <= 1; z++) {
+				Chunk c = l.getWorld().getChunkAt(new Location(l.getWorld(), px + x * 16, py, pz + z * 16));
+				for (Entity e : c.getEntities()) {
+					if (e.getType() == EntityType.SPIDER || e.getType() == EntityType.CREEPER || e.getType() == EntityType.ENDERMAN || e.getType() == EntityType.SKELETON || e.getType() == EntityType.ZOMBIE) {
+						e.remove();
 					}
 				}
 			}
 		}
-	}*/
+	}
 
 	/**
 	 * Remove a island from SkyBlock.
