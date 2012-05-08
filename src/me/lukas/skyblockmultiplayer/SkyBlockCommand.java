@@ -59,20 +59,55 @@ public class SkyBlockCommand implements CommandExecutor {
 						if (!Permissions.SKYBLOCK_BUILD.has(sender)) {
 							return this.notAuthorized(sender);
 						}
-						File f = new File(SkyBlockMultiplayer.getInstance().getDataFolder(), Settings.towerFileName);
-						if (Settings.islandFileName.equalsIgnoreCase("")) {
+
+						Location locTower = new Location(SkyBlockMultiplayer.getSkyBlockWorld(), 0, Settings.towerYHeight, 0);
+						File f = new File(Settings.towerFileName);
+						if (Settings.towerFileName.trim().equalsIgnoreCase("")) {
 							SkyBlockMultiplayer.createSpawnTower();
-						} else {
-							if (f.exists() && f.isFile()) {
-								try {
-									CreateNewIsland.createStructure(new Location(SkyBlockMultiplayer.getSkyBlockWorld(), 0, Settings.towerYHeight, 0), new File(SkyBlockMultiplayer.getInstance().getDataFolder(), Settings.towerFileName));
-								} catch (Exception e) {
-									e.printStackTrace();
+							sender.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_SPAWN_TOWER_RECREATED.sentence);
+							return true;
+						}
+
+						if (f.exists() && f.isFile()) {
+							try {
+								int res = CreateNewIsland.createStructure(locTower, f);
+								if (res != -1) {
+									SkyBlockMultiplayer.createSpawnTower();
+									if (res == 0) {
+										SkyBlockMultiplayer.getInstance().log.warning("Tower contains no bedrock.");
+									} else {
+										SkyBlockMultiplayer.getInstance().log.warning("Tower contains too much bedrock.");
+									}
 								}
-							} else {
+								sender.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_SPAWN_TOWER_RECREATED.sentence);
+							} catch (Exception e) {
+								e.printStackTrace();
 								SkyBlockMultiplayer.createSpawnTower();
 							}
+							return true;
 						}
+
+						f = new File(SkyBlockMultiplayer.getInstance().getDataFolder(), Settings.towerFileName);
+						if (f.exists() && f.isFile()) {
+							try {
+								int res = CreateNewIsland.createStructure(locTower, f);
+								if (res != -1) {
+									SkyBlockMultiplayer.createSpawnTower();
+									if (res == 0) {
+										SkyBlockMultiplayer.getInstance().log.warning("Tower contains no bedrock.");
+									} else {
+										SkyBlockMultiplayer.getInstance().log.warning("Tower contains too much bedrock.");
+									}
+								}
+								sender.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_SPAWN_TOWER_RECREATED.sentence);
+							} catch (Exception e) {
+								e.printStackTrace();
+								SkyBlockMultiplayer.createSpawnTower();
+							}
+							return true;
+						}
+
+						SkyBlockMultiplayer.createSpawnTower();
 						sender.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_SPAWN_TOWER_RECREATED.sentence);
 						return true;
 					}
@@ -755,8 +790,8 @@ public class SkyBlockCommand implements CommandExecutor {
 				player.teleport(pi.getIslandLocation());
 			} else {
 				Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi);
-				if (homeSweetHome == null){ // if null, island is missing and home location returns no safe block
-					player.sendMessage("Cannot teleport to your home location, your island is probably missing.");
+				if (homeSweetHome == null) { // if null, island is missing and home location returns no safe block
+					player.sendMessage(SkyBlockMultiplayer.getInstance().pName + "Cannot teleport to your home location, your island is probably missing.");
 					return true;
 				}
 				SkyBlockMultiplayer.getInstance().removeCreatures(homeSweetHome);
@@ -1318,11 +1353,11 @@ public class SkyBlockCommand implements CommandExecutor {
 			player.teleport(pi.getIslandLocation());
 		} else {
 			Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi);
-			if (homeSweetHome == null){ // if null, island is missing and home location returns no safe block
-				player.sendMessage("Cannot teleport to your home location, your island is probably missing.");
+			if (homeSweetHome == null) { // if null, island is missing and / or home location returns no safe block
+				player.sendMessage(SkyBlockMultiplayer.getInstance().pName + "Cannot teleport to your home location, your island is probably missing.");
 				return true;
 			}
-			
+
 			SkyBlockMultiplayer.getInstance().removeCreatures(homeSweetHome);
 			player.teleport(homeSweetHome);
 		}
@@ -1467,7 +1502,7 @@ public class SkyBlockCommand implements CommandExecutor {
 			player.teleport(pTarget.getIslandLocation());
 		} else {
 			Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pTarget);
-			if (homeSweetHome == null){ // if null, island is missing and home location returns no safe block
+			if (homeSweetHome == null) { // if null, island is missing and home location returns no safe block
 				player.sendMessage("Cannot teleport to the friend home location, his island is probably missing.");
 				return true;
 			}

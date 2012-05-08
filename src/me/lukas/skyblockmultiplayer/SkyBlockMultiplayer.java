@@ -586,11 +586,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	public Location getSafeHomeLocation(PlayerInfo p) {
-
+		
 		// a) check original location
 		Location home = p.getHomeLocation();
-		if (this.isSafeLocation(home))
+		if (this.isSafeLocation(home)) {
 			return home;
+		}
 		// b) check if a suitable y exists on this x and z
 		for (int y = home.getBlockY(); y > 0; y--) {
 			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
@@ -629,7 +630,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return false;
 		if (ground.getType().equals(Material.LAVA))
 			return false;
+		if (ground.getType().equals(Material.STATIONARY_LAVA))
+			return false;
 		if (ground.getType().equals(Material.WATER))
+			return false;
+		if (ground.getType().equals(Material.STATIONARY_WATER))
 			return false;
 		if (air1.getType().equals(Material.AIR) && air2.getType().equals(Material.AIR))
 			return true;
