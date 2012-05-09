@@ -1438,6 +1438,7 @@ public class SkyBlockCommand implements CommandExecutor {
 			return true;
 		}
 
+		
 		String res = SkyBlockMultiplayer.getInstance().getFullPlayerName(toPlayer);
 		if (res.equalsIgnoreCase("-1")) {
 			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_WRONG_PLAYER_NAME.sentence);
