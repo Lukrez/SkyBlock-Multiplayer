@@ -4,7 +4,6 @@ import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Permissions;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -57,9 +56,9 @@ public class PlayerBreackBlockListener implements Listener {
 					}
 				}
 
-				PlayerInfo owner = this.getOwner(b.getLocation());
+				PlayerInfo owner = SkyBlockMultiplayer.getOwner(b.getLocation());
 				if (owner == null) {
-					if (this.canPlayerDoThat(pi, b.getLocation())) {
+					if (SkyBlockMultiplayer.canPlayerDoThat(pi, b.getLocation())) {
 						return;
 					}
 					event.setCancelled(true);
@@ -77,41 +76,5 @@ public class PlayerBreackBlockListener implements Listener {
 				return;
 			}
 		}
-	}
-
-	private boolean canPlayerDoThat(PlayerInfo pi, Location l) {
-		int islandX = pi.getIslandLocation().getBlockX();
-		int islandZ = pi.getIslandLocation().getBlockZ();
-
-		int blockX = l.getBlockX();
-		int blockZ = l.getBlockZ();
-
-		int dist = Settings.distanceIslands / 2 - 3;
-
-		if (islandX + dist >= blockX && islandX - dist <= blockX) {
-			if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private PlayerInfo getOwner(Location l) {
-		for (PlayerInfo pi : Settings.players.values()) {
-			int islandX = pi.getIslandLocation().getBlockX();
-			int islandZ = pi.getIslandLocation().getBlockZ();
-
-			int blockX = l.getBlockX();
-			int blockZ = l.getBlockZ();
-
-			int dist = (Settings.distanceIslands / 2) - 3;
-
-			if (islandX + dist >= blockX && islandX - dist <= blockX) {
-				if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
-					return pi;
-				}
-			}
-		}
-		return null;
 	}
 }

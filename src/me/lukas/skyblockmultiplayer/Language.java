@@ -95,7 +95,7 @@ public enum Language {
 	MSGS_SPAWN_LOCATION_CHANGED("msgs.spawnLocationChanged", "Your spawn point is changed."),
 	MSGS_HOME_CHANGE_ONYL_INOWN_AREA("msgs.changeOfHomeLocationOnlyInOwnArea", "You can change your spawn point only in your region."),
 	MSGS_NO_ISLAND_TELEPORT_IMPOSSIBLE("msgs.noIslandTeleportImpossible", "You have no island, you can not teleport to your friend."),
-	MSGS_AREA_OFSPAWN_TOWER("msgs.areaOfSpawnTower", "Area of spawn tower."),
+	MSGS_AREA_OF_SPAWN_TOWER("msgs.areaOfSpawnTower", "Area of spawn tower."),
 	MSGS_ONLY_ON_TOWER("msgs.onlyOnTower", "This command works only on the tower."),
 	MSGS_ONLY_OUTSIDE_OF_SB("msgs.onlyOutsideOfSb", "This command works only outside of SkyBlock."),
 	MSGS_ONLY_INSIDE_OF_SB("msgs.onlyInsideOfSb", "This command works only inside of SkyBlock.");

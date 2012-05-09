@@ -85,7 +85,7 @@ public class PlayerInteract implements Listener {
 
 						if (i == 0) {
 							if (this.plugin.locationIsOnTower(player.getLocation())) {
-								player.sendMessage(this.plugin.pName + Language.MSGS_AREA_OFSPAWN_TOWER.sentence);
+								player.sendMessage(this.plugin.pName + Language.MSGS_AREA_OF_SPAWN_TOWER.sentence);
 								event.setCancelled(true);
 								return;
 							}
