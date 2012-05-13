@@ -13,10 +13,12 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 import me.lukas.skyblockmultiplayer.listeners.EntityDeath;
+import me.lukas.skyblockmultiplayer.listeners.PlayerBreackBlockListener;
 import me.lukas.skyblockmultiplayer.listeners.PlayerInteract;
 import me.lukas.skyblockmultiplayer.listeners.PlayerPlaceBlockListener;
 import me.lukas.skyblockmultiplayer.listeners.PlayerRespawn;
 import me.lukas.skyblockmultiplayer.listeners.PlayerTeleport;
+import me.lukas.skyblockmultiplayer.listeners.PlayerUseBucketListener;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -48,7 +50,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	public PluginDescriptionFile pluginFile;
 	public Logger log;
 
-	static World skyBlockWorld = null;
+	public static World skyBlockWorld = null;
 	private static SkyBlockMultiplayer instance;
 
 	public FileConfiguration configPlugin;
@@ -118,8 +120,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	public void registerEvents() {
 		PluginManager manager = this.getServer().getPluginManager();
 		manager.registerEvents(new PlayerPlaceBlockListener(this), this);
-		/*manager.registerEvents(new PlayerBreackBlockListener(this), this); // this 2 events will not be removed
-		manager.registerEvents(new PlayerUseBucketListener(this), this);*/// until I know that it works fine...
+		manager.registerEvents(new PlayerBreackBlockListener(this), this);
+		manager.registerEvents(new PlayerUseBucketListener(this), this);
 		manager.registerEvents(new EntityDeath(this), this);
 		manager.registerEvents(new PlayerRespawn(this), this);
 		manager.registerEvents(new PlayerInteract(this), this);
@@ -255,6 +257,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				PlayerInfo pi = this.readPlayerFile(f);
 				if (pi != null) {
 					if (pi.getIslandLocation() != null) {
+						for (String friend : pi.getFriends()) {
+							if (!Settings.playerBuildLocations.containsKey(friend)) {
+								Settings.playerBuildLocations.put(f, new ArrayList<Location>());
+							}
+							Settings.playerBuildLocations.get(friend).add(pi.getIslandLocation());
+						}
 						Settings.players.put(f, pi);
 					}
 				}
@@ -365,6 +373,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return s;
 	}
 
+	/**
+	 * Parse a String to a location.
+	 * 
+	 * @param s 
+	 * @return location or null
+	 */
 	public Location getLocationString(String s) {
 		if (s == null || s.trim() == "") {
 			return null;
@@ -457,18 +471,38 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			boolean folderExists = new File(Settings.worldName).exists();
 			skyBlockWorld = WorldCreator.name(Settings.worldName).type(WorldType.FLAT).environment(Environment.NORMAL).generator(new SkyBlockChunkGenerator()).createWorld();
 			if (!folderExists) {
-				File f = new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName);
+				File f = new File(Settings.towerFileName);
 				if (f.exists() && f.isFile()) {
 					try {
-						CreateNewIsland.createStructure(new Location(getSkyBlockWorld(), 0, Settings.towerYHeight, 0), new File(SkyBlockMultiplayer.instance.getDataFolder(), Settings.towerFileName));
-						skyBlockWorld.setSpawnLocation(0, SkyBlockMultiplayer.instance.getYLocation(new Location(SkyBlockMultiplayer.getSkyBlockWorld(), 0, 80, 0)).getBlockY(), 0);
+						CreateNewIsland.createStructure(new Location(getSkyBlockWorld(), 0, Settings.towerYHeight, 0), f);
+						skyBlockWorld.setSpawnLocation(0, skyBlockWorld.getHighestBlockYAt(0, 0), 0);
 						return skyBlockWorld;
 					} catch (Exception e) {
 						e.printStackTrace();
+						SkyBlockMultiplayer.createSpawnTower();
+						skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
+						return skyBlockWorld;
 					}
 				}
+
+				f = new File(SkyBlockMultiplayer.getInstance().getDataFolder(), Settings.towerFileName);
+				if (f.exists() && f.isFile()) {
+					try {
+						CreateNewIsland.createStructure(new Location(getSkyBlockWorld(), 0, Settings.towerYHeight, 0), f);
+						// skyBlockWorld.setSpawnLocation(0, skyBlockWorld.getHighestBlockYAt(0, 0), 0)
+						System.out.println("Spawn set: " + skyBlockWorld.setSpawnLocation(0, skyBlockWorld.getHighestBlockYAt(0, 0), 0) + " location = " + SkyBlockMultiplayer.getInstance().getStringLocation(skyBlockWorld.getSpawnLocation()));
+						return skyBlockWorld;
+					} catch (Exception e) {
+						e.printStackTrace();
+						SkyBlockMultiplayer.createSpawnTower();
+						skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
+						return skyBlockWorld;
+					}
+				}
+
 				SkyBlockMultiplayer.createSpawnTower();
 				skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
+				return skyBlockWorld;
 			}
 		}
 		return skyBlockWorld;
@@ -586,9 +620,14 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	public Location getSafeHomeLocation(PlayerInfo p) {
-		
 		// a) check original location
-		Location home = p.getHomeLocation();
+		Location home = null;
+		if (p.getHomeLocation() == null) {
+			home = p.getIslandLocation();
+		} else {
+			home = p.getHomeLocation();
+		}
+
 		if (this.isSafeLocation(home)) {
 			return home;
 		}
@@ -647,7 +686,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * @param l
 	 */
 	public void removeCreatures(Location l) {
-		if (!Settings.removeCreaturesByTeleport) {
+		if (!Settings.removeCreaturesByTeleport || l == null) {
 			return;
 		}
 
@@ -871,6 +910,45 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 		return null;
+	}
+
+	public static boolean checkBuildPermission(PlayerInfo pi, Location l) {
+		if (l == null || pi == null) {
+			return false;
+		}
+
+		if (canPlayerDoThat(pi, l)) {
+			return true;
+		}
+
+		ArrayList<Location> locations = Settings.playerBuildLocations.get(pi.getPlayerName());
+		if (locations == null) {
+			return false;
+		}
+
+		for (Location locFriend : locations) {
+			if (locFriend != null) {
+				int islandX = locFriend.getBlockX();
+				int islandZ = locFriend.getBlockZ();
+
+				int blockX = l.getBlockX();
+				int blockZ = l.getBlockZ();
+
+				int dist = 0;
+				if (Settings.build_withProtectedBorder) {
+					dist = (Settings.distanceIslands / 2) - 3;
+				} else {
+					dist = Settings.distanceIslands / 2;
+				}
+
+				if (islandX + dist >= blockX && islandX - dist <= blockX) {
+					if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	public static boolean canPlayerDoThat(PlayerInfo pi, Location l) {

@@ -29,7 +29,7 @@ public class PlayerPlaceBlockListener implements Listener {
 			return;
 		}
 
-		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Check if player is in world SkyBlockMultiplayer
+		if (!player.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) { // Check if player is in world SkyBlockMultiplayer
 			return;
 		}
 
@@ -54,7 +54,12 @@ public class PlayerPlaceBlockListener implements Listener {
 			pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
 		}
 
-		PlayerInfo owner = SkyBlockMultiplayer.getOwner(b.getLocation());
+		if (SkyBlockMultiplayer.checkBuildPermission(pi, b.getLocation())) {
+			return;
+		}
+		event.setCancelled(true);
+
+		/*PlayerInfo owner = SkyBlockMultiplayer.getOwner(b.getLocation());
 		if (owner == null) {
 			if (SkyBlockMultiplayer.canPlayerDoThat(pi, b.getLocation())) {
 				return;
@@ -72,6 +77,6 @@ public class PlayerPlaceBlockListener implements Listener {
 		}
 
 		event.setCancelled(true);
-		return;
+		return;*/
 	}
 }

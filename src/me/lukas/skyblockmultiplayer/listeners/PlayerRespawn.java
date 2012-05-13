@@ -85,9 +85,7 @@ public class PlayerRespawn implements Listener {
 					SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 					event.setRespawnLocation(pi.getIslandLocation());
 				} else {
-
 					Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi);
-					
 					if (homeSweetHome == null) { // if null, island is missing and home location returns no safe block
 						player.sendMessage("Cannot teleport to your home location, your island is probably missing.");
 						return;

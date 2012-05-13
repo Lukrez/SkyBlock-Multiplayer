@@ -27,7 +27,7 @@ public class PlayerBreackBlockListener implements Listener {
 			return;
 		}
 
-		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Check if player is in world SkyBlockMultiplayer
+		if (!player.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) { // Check if player is in world SkyBlockMultiplayer
 			return;
 		}
 
@@ -42,39 +42,41 @@ public class PlayerBreackBlockListener implements Listener {
 			}
 		}
 
-		if (Settings.gameModeSelected == Settings.GameMode.PVP) {
+		if (Settings.gameModeSelected == Settings.GameMode.PVP || !Settings.build_withProtectedArea) {
 			return;
 		}
 
 		if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
-			if (Settings.build_withProtectedArea) {
-				PlayerInfo pi = Settings.players.get(player.getName());
+			PlayerInfo pi = Settings.players.get(player.getName());
+			if (pi == null) {
+				pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
 				if (pi == null) {
-					pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
-					if (pi == null) {
-						return;
-					}
-				}
-
-				PlayerInfo owner = SkyBlockMultiplayer.getOwner(b.getLocation());
-				if (owner == null) {
-					if (SkyBlockMultiplayer.canPlayerDoThat(pi, b.getLocation())) {
-						return;
-					}
-					event.setCancelled(true);
 					return;
 				}
+			}
 
-				if (owner.getPlayerName().equalsIgnoreCase(player.getName())) {
-					return;
-				}
+			if (SkyBlockMultiplayer.checkBuildPermission(pi, b.getLocation())) {
+				return;
+			}
+			event.setCancelled(true);
+			return;
 
-				if (owner.getFriends().contains(player.getName())) {
+			/*PlayerInfo owner = SkyBlockMultiplayer.getOwner(b.getLocation());
+			if (owner == null) {
+				if (SkyBlockMultiplayer.canPlayerDoThat(pi, b.getLocation())) {
 					return;
 				}
 				event.setCancelled(true);
 				return;
 			}
+
+			if (owner.getPlayerName().equalsIgnoreCase(player.getName())) {
+				return;
+			}
+
+			if (owner.getFriends().contains(player.getName())) {
+				return;
+			}*/
 		}
 	}
 }

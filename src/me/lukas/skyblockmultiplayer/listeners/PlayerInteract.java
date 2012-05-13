@@ -36,20 +36,23 @@ public class PlayerInteract implements Listener {
 			return;
 		}
 
-		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) {
+		if (!player.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
 			return;
 		}
 
 		PlayerInfo pi = Settings.players.get(player.getName());
 		if (pi == null) {
 			pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
+			if (pi == null) {
+				return;
+			}
 		}
-		PlayerInfo owner = null;
 
+		boolean hasBuildPermission = false;
 		if (b == null) {
-			owner = SkyBlockMultiplayer.getOwner(player.getLocation());
+			hasBuildPermission = SkyBlockMultiplayer.checkBuildPermission(pi, player.getLocation());
 		} else {
-			owner = SkyBlockMultiplayer.getOwner(b.getLocation());
+			hasBuildPermission = SkyBlockMultiplayer.checkBuildPermission(pi, b.getLocation());
 		}
 
 		if (item != null) {
@@ -57,17 +60,14 @@ public class PlayerInteract implements Listener {
 				if (item.getType().equals(Material.ENDER_PEARL)) {
 					if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
 						if (Settings.build_allowEnderpearl) {
-							if (owner.getPlayerName().equalsIgnoreCase(player.getName())) {
+							if (hasBuildPermission) {
 								return;
 							}
-							if (owner.getFriends().contains(player.getName())) {
-								return;
-							}
-						}
-						if (Settings.build_withProtectedArea) {
+
 							event.setCancelled(true);
 							return;
 						}
+						event.setCancelled(true);
 						return;
 					}
 				}
@@ -75,6 +75,13 @@ public class PlayerInteract implements Listener {
 
 			if (item.getType().equals(Material.STICK)) {
 				if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+					PlayerInfo owner = null;
+					if (b == null) {
+						owner = SkyBlockMultiplayer.getOwner(player.getLocation());
+					} else {
+						owner = SkyBlockMultiplayer.getOwner(b.getLocation());
+					}
+
 					if (owner == null) {
 						int i = -1;
 						if (b == null) {
@@ -151,27 +158,14 @@ public class PlayerInteract implements Listener {
 				return;
 			}
 
-			if (owner == null) {
-				if (b == null) {
-					if (SkyBlockMultiplayer.canPlayerDoThat(pi, player.getLocation())) {
-						return;
-					}
-					event.setCancelled(true);
+			if (b == null) {
+				if (SkyBlockMultiplayer.checkBuildPermission(pi, player.getLocation())) {
 					return;
 				}
-				if (SkyBlockMultiplayer.canPlayerDoThat(pi, b.getLocation())) {
+			} else {
+				if (SkyBlockMultiplayer.checkBuildPermission(pi, b.getLocation())) {
 					return;
 				}
-				event.setCancelled(true);
-				return;
-			}
-
-			if (owner.getPlayerName().equalsIgnoreCase(player.getName())) {
-				return;
-			}
-
-			if (owner.getFriends().contains(player.getName())) {
-				return;
 			}
 
 			event.setCancelled(true);

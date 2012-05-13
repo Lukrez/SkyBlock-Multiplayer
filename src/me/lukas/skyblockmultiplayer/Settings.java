@@ -26,7 +26,8 @@ public class Settings {
 	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
 	public static int numbersPlayers; // Amount of players in SkyBlock
 	public static boolean messagesOutside; // to get messages from SkyBlock.
-	public static Map<String, ArrayList<Location>> islandLocations = new HashMap<String, ArrayList<Location>>();
+	public static Map<String, ArrayList<Location>> playerBuildLocations = new HashMap<String, ArrayList<Location>>();
+	// public static Map<String, ArrayList<Location>> playerInvitedBy = new HashMap<String, ArrayList<Location>>();
 
 	public static enum GameMode { // Two game modes
 		BUILD, PVP

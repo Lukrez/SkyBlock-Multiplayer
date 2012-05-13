@@ -30,7 +30,7 @@ public class PlayerTeleport implements Listener {
 		if (!event.getFrom().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) && event.getTo().getWorld().getName().equalsIgnoreCase((SkyBlockMultiplayer.getSkyBlockWorld().getName()))) {
 			if (!SkyBlockMultiplayer.getInstance().locationIsOnTower(event.getTo())) {
 				event.setCancelled(true);
-				player.sendMessage(Language.MSGS_ONLY_INSIDE_OF_SB.sentence);
+				player.sendMessage(SkyBlockMultiplayer.getInstance().pName +  Language.MSGS_ONLY_INSIDE_OF_SB.sentence);
 				return;
 			}
 		}
