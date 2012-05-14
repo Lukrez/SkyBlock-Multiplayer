@@ -739,6 +739,10 @@ public class SkyBlockCommand implements CommandExecutor {
 				// teleport player
 				SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 				player.teleport(SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi));
+				if (!Settings.lstPlayerInfo2.containsKey(player.getName())) {
+					Settings.lstPlayerInfo2.put(player.getName(), new PlayerInfo2(pi.getPlayerName(), pi.getIslandLocation()));
+				}
+				
 				Settings.numbersPlayers++;
 
 				// send message to all
@@ -1396,7 +1400,7 @@ public class SkyBlockCommand implements CommandExecutor {
 			Settings.players.put(player.getName(), pi);
 		}
 
-		if (SkyBlockMultiplayer.canPlayerDoThat(pi, player.getLocation())) {
+		if (SkyBlockMultiplayer.checkBuildPermission(pi, player.getLocation())) {
 			pi.setHomeLocation(player.getLocation());
 			SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_SPAWN_LOCATION_CHANGED.sentence);
@@ -1564,17 +1568,20 @@ public class SkyBlockCommand implements CommandExecutor {
 				return true;
 			}
 		}
-
-		if (!Settings.playerBuildLocations.containsKey(res)) {
-			Settings.playerBuildLocations.put(res, new ArrayList<Location>());
-		}
-		if (!Settings.playerBuildLocations.get(res).contains(pi.getIslandLocation())) {
-			Settings.playerBuildLocations.get(res).add(pi.getIslandLocation());
-		}
-
+		// add to playerinfo
 		pi.addFriend(res);
-
 		SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
+
+		// add Info to  PlayerInfo2
+		if (!Settings.lstPlayerInfo2.containsKey(player.getName()))
+			return true; // player does not exist
+		PlayerInfo2 pi2 = Settings.lstPlayerInfo2.get(player.getName());
+		if (!Settings.lstPlayerInfo2.containsKey(res))
+			return true; // res does not exist
+		PlayerInfo2 friend = Settings.lstPlayerInfo2.get(res);
+
+		pi2.addFriendsToOwnIsland(friend);
+		friend.addOwnBuildPermission(pi2);
 
 		player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_FRIEND_ADDED.sentence);
 		return true;
@@ -1605,14 +1612,20 @@ public class SkyBlockCommand implements CommandExecutor {
 				return true;
 			}
 		}
-
-		if (!Settings.playerBuildLocations.containsKey(res)) {
-			Settings.playerBuildLocations.put(res, new ArrayList<Location>());
-		}
-		Settings.playerBuildLocations.get(res).remove(pi.getIslandLocation());
-
+		// remove friend
 		pi.removeFriend(res);
 		SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
+
+		// add Info to  PlayerInfo2
+		if (!Settings.lstPlayerInfo2.containsKey(player.getName()))
+			return true; // player does not exist
+		PlayerInfo2 pi2 = Settings.lstPlayerInfo2.get(player.getName());
+		if (!Settings.lstPlayerInfo2.containsKey(res))
+			return true; // res does not exist
+		PlayerInfo2 friend = Settings.lstPlayerInfo2.get(res);
+
+		pi2.removeFriendFromOwnIsland(friend);
+		friend.removeBuildPermissionByFriends(pi2);
 
 		player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_FRIEND_REMOVED.sentence);
 		return true;

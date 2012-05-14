@@ -1,6 +1,5 @@
 package me.lukas.skyblockmultiplayer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,53 +12,58 @@ public class PlayerInfo2 {
 	private Map<String, PlayerInfo2> canBuildByFriends;
 	private Map<String, PlayerInfo2> friendsCanBuildHere;
 
-	public PlayerInfo2(String playername, Location ownisland){
+	public PlayerInfo2(String playername, Location ownisland) {
 		this.playername = playername;
 		this.ownIslandLocation = ownisland;
 		this.canBuildByFriends = new HashMap<String, PlayerInfo2>();
 		this.friendsCanBuildHere = new HashMap<String, PlayerInfo2>();
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return this.playername;
 	}
-	
+
 	public Location getLocation() {
 		return this.ownIslandLocation;
 	}
-	
-	
-	
-	public void addFriendToOwnIsland(PlayerInfo2 friend){
+
+	public HashMap<String, PlayerInfo2> getFriends() {
+		return (HashMap<String, PlayerInfo2>) this.friendsCanBuildHere;
+	}
+
+	public void setLocation(Location l) {
+		this.ownIslandLocation = l;
+	}
+
+	public void addFriendsToOwnIsland(PlayerInfo2 friend) {
 		// check if friend is already added
-		if (this.friendsCanBuildHere.containsKey(friend.getName())) return;
+		if (this.friendsCanBuildHere.containsKey(friend.getName()))
+			return;
 		this.friendsCanBuildHere.put(friend.getName(), friend);
 	}
-	
-	
-	public void addNewBuildPermissionFromFriend(PlayerInfo2 friend){
+
+	public void addOwnBuildPermission(PlayerInfo2 friend) {
 		// check if friend is already added
-		if (this.canBuildByFriends.containsKey(friend.getName())) return;
+		if (this.canBuildByFriends.containsKey(friend.getName()))
+			return;
 		this.canBuildByFriends.put(friend.getName(), friend);
 	}
-	
-	public void removeFriendFromOwnIsland(PlayerInfo2 friend){
+
+	public void removeFriendFromOwnIsland(PlayerInfo2 friend) {
 		// check if friend is in list
-		if (!this.friendsCanBuildHere.containsKey(friend.getName())) return;
+		if (!this.friendsCanBuildHere.containsKey(friend.getName()))
+			return;
 		this.friendsCanBuildHere.remove(friend.getName());
 	}
-	
-	
-	public void removewBuildPermission(PlayerInfo2 friend){
+
+	public void removeBuildPermissionByFriends(PlayerInfo2 friend) {
 		// check if friend is in list
-		if (!this.canBuildByFriends.containsKey(friend.getName())) return;
+		if (!this.canBuildByFriends.containsKey(friend.getName()))
+			return;
 		this.canBuildByFriends.remove(friend.getName());
 	}
-	
 
-
-	private boolean isLocationWithinArea(Location block, Location center) {
-
+	private boolean isLocationWithInArea(Location block, Location center) {
 		if (block == null || center == null)
 			return false;
 
@@ -85,19 +89,18 @@ public class PlayerInfo2 {
 	}
 
 	public boolean checkBuildPermission(Location block) {
-
 		if (this.ownIslandLocation == null || block == null) {
 			return false;
 		}
 
 		// check if player is on own island
-		if (this.isLocationWithinArea(block, this.ownIslandLocation)) {
+		if (this.isLocationWithInArea(block, this.ownIslandLocation)) {
 			return true;
 		}
 
 		// check friends
 		for (PlayerInfo2 friend : this.canBuildByFriends.values()) {
-			if (this.isLocationWithinArea(block, friend.getLocation())) {
+			if (this.isLocationWithInArea(block, friend.getLocation())) {
 				return true;
 			}
 		}

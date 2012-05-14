@@ -256,16 +256,35 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			if (new File(this.directoryPlayers, f).isFile()) {
 				PlayerInfo pi = this.readPlayerFile(f);
 				if (pi != null) {
-					if (pi.getIslandLocation() != null) {
-						for (String friend : pi.getFriends()) {
-							if (!Settings.playerBuildLocations.containsKey(friend)) {
-								Settings.playerBuildLocations.put(f, new ArrayList<Location>());
-							}
-							Settings.playerBuildLocations.get(friend).add(pi.getIslandLocation());
-						}
-						Settings.players.put(f, pi);
+					// add player, if missing
+					String playername = pi.getPlayerName();
+					if (!Settings.lstPlayerInfo2.containsKey(playername)) {
+						Settings.lstPlayerInfo2.put(playername, new PlayerInfo2(playername, pi.getIslandLocation()));
+					} else {
+						Settings.lstPlayerInfo2.get(playername).setLocation(pi.getIslandLocation());
 					}
+					PlayerInfo2 player = Settings.lstPlayerInfo2.get(playername);
+
+					// Add friends
+					for (String friendName : pi.getFriends()) {
+						if (!Settings.lstPlayerInfo2.containsKey(friendName)) {
+							Settings.lstPlayerInfo2.put(friendName, new PlayerInfo2(friendName, null));
+						}
+						PlayerInfo2 friend = Settings.lstPlayerInfo2.get(friendName);
+						// Add Permissions
+						player.addFriendsToOwnIsland(friend);
+						friend.addOwnBuildPermission(player);
+					}
+					Settings.players.put(playername, pi);
 				}
+			}
+		}
+
+		// print friendslist
+		for (PlayerInfo2 player : Settings.lstPlayerInfo2.values()) {
+			System.out.println("Player: " + player.getName());
+			for (PlayerInfo2 friend : player.getFriends().values()) {
+				System.out.println("\t -" + friend.getName());
 			}
 		}
 	}
@@ -595,6 +614,20 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			return pName;
 		else if (amount > 1)
 			return "0";
+
+		// check PlayerInfo2, also with offline players
+		amount = 0;
+		pName = "";
+		for (String playerName : Settings.lstPlayerInfo2.keySet()) {
+			if (playerName.toLowerCase().startsWith(partName.toLowerCase())) {
+				amount++;
+				pName = playerName;
+			}
+		}
+		if (amount == 1)
+			return pName;
+		else if (amount > 1)
+			return "0";
 		return "-1";
 	}
 
@@ -634,28 +667,34 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		// b) check if a suitable y exists on this x and z
 		for (int y = home.getBlockY(); y > 0; y--) {
 			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
-			if (this.isSafeLocation(n))
+			if (this.isSafeLocation(n)) {
 				return n;
+			}
 		}
 		for (int y = home.getBlockY(); y < 255; y++) {
 			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
-			if (this.isSafeLocation(n))
+			if (this.isSafeLocation(n)) {
 				return n;
+			}
 		}
 
 		// c) check island Location
 		Location island = p.getIslandLocation();
-		if (this.isSafeLocation(island))
+		if (this.isSafeLocation(island)) {
 			return island;
+		}
+
 		for (int y = island.getBlockY(); y > 0; y--) {
 			Location n = new Location(island.getWorld(), island.getBlockX(), y, island.getBlockZ());
-			if (this.isSafeLocation(n))
+			if (this.isSafeLocation(n)) {
 				return n;
+			}
 		}
 		for (int y = island.getBlockY(); y < 255; y++) {
 			Location n = new Location(island.getWorld(), island.getBlockX(), y, island.getBlockZ());
-			if (this.isSafeLocation(n))
+			if (this.isSafeLocation(n)) {
 				return n;
+			}
 		}
 		return null;
 	}
@@ -913,45 +952,20 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	public static boolean checkBuildPermission(PlayerInfo pi, Location l) {
+
 		if (l == null || pi == null) {
 			return false;
 		}
 
-		if (canPlayerDoThat(pi, l)) {
-			return true;
-		}
-
-		ArrayList<Location> locations = Settings.playerBuildLocations.get(pi.getPlayerName());
-		if (locations == null) {
+		// get PlayerInfo2
+		if (!Settings.lstPlayerInfo2.containsKey(pi.getPlayerName()))
 			return false;
-		}
+		PlayerInfo2 player = Settings.lstPlayerInfo2.get(pi.getPlayerName());
 
-		for (Location locFriend : locations) {
-			if (locFriend != null) {
-				int islandX = locFriend.getBlockX();
-				int islandZ = locFriend.getBlockZ();
-
-				int blockX = l.getBlockX();
-				int blockZ = l.getBlockZ();
-
-				int dist = 0;
-				if (Settings.build_withProtectedBorder) {
-					dist = (Settings.distanceIslands / 2) - 3;
-				} else {
-					dist = Settings.distanceIslands / 2;
-				}
-
-				if (islandX + dist >= blockX && islandX - dist <= blockX) {
-					if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+		return player.checkBuildPermission(l);
 	}
 
-	public static boolean canPlayerDoThat(PlayerInfo pi, Location l) {
+	/*public static boolean canPlayerDoThat(PlayerInfo pi, Location l) {
 		if (pi == null || pi.getIslandLocation() == null) {
 			return false;
 		}
@@ -974,5 +988,5 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 		return false;
-	}
+	}*/
 }

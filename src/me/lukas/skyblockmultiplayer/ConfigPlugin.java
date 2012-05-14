@@ -20,7 +20,7 @@ public enum ConfigPlugin {
 	OPTIONS_BUILD_ALLOWENDERPEARL("options.build.allowEnderPearl", false),
 	OPTIONS_BUILD_WITHPROTECTEDBORDER("options.build.withProtectedBorder", true),
 	OPTIONS_SCHEMATIC_ISLAND_FILENAME("options.schematic.island.fileName", ""),
-	// OPTIONS_SCHEMATIC_ISLAND_YHEIGHT("options.schematic.island.yHeight", ""),
+	OPTIONS_SCHEMATIC_ISLAND_YHEIGHT("options.schematic.island.yHeight", 64),
 	OPTIONS_SCHEMATIC_TOWER_FILENAME("options.schematic.tower.fileName", ""),
 	OPTIONS_SCHEMATIC_TOWER_YHEIGHT("options.schematic.tower.yHeight", 80);
 

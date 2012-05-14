@@ -1,10 +1,8 @@
 package me.lukas.skyblockmultiplayer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 public class Settings {
@@ -18,15 +16,18 @@ public class Settings {
 	public static int distanceIslands; // Distance between the player spawn locations
 	public static boolean closed; // Lock SkyBlock to maximize the amount of players
 	public static String islandFileName; // schematic file name for island
+	public static int islandYHeight; // y position of the bedrock
 	public static String towerFileName; // schematic file name for tower
-	public static int towerYHeight; // tower height
+	public static int towerYHeight; // y position of the bedrock
 	public static boolean removeCreaturesByTeleport; // remove creatures by teleport to island
 
 	/* Needed for plugin */
 	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
 	public static int numbersPlayers; // Amount of players in SkyBlock
 	public static boolean messagesOutside; // to get messages from SkyBlock.
-	public static Map<String, ArrayList<Location>> playerBuildLocations = new HashMap<String, ArrayList<Location>>();
+	public static Map<String, PlayerInfo2> lstPlayerInfo2 = new HashMap<String, PlayerInfo2>();
+
+	//public static Map<String, ArrayList<Location>> playerBuildLocations = new HashMap<String, ArrayList<Location>>();
 	// public static Map<String, ArrayList<Location>> playerInvitedBy = new HashMap<String, ArrayList<Location>>();
 
 	public static enum GameMode { // Two game modes

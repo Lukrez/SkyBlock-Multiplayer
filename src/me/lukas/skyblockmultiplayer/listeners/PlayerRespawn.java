@@ -80,7 +80,7 @@ public class PlayerRespawn implements Listener {
 					this.plugin.writePlayerFile(player.getName(), pi);
 					return;
 				}
-
+				System.out.println("teloprt dead player to safe location"); //debug
 				if (pi.getHomeLocation() == null) {
 					SkyBlockMultiplayer.getInstance().removeCreatures(pi.getIslandLocation());
 					event.setRespawnLocation(pi.getIslandLocation());
