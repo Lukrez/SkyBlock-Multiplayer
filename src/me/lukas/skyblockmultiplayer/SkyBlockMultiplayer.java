@@ -151,6 +151,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			Settings.messagesOutside = false;
 			Settings.removeCreaturesByTeleport = true;
 			Settings.islandFileName = "";
+			Settings.islandYHeight = 64;
 			Settings.towerFileName = "";
 			Settings.towerYHeight = 80;
 
@@ -228,6 +229,17 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			} catch (Exception e) {
 				Settings.towerYHeight = 80;
 			}
+			
+			/*try {
+				Settings.islandYHeight = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_ISLAND_YHEIGHT.path, 64, true));
+				if (Settings.islandYHeight < 0) {
+					Settings.islandYHeight = 64;
+				}
+			} catch (Exception e) {
+				Settings.islandYHeight = 64;
+			}*/
+			
+			Settings.islandYHeight = 64;
 
 			Settings.itemsChest = itemsChest;
 			Settings.skyBlockOnline = Boolean.parseBoolean(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SKYBLOCKONLINE.path, true, true));
@@ -280,13 +292,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 
-		// print friendslist
+		/*// print friendslist
 		for (PlayerInfo2 player : Settings.lstPlayerInfo2.values()) {
 			System.out.println("Player: " + player.getName());
 			for (PlayerInfo2 friend : player.getFriends().values()) {
 				System.out.println("\t -" + friend.getName());
 			}
-		}
+		}*/
 	}
 
 	public PlayerInfo readPlayerFile(String playerName) {
@@ -508,8 +520,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				if (f.exists() && f.isFile()) {
 					try {
 						CreateNewIsland.createStructure(new Location(getSkyBlockWorld(), 0, Settings.towerYHeight, 0), f);
-						// skyBlockWorld.setSpawnLocation(0, skyBlockWorld.getHighestBlockYAt(0, 0), 0)
-						System.out.println("Spawn set: " + skyBlockWorld.setSpawnLocation(0, skyBlockWorld.getHighestBlockYAt(0, 0), 0) + " location = " + SkyBlockMultiplayer.getInstance().getStringLocation(skyBlockWorld.getSpawnLocation()));
+						skyBlockWorld.setSpawnLocation(0, skyBlockWorld.getHighestBlockYAt(0, 0), 0);
+						// System.out.println("Spawn set: " + skyBlockWorld.setSpawnLocation(0, skyBlockWorld.getHighestBlockYAt(0, 0), 0) + " location = " + SkyBlockMultiplayer.getInstance().getStringLocation(skyBlockWorld.getSpawnLocation()));
 						return skyBlockWorld;
 					} catch (Exception e) {
 						e.printStackTrace();

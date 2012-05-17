@@ -36,7 +36,7 @@ public class ItemParser {
 		for (String thing : s.split(";")) {
 			String[] sp = thing.split(":");
 			if (sp.length != 2)
-				System.out.println("error, wrong type size");
+				SkyBlockMultiplayer.getInstance().log.warning("error, wrong type size");
 			String name = sp[0];
 
 			if (name.equals("id")) {
@@ -53,7 +53,7 @@ public class ItemParser {
 				for (String enchantment : sp[1].split(" ")) {
 					String[] prop = enchantment.split("#");
 					if (prop.length != 2)
-						System.out.println("error, wrong enchantmenttype length");
+						SkyBlockMultiplayer.getInstance().log.warning("error, wrong enchantmenttype length");
 					if (prop[0].equals("eid")) {
 						enchId = Integer.parseInt(prop[1]);
 					} else if (prop[0].equals("elevel")) {
@@ -63,7 +63,7 @@ public class ItemParser {
 				}
 
 			} else {
-				System.out.println("error, unknown itemvalue");
+				SkyBlockMultiplayer.getInstance().log.warning("error, unknown itemvalue");
 			}
 		}
 		return x;

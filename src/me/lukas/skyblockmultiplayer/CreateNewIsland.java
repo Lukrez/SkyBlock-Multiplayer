@@ -30,7 +30,6 @@ import org.jnbt.StringTag;
 import org.jnbt.Tag;
 
 public class CreateNewIsland {
-	private static int posY = 64;
 	public Location Islandlocation;
 
 	public CreateNewIsland(Player player) {
@@ -47,8 +46,8 @@ public class CreateNewIsland {
 		this.Islandlocation = new Location(SkyBlockMultiplayer.getSkyBlockWorld(), l.getBlockX(), SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockAt(l.getBlockX(), l.getBlockZ()).getLocation().getBlockY(), l.getBlockZ());
 	}
 
-	/*
-	public CreateNewIsland(int amount) {
+	
+	/*public CreateNewIsland(int amount) {
 		int numberIslands = 1;
 		Location l = getIslandPosition(numberIslands);
 		for (int i = 0; i < amount; i++) {
@@ -90,7 +89,7 @@ public class CreateNewIsland {
 		do {
 			Location locIsland = CreateNewIsland.getIslandPosition(amountIslands);
 			int px = locIsland.getBlockX();
-			int py = locIsland.getBlockY() - 3; // 61
+			int py = locIsland.getBlockY() - 3;
 			int pz = locIsland.getBlockZ();
 			if (!new Location(SkyBlockMultiplayer.getSkyBlockWorld(), px, py, pz).getBlock().getType().equals(Material.BEDROCK)) {
 				break;
@@ -156,7 +155,7 @@ public class CreateNewIsland {
 		//System.out.println("Die Insel befindet sich auf "+posZ+" in Z-Richtung.");
 
 		// create location for island
-		return new Location(SkyBlockMultiplayer.getSkyBlockWorld(), posX, posY, posZ);
+		return new Location(SkyBlockMultiplayer.getSkyBlockWorld(), posX, Settings.islandYHeight, posZ);
 	}
 
 	private void createDefaultIsland(Location l) {
@@ -167,14 +166,14 @@ public class CreateNewIsland {
 		// Ersetze Erde durch Sand
 		for (int x = 2; x <= 4; x++) {
 			for (int z = -1; z <= 1; z++) {
-				SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(x + l.getBlockX(), 62, z + l.getBlockZ()).setType(Material.SAND);
+				SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(x + l.getBlockX(), Settings.islandYHeight - 2, z + l.getBlockZ()).setType(Material.SAND);
 			}
 		}
 		//Erstelle oberste Grassebene
 		createLayer(l, 63, Material.GRASS);
 
 		// create Chest		
-		Block block = SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(0 + l.getBlockX(), 64, 4 + l.getBlockZ());
+		Block block = SkyBlockMultiplayer.getSkyBlockWorld().getBlockAt(0 + l.getBlockX(), Settings.islandYHeight, 4 + l.getBlockZ());
 		block.setType(Material.CHEST);
 		Chest chest = (Chest) block.getState();
 		chest.getBlock().setData((byte) 2);

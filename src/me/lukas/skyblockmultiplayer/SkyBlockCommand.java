@@ -42,14 +42,14 @@ public class SkyBlockCommand implements CommandExecutor {
 				}
 			}
 
-			// only for testing
-			/*if (args[0].equalsIgnoreCase("create")) {
+			/*// only for testing
+			if (args[0].equalsIgnoreCase("create")) {
 				new CreateNewIsland(Integer.parseInt(args[1]));
 				return true;
 			}
 
 			if (args[0].equalsIgnoreCase("amount")) {
-				sender.sendMessage("" + new CreateNewIsland().getAmountOfIslands());
+				sender.sendMessage("" + CreateNewIsland.getAmountOfIslands());
 				return true;
 			}*/
 
@@ -89,7 +89,6 @@ public class SkyBlockCommand implements CommandExecutor {
 						if (f.exists() && f.isFile()) {
 							try {
 								int res = CreateNewIsland.createStructure(locTower, f);
-								System.out.println("bedrock: " + res);
 								if (res != 1) {
 									SkyBlockMultiplayer.createSpawnTower();
 									if (res == 0) {

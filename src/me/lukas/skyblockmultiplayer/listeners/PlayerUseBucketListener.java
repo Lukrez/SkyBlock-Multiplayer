@@ -47,8 +47,6 @@ public class PlayerUseBucketListener implements Listener {
 			return;
 		}
 
-		System.out.println("called");
-
 		if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
 
 			PlayerInfo pi = Settings.players.get(player.getName());
