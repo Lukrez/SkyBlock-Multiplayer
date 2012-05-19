@@ -27,11 +27,20 @@ public class PlayerTeleport implements Listener {
 			return;
 		}
 
-		if (!event.getFrom().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) && event.getTo().getWorld().getName().equalsIgnoreCase((SkyBlockMultiplayer.getSkyBlockWorld().getName()))) {
-			if (!SkyBlockMultiplayer.getInstance().locationIsOnTower(event.getTo())) {
-				event.setCancelled(true);
-				player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_ONLY_INSIDE_OF_SB.sentence);
+		if (!event.getFrom().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+			if (event.getCause() == TeleportCause.ENDER_PEARL) {
 				return;
+			}
+		}
+
+		if (!event.getFrom().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+			if (event.getTo().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+				if (!SkyBlockMultiplayer.getInstance().locationIsOnTower(event.getTo())) {
+					System.out.println("PlayerTeleport.onPlayerTeleport()");
+					event.setCancelled(true);
+					player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_ONLY_INSIDE_OF_SB.sentence);
+					return;
+				}
 			}
 		}
 

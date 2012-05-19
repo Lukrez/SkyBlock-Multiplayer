@@ -27,7 +27,7 @@ public class EntityDeath implements Listener {
 		}
 
 		Player player = (Player) ent;
-		if (!player.getWorld().equals(SkyBlockMultiplayer.getSkyBlockWorld())) { // Exit, if player not in SkyBlock
+		if (!player.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) { // Exit, if player not in SkyBlock
 			return;
 		}
 

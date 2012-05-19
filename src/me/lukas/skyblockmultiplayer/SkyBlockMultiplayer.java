@@ -511,7 +511,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					} catch (Exception e) {
 						e.printStackTrace();
 						SkyBlockMultiplayer.createSpawnTower();
-						skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
+						skyBlockWorld.setSpawnLocation(1, skyBlockWorld.getHighestBlockYAt(1, 1), 1);
 						return skyBlockWorld;
 					}
 				}
@@ -526,13 +526,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 					} catch (Exception e) {
 						e.printStackTrace();
 						SkyBlockMultiplayer.createSpawnTower();
-						skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
+						skyBlockWorld.setSpawnLocation(1, skyBlockWorld.getHighestBlockYAt(1, 1), 1);
 						return skyBlockWorld;
 					}
 				}
 
 				SkyBlockMultiplayer.createSpawnTower();
-				skyBlockWorld.setSpawnLocation(1, SkyBlockMultiplayer.getSkyBlockWorld().getHighestBlockYAt(1, 1), 1);
+				skyBlockWorld.setSpawnLocation(1, skyBlockWorld.getHighestBlockYAt(1, 1), 1);
 				return skyBlockWorld;
 			}
 		}
