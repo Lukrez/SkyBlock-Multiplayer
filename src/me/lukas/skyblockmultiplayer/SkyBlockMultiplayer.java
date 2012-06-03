@@ -229,7 +229,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			} catch (Exception e) {
 				Settings.towerYHeight = 80;
 			}
-			
+
 			/*try {
 				Settings.islandYHeight = Integer.parseInt(this.getStringbyPath(this.configPlugin, this.filePlugin, ConfigPlugin.OPTIONS_SCHEMATIC_ISLAND_YHEIGHT.path, 64, true));
 				if (Settings.islandYHeight < 0) {
@@ -238,7 +238,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			} catch (Exception e) {
 				Settings.islandYHeight = 64;
 			}*/
-			
+
 			Settings.islandYHeight = 64;
 
 			Settings.itemsChest = itemsChest;
@@ -264,18 +264,29 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * 
 	 */
 	public void loadPlayerFiles() {
+		int all = 0;
+		int notOnline = 0;
 		for (String f : new File(this.directoryPlayers.toString()).list()) {
 			if (new File(this.directoryPlayers, f).isFile()) {
 				PlayerInfo pi = this.readPlayerFile(f);
 				if (pi != null) {
+					all++;
 					// add player, if missing
-					String playername = pi.getPlayerName();
-					if (!Settings.lstPlayerInfo2.containsKey(playername)) {
-						Settings.lstPlayerInfo2.put(playername, new PlayerInfo2(playername, pi.getIslandLocation()));
-					} else {
-						Settings.lstPlayerInfo2.get(playername).setLocation(pi.getIslandLocation());
+					String playerName = pi.getPlayerName();
+
+					Player playerOnline = this.getServer().getPlayer(playerName);
+					if (pi.getIslandLocation() == null) {
+						continue;
 					}
-					PlayerInfo2 player = Settings.lstPlayerInfo2.get(playername);
+
+					if (!Settings.lstPlayerInfo2.containsKey(playerName)) {
+						Settings.lstPlayerInfo2.put(playerName, new PlayerInfo2(playerName, pi.getIslandLocation()));
+						Settings.lstPlayerInfo2.get(playerName).setHomeLocation(pi.getHomeLocation());
+					} else {
+						Settings.lstPlayerInfo2.get(playerName).setIslandLocation(pi.getIslandLocation());
+						Settings.lstPlayerInfo2.get(playerName).setHomeLocation(pi.getHomeLocation());
+					}
+					PlayerInfo2 player = Settings.lstPlayerInfo2.get(playerName);
 
 					// Add friends
 					for (String friendName : pi.getFriends()) {
@@ -287,10 +298,20 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						player.addFriendsToOwnIsland(friend);
 						friend.addOwnBuildPermission(player);
 					}
-					Settings.players.put(playername, pi);
+
+					Settings.islandsAndOwners.put(pi.getPlayerName(), pi.getIslandLocation());
+					if (playerOnline == null || !playerOnline.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
+						notOnline++;
+						continue;
+					}
+					Settings.players.put(playerName, pi);
 				}
 			}
 		}
+
+		System.out.println("Alle: " + all);
+		System.out.println("Not online: " + notOnline);
+		System.out.println("islandsAndOwners: " + Settings.islandsAndOwners.size());
 
 		/*// print friendslist
 		for (PlayerInfo2 player : Settings.lstPlayerInfo2.values()) {
@@ -710,8 +731,59 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 		return null;
 	}
+	
+	public Location getSafeHomeLocation(PlayerInfo2 p) {
+		// a) check original location
+		Location home = null;
+		if (p.getIslandLocation() == null) {
+			home = p.getIslandLocation();
+		} else {
+			home = p.getHomeLocation();
+		}
+
+		if (this.isSafeLocation(home)) {
+			return home;
+		}
+		// b) check if a suitable y exists on this x and z
+		for (int y = home.getBlockY(); y > 0; y--) {
+			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
+			if (this.isSafeLocation(n)) {
+				return n;
+			}
+		}
+		for (int y = home.getBlockY(); y < 255; y++) {
+			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
+			if (this.isSafeLocation(n)) {
+				return n;
+			}
+		}
+
+		// c) check island Location
+		Location island = p.getIslandLocation();
+		if (this.isSafeLocation(island)) {
+			return island;
+		}
+
+		for (int y = island.getBlockY(); y > 0; y--) {
+			Location n = new Location(island.getWorld(), island.getBlockX(), y, island.getBlockZ());
+			if (this.isSafeLocation(n)) {
+				return n;
+			}
+		}
+		for (int y = island.getBlockY(); y < 255; y++) {
+			Location n = new Location(island.getWorld(), island.getBlockX(), y, island.getBlockZ());
+			if (this.isSafeLocation(n)) {
+				return n;
+			}
+		}
+		return null;
+	}
 
 	public boolean isSafeLocation(Location l) {
+		if(l == null) {
+			return false;
+		}
+		
 		Block ground = l.getBlock().getRelative(BlockFace.DOWN);
 		Block air1 = l.getBlock();
 		Block air2 = l.getBlock().getRelative(BlockFace.UP);
@@ -935,8 +1007,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		s2.getBlock().setData((byte) 8);
 	}
 
-	public static PlayerInfo getOwner(Location l) {
-		for (PlayerInfo pi : Settings.players.values()) {
+	public static String getOwner(Location l) {
+		/*for (PlayerInfo pi : Settings.players.values()) {
 			if (pi != null) {
 				if (pi.getIslandLocation() != null) {
 					int islandX = pi.getIslandLocation().getBlockX();
@@ -956,6 +1028,31 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 						if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
 							return pi;
 						}
+					}
+				}
+			}
+		}
+		return null;*/
+
+		for (String owner : Settings.islandsAndOwners.keySet()) {
+			Location locIsland = Settings.islandsAndOwners.get(owner);
+			if (locIsland != null) {
+				int islandX = locIsland.getBlockX();
+				int islandZ = locIsland.getBlockZ();
+
+				int blockX = l.getBlockX();
+				int blockZ = l.getBlockZ();
+
+				int dist = 0;
+				if (Settings.build_withProtectedBorder) {
+					dist = (Settings.distanceIslands / 2) - 3;
+				} else {
+					dist = Settings.distanceIslands / 2;
+				}
+
+				if (islandX + dist >= blockX && islandX - dist <= blockX) {
+					if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
+						return owner;
 					}
 				}
 			}

@@ -78,7 +78,7 @@ public class PlayerInteract implements Listener {
 
 			if (item.getType().equals(Material.STICK)) {
 				if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-					PlayerInfo owner = null;
+					String owner = null;
 					if (b == null) {
 						owner = SkyBlockMultiplayer.getOwner(player.getLocation());
 					} else {
@@ -123,14 +123,22 @@ public class PlayerInteract implements Listener {
 						player.sendMessage("Island number: " + i);
 					}
 
-					player.sendMessage("Owner: " + owner.getPlayerName());
+					player.sendMessage("Owner: " + owner);
 					// get friends
-					if (!Settings.lstPlayerInfo2.containsKey(owner.getPlayerName())) return;;
-					String list = "";
-					HashMap<String, PlayerInfo2> friends = Settings.lstPlayerInfo2.get(owner.getPlayerName()).getFriends();
-					for (String name : friends.keySet()) {
-						list += ";"+name;
+					if (!Settings.lstPlayerInfo2.containsKey(owner)) {
+						return;
 					}
+					String list = "";
+					HashMap<String, PlayerInfo2> friends = Settings.lstPlayerInfo2.get(owner).getFriends();
+					int counter = 0;
+					for (String name : friends.keySet()) {
+						if (counter != 0) {
+							list += ", ";
+						}
+						list += name;
+						counter++;
+					}
+
 					player.sendMessage("Friends: " + list);
 					event.setCancelled(true);
 					return;

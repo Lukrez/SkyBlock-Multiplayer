@@ -3,6 +3,7 @@ package me.lukas.skyblockmultiplayer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 public class Settings {
@@ -26,6 +27,7 @@ public class Settings {
 	public static int numbersPlayers; // Amount of players in SkyBlock
 	public static boolean messagesOutside; // to get messages from SkyBlock.
 	public static Map<String, PlayerInfo2> lstPlayerInfo2 = new HashMap<String, PlayerInfo2>();
+	public static HashMap<String, Location> islandsAndOwners = new HashMap<String, Location>();
 
 	//public static Map<String, ArrayList<Location>> playerBuildLocations = new HashMap<String, ArrayList<Location>>();
 	// public static Map<String, ArrayList<Location>> playerInvitedBy = new HashMap<String, ArrayList<Location>>();

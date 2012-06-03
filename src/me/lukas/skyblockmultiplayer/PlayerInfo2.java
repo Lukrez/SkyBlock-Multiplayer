@@ -8,13 +8,14 @@ import org.bukkit.Location;
 public class PlayerInfo2 {
 
 	private String playername;
-	private Location ownIslandLocation;
+	private Location islandLocation;
 	private Map<String, PlayerInfo2> canBuildByFriends;
 	private Map<String, PlayerInfo2> friendsCanBuildHere;
+	private Location homeLocation;
 
 	public PlayerInfo2(String playername, Location ownisland) {
 		this.playername = playername;
-		this.ownIslandLocation = ownisland;
+		this.islandLocation = ownisland;
 		this.canBuildByFriends = new HashMap<String, PlayerInfo2>();
 		this.friendsCanBuildHere = new HashMap<String, PlayerInfo2>();
 	}
@@ -23,16 +24,24 @@ public class PlayerInfo2 {
 		return this.playername;
 	}
 
-	public Location getLocation() {
-		return this.ownIslandLocation;
+	public Location getIslandLocation() {
+		return this.islandLocation;
+	}
+	
+	public Location getHomeLocation() {
+		return this.homeLocation;
 	}
 
 	public HashMap<String, PlayerInfo2> getFriends() {
 		return (HashMap<String, PlayerInfo2>) this.friendsCanBuildHere;
 	}
 
-	public void setLocation(Location l) {
-		this.ownIslandLocation = l;
+	public void setIslandLocation(Location l) {
+		this.islandLocation = l;
+	}
+	
+	public void setHomeLocation(Location l) {
+		this.homeLocation = l;
 	}
 
 	public void addFriendsToOwnIsland(PlayerInfo2 friend) {
@@ -89,18 +98,18 @@ public class PlayerInfo2 {
 	}
 
 	public boolean checkBuildPermission(Location block) {
-		if (this.ownIslandLocation == null || block == null) {
+		if (this.islandLocation == null || block == null) {
 			return false;
 		}
 
 		// check if player is on own island
-		if (this.isLocationWithInArea(block, this.ownIslandLocation)) {
+		if (this.isLocationWithInArea(block, this.islandLocation)) {
 			return true;
 		}
 
 		// check friends
 		for (PlayerInfo2 friend : this.canBuildByFriends.values()) {
-			if (this.isLocationWithInArea(block, friend.getLocation())) {
+			if (this.isLocationWithInArea(block, friend.getIslandLocation())) {
 				return true;
 			}
 		}

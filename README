@@ -55,16 +55,12 @@ skyblock.messages - needed to get messages outside from SkyBlock
 skyblock.remove - needed for remove command
 
 Changelog:
-	- fixed home commands
-	- fixed pvp issues
-	- fixed teleport issues 
-	- added command /skyblock remove <island number> - with this you can remove a island over the island number
-	- The newisland command removes an area of 15 blocks in each direction of the spawn location, it also used the island remove function
-	- added new settings for schematic files:
-		- The schematic has to have one (and only one) bedrock block, which is used as spawn location.
-		  If the schematic contains no or more than one bedrock the default island/tower will be generated.
-	- fixed another problems with encoding of language files
-
-
+	- fixed default spawn location for tower if schematic file is given
+	- fixed ender pearl, have not working in other world
+	- fixed joining location from other world
+	- added a big improvement for build mode, if withProtecedArea is true
+	- fixed home join not working if friend is offline
+	- a few other improvements and fixes
+	
 Downloads:
 https://github.com/Leseratte91/SkyBlock-Multiplayer/downloads
