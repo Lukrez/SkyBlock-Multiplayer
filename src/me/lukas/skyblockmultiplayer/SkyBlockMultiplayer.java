@@ -109,8 +109,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		
 		// load SQL
 		try {
+			SQLInstructions.initializeConnections();
 			SQLInstructions.createTables();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 

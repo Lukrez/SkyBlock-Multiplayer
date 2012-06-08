@@ -84,15 +84,16 @@ public class SQLInstructions {
 
 	public static void writeNewPlayerData(Player player) throws SQLException{
 		stat.execute("INSERT OR REPLACE INTO players (" +
-				"playername," +
+				"playerName," +
 				"isOnIsland," +
 				"isDead," +
 				"livesLeft," +
 				"islandsLeft) VALUES (" +
 				"'"+player.getName()+"',"+
 				"0,"+
-				Settings.pvp_livesPerIsland+","+
-				Settings.pvp_islandsPerPlayer+",);");
+				"0,"+
+				Settings.pvp_livesPerIsland+"," +
+				Settings.pvp_islandsPerPlayer + ");");
 	}
 	
 	
