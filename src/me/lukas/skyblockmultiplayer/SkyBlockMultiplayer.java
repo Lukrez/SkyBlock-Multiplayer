@@ -309,9 +309,9 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 
-		System.out.println("Alle: " + all);
+		/*System.out.println("Alle: " + all);
 		System.out.println("Not online: " + notOnline);
-		System.out.println("islandsAndOwners: " + Settings.islandsAndOwners.size());
+		System.out.println("islandsAndOwners: " + Settings.islandsAndOwners.size());*/
 
 		/*// print friendslist
 		for (PlayerInfo2 player : Settings.lstPlayerInfo2.values()) {
@@ -731,7 +731,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 		return null;
 	}
-	
+
 	public Location getSafeHomeLocation(PlayerInfo2 p) {
 		// a) check original location
 		Location home = null;
@@ -780,10 +780,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	public boolean isSafeLocation(Location l) {
-		if(l == null) {
+		if (l == null) {
 			return false;
 		}
-		
+
 		Block ground = l.getBlock().getRelative(BlockFace.DOWN);
 		Block air1 = l.getBlock();
 		Block air2 = l.getBlock().getRelative(BlockFace.UP);
