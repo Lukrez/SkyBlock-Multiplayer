@@ -1,16 +1,16 @@
 package org.jnbt;
 
-public final class ByteArrayTag extends Tag
+public final class IntArrayTag extends Tag
 {
-  private final byte[] value;
+  private final int[] value;
 
-  public ByteArrayTag(String name, byte[] value)
+  public IntArrayTag(String name, int[] value)
   {
     super(name);
     this.value = value;
   }
 
-  public byte[] getValue()
+  public int[] getValue()
   {
     return this.value;
   }
@@ -18,7 +18,7 @@ public final class ByteArrayTag extends Tag
   public String toString()
   {
     StringBuilder hex = new StringBuilder();
-    for (byte b : this.value) {
+    for (int b : this.value) {
       String hexDigits = Integer.toHexString(b).toUpperCase();
       if (hexDigits.length() == 1) {
         hex.append("0");
@@ -28,8 +28,8 @@ public final class ByteArrayTag extends Tag
     String name = getName();
     String append = "";
     if ((name != null) && (!name.equals(""))) {
-      append = "(\"" + getName() + "\")";
+      append = new StringBuilder().append("(\"").append(getName()).append("\")").toString();
     }
-    return "TAG_Byte_Array" + append + ": " + hex.toString();
+    return new StringBuilder().append("TAG_Int_Array").append(append).append(": ").append(hex.toString()).toString();
   }
 }
