@@ -6,6 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+
+import me.lukas.skyblockmultiplayer.*;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class SQLInstructions {
 	private static Connection conn;
@@ -19,101 +25,98 @@ public class SQLInstructions {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
+	}	
 
 	public static void closeConnections() throws SQLException {
 		SQLInstructions.stat.close();
 		SQLInstructions.conn.close();
 	}
 
-	public static void createTables() throws SQLException {
-		for (Tables table : Tables.values()) {
-			String createTableWithColumns = "CREATE TABLE IF NOT EXISTS " + table.tableName + " ( ";
-			if (table.columns.length == 1) {
-				createTableWithColumns += table.columns[0] + " );";
-				stat.execute(createTableWithColumns);
-			} else {
-				for (int i = 0; i < table.columns.length; i++) {
-					createTableWithColumns += table.columns[i];
-					if (table.columns.length != i + 1) {
-						createTableWithColumns += ",";
-					}
-				}
-				createTableWithColumns += " );";
-				stat.execute(createTableWithColumns);
-			}
-			System.out.println(createTableWithColumns);
-		}
-	}
-
 	// @formatter:off
-	private enum Tables {
-		PLAYERS("players", new String[] { "playerId integer primary key autoincrement",
-										  "playerName varchar"  }),
-		OLDWORLD("oldworld", new String[] { "playerId integer",
-											"inventoryId integer",
-											"armorId integer",
-											"health integer",
-											"food integer",
-											"exp integer",
-											"level integer" }),
-		SKYBLOCKWORLD("skyblockWorld", new String[] { "playerId integer",
-													  "onIsland integer",
-													  "hasIsland integer",
-													  "isDead integer",
-													  "livesLeft integer",
-													  "islandsLeft integer",
-													  "inventoryId integer",
-													  "armorId varchar",
-													  "health integer",
-													  "food integer",
-													  "exp integer",
-													  "level integer",
-													  "islandLocation varchar",
-													  "homeLocation varchar",
-													  "friends varchar" }),
-		ISLANDLOCATIONS("islands", new String[] { "playerId integer",
-													"islandLocation varchar",
-													"islandNumber integer" }),
-		INVENTORIES("inventories", new String[] { "inventoryId integer",
-												  "inventory varchar" });
-		
-		private String tableName;
-		private String[] columns;
+	public static void createTables() throws SQLException {
 
-		private Tables(String tableName, String[] columns) {
-			this.tableName = tableName;
-			this.columns = columns;
-		}
+		stat.execute("CREATE TABLE IF NOT EXISTS metadata (" +
+				"version integer, "+
+				"info varchar);");
+	
+		stat.execute("CREATE TABLE IF NOT EXISTS players (" +
+					"playerName varchar UNIQUE,"+
+					"isOnIsland integer,"+
+					"isDead integer,"+
+					"livesLeft integer,"+
+					"islandsLeft integer," +
+					"homeLocation varchar);");
+		
+		stat.execute("CREATE TABLE IF NOT EXISTS islands (" +
+					"islandNumber integer,"+
+					"islandLocation varchar,"+
+					"playerName varchar UNIQUE);");
+		
+		stat.execute("CREATE TABLE IF NOT EXISTS oldWorld (" +
+						"playerName varchar REFERENCES player(playerName),"+
+						"location varchar,"+
+						"inventory varchar,"+
+						"armor varchar,"+
+						"health integer,"+
+						"food integer,"+
+						"exp integer,"+
+						"level integer);");
+		
+		stat.execute("CREATE TABLE IF NOT EXISTS skyblockWorld (" +
+						"playerName varchar REFERENCES player(playerName),"+
+						"location varchar,"+
+						"inventory varchar,"+
+						"armor varchar,"+
+						"health integer,"+
+						"food integer,"+
+						"exp integer,"+
+						"level integer);");
+		
+		stat.execute("CREATE TABLE IF NOT EXISTS friends (" +
+						"playername varchar REFERENCES player(playername),"+
+						"friendname varchar REFERENCES player(playername))");
+		
+		
+		
 	}
 	// @formatter:on
 
-	public static void addFieldIfNotExists(String tableName, String columnName, int playerId) throws SQLException {
-		ResultSet rs = stat.executeQuery("SELECT * FROM " + tableName + " WHERE playerId = " + playerId + ";");
-		boolean res = rs.next();
-		if (res == true) {
-			return;
-		}
 
-		PreparedStatement setField = conn.prepareStatement("insert into " + tableName + " values (?,?)");
-		setField.setInt(1, playerId);
-		setField.addBatch();
-
-		conn.setAutoCommit(false);
-		setField.executeBatch();
-		conn.setAutoCommit(true);
+	public static void writeNewPlayerData(Player player) throws SQLException{
+		stat.execute("INSERT OR REPLACE INTO players (" +
+				"playername," +
+				"isOnIsland," +
+				"isDead," +
+				"livesLeft," +
+				"islandsLeft) VALUES (" +
+				"'"+player.getName()+"',"+
+				"0,"+
+				Settings.pvp_livesPerIsland+","+
+				Settings.pvp_islandsPerPlayer+",);");
+	}
+	
+	
+	
+	public static ResultSet loadSkyWorldData(String playername) throws SQLException{
+		return stat.executeQuery("SELECT * FROM skyblockWorld " +
+				"WHERE playerName = '" + playername + "';");
 	}
 
-	public static boolean existsUserAlready(String playerName) throws SQLException {
-		ResultSet rs = stat.executeQuery("SELECT * FROM players WHERE playerName = '" + playerName + "';");
-		boolean res = rs.next();
-		if (res == false) {
-			return false;
-		}
-		return true;
+	public static ResultSet loadFriendData(String playername) throws SQLException{
+		return stat.executeQuery("SELECT friendName FROM friends " +
+				"WHERE playerName = '" + playername + "';");
 	}
+	
+	public static ResultSet loadOnlinePlayerData(String playername) throws SQLException{
+		return stat.executeQuery("SELECT * FROM players " +
+				"JOIN islands ON players.playerName = islands.playerName "+
+				"JOIN oldWorld ON players.playerName = oldWorld.playerName "+
+				"JOIN skyblockWorld ON players.playerName = skyblockWorld.playerName "+
+				"WHERE playerName = '" + playername + "';");
+	}
+		
 
-	public static void updatePlayerData(PlayerInfo pi) throws SQLException {
+	/*public static void updatePlayerData(PlayerInfo pi) throws SQLException {
 		if (!SQLInstructions.existsUserAlready(pi.getPlayerName())) {
 			PreparedStatement addPlayer = conn.prepareStatement("insert into players values (?,?)");
 			addPlayer.setString(2, pi.getPlayerName());
@@ -123,11 +126,11 @@ public class SQLInstructions {
 			addPlayer.executeBatch();
 			conn.setAutoCommit(true);
 		}
-		/*.setFieldValue(pi.getPlayerName(), "placed", AchievementField.PLACED, SQLInstructions.getStringList(pi.getPlacedList()));
+		.setFieldValue(pi.getPlayerName(), "placed", AchievementField.PLACED, SQLInstructions.getStringList(pi.getPlacedList()));
 		SQLInstructions.setFieldValue(pi.getPlayerName(), "breaked", AchievementField.BREAKED, SQLInstructions.getStringList(pi.getBreakedList()));
 		SQLInstructions.setFieldValue(pi.getPlayerName(), "collected", AchievementField.COLLECTED, SQLInstructions.getStringList(pi.getCollectedList()));
 		SQLInstructions.setFieldValue(pi.getPlayerName(), "crafted", AchievementField.CRAFTED, SQLInstructions.getStringList(pi.getCraftedList()));
-		SQLInstructions.setFieldValue(pi.getPlayerName(), "furnace", AchievementField.FURNACE, SQLInstructions.getStringList(pi.getFurnaceList()));*/
+		SQLInstructions.setFieldValue(pi.getPlayerName(), "furnace", AchievementField.FURNACE, SQLInstructions.getStringList(pi.getFurnaceList()));
 	}
 
 	public static PlayerInfo getPlayerData(String playerName) throws SQLException {
@@ -151,7 +154,7 @@ public class SQLInstructions {
 		pi.setCraftedList(SQLInstructions.getItemList(rs.getString("crafted")));
 
 		rs = stat.executeQuery("SELECT * FROM furnace WHERE playerId = " + playerId + ";");
-		pi.setFurnaceList(SQLInstructions.getItemList(rs.getString("furnace")));*/
+		pi.setFurnaceList(SQLInstructions.getItemList(rs.getString("furnace")));
 		return pi;
-	}
+	}*/
 }

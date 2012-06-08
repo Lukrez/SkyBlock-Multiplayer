@@ -2,6 +2,7 @@ package me.lukas.skyblockmultiplayer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -637,6 +638,7 @@ public class SkyBlockCommand implements CommandExecutor {
 	private boolean playerJoin(Player player) {
 		if (!Settings.skyBlockOnline) {
 			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_IS_OFFLINE.sentence);
+			
 			return true;
 		}
 
@@ -668,6 +670,13 @@ public class SkyBlockCommand implements CommandExecutor {
 
 		SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 
+		// write SQL
+		try {
+			SQLInstructions.writeNewPlayerData(player);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		player.teleport(SkyBlockMultiplayer.getSkyBlockWorld().getSpawnLocation()); // teleport player to the spawn tower
 		player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_WELCOME1.sentence + islands + Language.MSGS_WELCOME2.sentence + Settings.numbersPlayers + Language.MSGS_WELCOME3.sentence);
 		return true;

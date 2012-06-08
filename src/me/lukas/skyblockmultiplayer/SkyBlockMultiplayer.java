@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -104,6 +105,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			this.directoryPlayers.mkdir();
 		} else {
 			this.loadPlayerFiles();
+		}
+		
+		// load SQL
+		try {
+			SQLInstructions.createTables();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 		// register command
