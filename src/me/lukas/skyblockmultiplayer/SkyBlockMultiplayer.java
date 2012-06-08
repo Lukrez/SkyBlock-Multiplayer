@@ -52,6 +52,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 	public static World skyBlockWorld = null;
 	private static SkyBlockMultiplayer instance;
+	public String fileSQLite;
 
 	public FileConfiguration configPlugin;
 	public File filePlugin;
@@ -74,6 +75,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 		this.pluginFile = this.getDescription();
 		this.log = this.getLogger();
+
+		this.fileSQLite = this.getDataFolder() + File.separator + "Skylock.db";
 
 		this.pName = ChatColor.WHITE + "[" + ChatColor.GREEN + this.pluginFile.getName() + ChatColor.WHITE + "] ";
 
@@ -119,13 +122,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 */
 	public void registerEvents() {
 		PluginManager manager = this.getServer().getPluginManager();
-		manager.registerEvents(new PlayerPlaceBlockListener(this), this);
-		manager.registerEvents(new PlayerBreackBlockListener(this), this);
-		manager.registerEvents(new PlayerUseBucketListener(this), this);
-		manager.registerEvents(new EntityDeath(this), this);
-		manager.registerEvents(new PlayerRespawn(this), this);
-		manager.registerEvents(new PlayerInteract(this), this);
-		manager.registerEvents(new PlayerTeleport(this), this);
+		manager.registerEvents(new PlayerPlaceBlockListener(), this);
+		manager.registerEvents(new PlayerBreackBlockListener(), this);
+		manager.registerEvents(new PlayerUseBucketListener(), this);
+		manager.registerEvents(new EntityDeath(), this);
+		manager.registerEvents(new PlayerRespawn(), this);
+		manager.registerEvents(new PlayerInteract(), this);
+		manager.registerEvents(new PlayerTeleport(), this);
 	}
 
 	/**
@@ -264,13 +267,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * 
 	 */
 	public void loadPlayerFiles() {
-		int all = 0;
-		int notOnline = 0;
 		for (String f : new File(this.directoryPlayers.toString()).list()) {
 			if (new File(this.directoryPlayers, f).isFile()) {
 				PlayerInfo pi = this.readPlayerFile(f);
 				if (pi != null) {
-					all++;
 					// add player, if missing
 					String playerName = pi.getPlayerName();
 
@@ -301,7 +301,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 					Settings.islandsAndOwners.put(pi.getPlayerName(), pi.getIslandLocation());
 					if (playerOnline == null || !playerOnline.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
-						notOnline++;
 						continue;
 					}
 					Settings.players.put(playerName, pi);

@@ -13,12 +13,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class PlayerRespawn implements Listener {
 
-	private SkyBlockMultiplayer plugin;
-
-	public PlayerRespawn(SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-	}
-
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
@@ -37,7 +31,7 @@ public class PlayerRespawn implements Listener {
 			Settings.players.put(player.getName(), pi);
 		}
 
-		if (this.plugin.playerIsOnTower(player) || Settings.gameModeSelected == Settings.GameMode.PVP || pi.getIslandLocation() == null) {
+		if (SkyBlockMultiplayer.getInstance().playerIsOnTower(player) || Settings.gameModeSelected == Settings.GameMode.PVP || pi.getIslandLocation() == null) {
 			player.getInventory().setContents(pi.getOldInventory());
 			player.getInventory().setArmorContents(pi.getOldArmor());
 			player.setExp(pi.getOldExp());
@@ -45,14 +39,14 @@ public class PlayerRespawn implements Listener {
 			player.setFoodLevel(pi.getOldFood());
 			player.setHealth(player.getMaxHealth());
 
-			this.plugin.writePlayerFile(player.getName(), pi);
+			SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 
 			event.setRespawnLocation(player.getWorld().getSpawnLocation());
 			return;
 		}
 
 		if (Settings.gameModeSelected == Settings.GameMode.BUILD && Settings.build_respawnWithInventory) {
-			if (!this.plugin.playerIsOnTower(player) && pi.getIslandLocation() != null) {
+			if (!SkyBlockMultiplayer.getInstance().playerIsOnTower(player) && pi.getIslandLocation() != null) {
 				player.getInventory().setContents(pi.getIslandInventory());
 				player.getInventory().setArmorContents(pi.getIslandArmor());
 				player.setExp(pi.getIslandExp());
@@ -60,7 +54,7 @@ public class PlayerRespawn implements Listener {
 				player.setFoodLevel(20);
 				player.setHealth(player.getMaxHealth());
 
-				this.plugin.writePlayerFile(player.getName(), pi);
+				SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 
 				// check if bedrock is still there
 				int px = pi.getIslandLocation().getBlockX();
@@ -77,7 +71,7 @@ public class PlayerRespawn implements Listener {
 					player.setFoodLevel(pi.getOldFood());
 					player.setHealth(player.getMaxHealth());
 
-					this.plugin.writePlayerFile(player.getName(), pi);
+					SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 					return;
 				}
 
@@ -99,10 +93,9 @@ public class PlayerRespawn implements Listener {
 		}
 
 		if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
-			if (!this.plugin.playerIsOnTower(player)) {
+			if (!SkyBlockMultiplayer.getInstance().playerIsOnTower(player)) {
 				if (pi.getHomeLocation() == null) {
 					event.setRespawnLocation(pi.getIslandLocation());
-				} else {
 					Location homeSweetHome = SkyBlockMultiplayer.getInstance().getSafeHomeLocation(pi);
 					if (homeSweetHome == null) { // if null, island is missing and home location returns no safe block
 						player.sendMessage("Cannot teleport to your home location, your island is probably missing.");

@@ -13,12 +13,6 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 public class PlayerUseBucketListener implements Listener {
 
-	SkyBlockMultiplayer plugin;
-
-	public PlayerUseBucketListener(SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-	}
-
 	@EventHandler
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
 		Player player = event.getPlayer();
