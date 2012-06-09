@@ -23,10 +23,10 @@ public class Settings {
 	public static boolean removeCreaturesByTeleport; // remove creatures by teleport to island
 
 	/* Needed for plugin */
-	public static Map<String, PlayerInfo> players = new HashMap<String, PlayerInfo>(); // Key = player name, value PlayerInfo
+	public static Map<String, PlayerData> players = new HashMap<String, PlayerData>(); // Key = player name, value PlayerInfo
 	public static int numbersPlayers; // Amount of players in SkyBlock
 	public static boolean messagesOutside; // to get messages from SkyBlock.
-	public static Map<String, PlayerData> onlinePlayers = new HashMap<String, PlayerData>();
+	//public static Map<String, PlayerData> onlinePlayers = new HashMap<String, PlayerData>();
 	public static Map<String, PlayerInfo2> lstPlayerInfo2 = new HashMap<String, PlayerInfo2>();
 	public static HashMap<String, Location> islandsAndOwners = new HashMap<String, Location>();
 

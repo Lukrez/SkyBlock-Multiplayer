@@ -47,7 +47,14 @@ public class PlayerData {
 		this.homeLocation = null;
 		this.livesLeft = Settings.pvp_livesPerIsland;
 		this.islandsLeft = Settings.pvp_islandsPerPlayer;
+		this.oldHealth = player.getMaxHealth();
+		this.islandHealth = player.getMaxHealth();
+		this.oldFood = 20;
+		this.islandFood = 20;
+		
 	}
+	
+	public PlayerData(){};
 	
 	public void updateSQLPartialData(){
 		SQLInstructions.writePartialPlayerData(this);
@@ -78,9 +85,11 @@ public class PlayerData {
 		SQLInstructions.writeIslandData(this);
 	}
 	
+	public void setPlayerName(String name){
+		this.playerName = name;
+	}
 	
-	
-	public void setHasIslandS(boolean b){
+	public void setHasIsland(boolean b){
 		this.hasIsland = b;
 	}
 	
@@ -210,18 +219,13 @@ public class PlayerData {
 	public void setOldHealth(int x){
 		this.oldHealth = x;
 	}
-	public void setOldExp(int x){
+	public void setOldExp(float x){
 		this.oldExp = x;
 	}
 	public void setOldLevel(int x){
 		this.oldLevel = x;
 	}
-	
-	
-	
-	
-	
-	
+
 	public void setIslandLocation(Location l){
 		this.islandLocation = l;
 	}
@@ -240,7 +244,7 @@ public class PlayerData {
 	public void setIslandHealth(int x){
 		this.islandHealth = x;
 	}
-	public void setIslandExp(int x){
+	public void setIslandExp(float x){
 		this.islandExp = x;
 	}
 	public void setIslandLevel(int x){

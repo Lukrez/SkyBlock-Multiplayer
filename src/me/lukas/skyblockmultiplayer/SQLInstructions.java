@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 
 import org.bukkit.Location;
 
@@ -63,7 +64,7 @@ public class SQLInstructions {
 						"armor varchar,"+
 						"health integer,"+
 						"food integer,"+
-						"exp integer,"+
+						"exp real,"+
 						"level integer);");
 		
 		stat.execute("CREATE TABLE IF NOT EXISTS skyblockWorld (" +
@@ -73,7 +74,7 @@ public class SQLInstructions {
 						"armor varchar,"+
 						"health integer,"+
 						"food integer,"+
-						"exp integer,"+
+						"exp real,"+
 						"level integer);");
 		
 		stat.execute("CREATE TABLE IF NOT EXISTS friends (" +
@@ -169,7 +170,33 @@ public class SQLInstructions {
 			return false;
 		}
 	}
+	
+	public static boolean loadAllPlayersPartial(){
 		
+		Settings.players = new HashMap<String,PlayerData>();
+
+		try {
+			ResultSet rs;
+			rs = stat.executeQuery("SELECT * FROM players" +
+									" JOIN islands ON islands.playerName = players.playerName;");
+			while (rs.next()){
+				PlayerData pdata = new PlayerData();
+				pdata.setPlayerName(rs.getString("players.playerName"));
+				pdata.setHasIsland(rs.getBoolean("islands.islandNumber"));
+				pdata.setDeathStatus(rs.getBoolean("players.isDead"));
+				pdata.setIslandsLeft(rs.getInt("players.islandsLeft"));
+				pdata.setLivesLeft(rs.getInt("players.livesLeft"));
+				pdata.setHomeLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("players.homeLocation")));
+				pdata.setIslandLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("islands.islandLocation")));
+				Settings.players.put(pdata.getPlayerName(), pdata);
+			}
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public static boolean loadPartialPlayerData(PlayerData pdata){
 		ResultSet rs;
 		try {
@@ -179,7 +206,7 @@ public class SQLInstructions {
 		if (rs.next() == false)
 			return true;
 
-		pdata.setHasIslandS(rs.getBoolean("islandNumber"));
+		pdata.setHasIsland(rs.getBoolean("islandNumber"));
 		pdata.setDeathStatus(rs.getBoolean("isDead"));
 		pdata.setIslandsLeft(rs.getInt("islandsLeft"));
 		pdata.setLivesLeft(rs.getInt("livesLeft"));
@@ -204,7 +231,7 @@ public class SQLInstructions {
 		pdata.setOldArmor(ItemParser.StringToInventory(rs.getString("armor"), 4));
 		pdata.setOldHealth(rs.getInt("health"));
 		pdata.setOldFood(rs.getInt("food"));
-		pdata.setOldExp(rs.getInt("exp"));
+		pdata.setOldExp(rs.getFloat("exp"));
 		pdata.setOldLevel(rs.getInt("level"));
 		
 		return true;
@@ -227,7 +254,7 @@ public class SQLInstructions {
 		pdata.setIslandArmor(ItemParser.StringToInventory(rs.getString("armor"), 4));
 		pdata.setIslandHealth(rs.getInt("health"));
 		pdata.setIslandFood(rs.getInt("food"));
-		pdata.setIslandExp(rs.getInt("exp"));
+		pdata.setIslandExp(rs.getFloat("exp"));
 		pdata.setIslandLevel(rs.getInt("level"));
 		
 		return true;

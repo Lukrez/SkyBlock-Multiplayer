@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -320,6 +321,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				}
 			}
 		}
+		
+		
 
 		/*System.out.println("Alle: " + all);
 		System.out.println("Not online: " + notOnline);
@@ -332,6 +335,20 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 				System.out.println("\t -" + friend.getName());
 			}
 		}*/
+	}
+	
+	public void loadOnlinePlayersFromDB(){
+		
+		// load all players parially
+		SQLInstructions.loadAllPlayersPartial();
+		for (Player player : this.getServer().getOnlinePlayers()){
+			if (!Settings.players.containsKey(player.getName()))
+				continue;
+			// load world informations for online players
+			PlayerData pdata = Settings.players.get(player.getName());
+			SQLInstructions.loadOldWorldData(pdata);
+			SQLInstructions.loadIslandData(pdata);
+		}
 	}
 
 	public PlayerInfo readPlayerFile(String playerName) {
@@ -851,6 +868,54 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		// a) check original location
 		Location home = null;
 		if (p.getIslandLocation() == null) {
+			home = p.getIslandLocation();
+		} else {
+			home = p.getHomeLocation();
+		}
+
+		if (this.isSafeLocation(home)) {
+			return home;
+		}
+		// b) check if a suitable y exists on this x and z
+		for (int y = home.getBlockY(); y > 0; y--) {
+			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
+			if (this.isSafeLocation(n)) {
+				return n;
+			}
+		}
+		for (int y = home.getBlockY(); y < 255; y++) {
+			Location n = new Location(home.getWorld(), home.getBlockX(), y, home.getBlockZ());
+			if (this.isSafeLocation(n)) {
+				return n;
+			}
+		}
+
+		// c) check island Location
+		Location island = p.getIslandLocation();
+		if (this.isSafeLocation(island)) {
+			return island;
+		}
+
+		for (int y = island.getBlockY(); y > 0; y--) {
+			Location n = new Location(island.getWorld(), island.getBlockX(), y, island.getBlockZ());
+			if (this.isSafeLocation(n)) {
+				return n;
+			}
+		}
+		for (int y = island.getBlockY(); y < 255; y++) {
+			Location n = new Location(island.getWorld(), island.getBlockX(), y, island.getBlockZ());
+			if (this.isSafeLocation(n)) {
+				return n;
+			}
+		}
+		return null;
+	}
+	
+	
+	public Location getSafeHomeLocation(PlayerData p) {
+		// a) check original location
+		Location home = null;
+		if (p.getHomeLocation() == null) {
 			home = p.getIslandLocation();
 		} else {
 			home = p.getHomeLocation();
