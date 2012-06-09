@@ -45,7 +45,7 @@ public class SQLInstructions {
 				"info varchar);");
 	
 		stat.execute("CREATE TABLE IF NOT EXISTS players (" +
-					"playerName varchar UNIQUE,"+
+					"playerName varchar primary key,"+
 					"isOnIsland integer,"+
 					"isDead integer,"+
 					"livesLeft integer,"+
@@ -58,7 +58,7 @@ public class SQLInstructions {
 					"playerName varchar UNIQUE);");
 		
 		stat.execute("CREATE TABLE IF NOT EXISTS oldWorld (" +
-						"playerName varchar REFERENCES player(playerName),"+
+						"playerName varchar primary key REFERENCES player(playerName),"+
 						"location varchar,"+
 						"inventory varchar,"+
 						"armor varchar,"+
@@ -99,8 +99,7 @@ public class SQLInstructions {
 					SQLInstructions.bool2int(player.isOnIsland())+","+
 					SQLInstructions.bool2int(player.isDead())+","+
 					player.getLivesLeft()+","+
-					player.getIslandsLeft()+","+
-					Settings.pvp_livesPerIsland+");");
+					player.getIslandsLeft() + ");");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -166,7 +165,7 @@ public class SQLInstructions {
 		try {
 			rs = stat.executeQuery("SELECT COUNT(*) FROM players WHERE playerName = '"+playerName+"';");
 		rs.next();
-		if (rs.getInt(0) == 0)
+		if (rs.getInt(1) == 0)
 			return false;
 		return true;
 		} catch (SQLException e) {
@@ -181,8 +180,8 @@ public class SQLInstructions {
 		ResultSet rs;
 		try {
 			rs = stat.executeQuery("SELECT * FROM players" +
-									"JOIN islands ON (island.playerName = players.playerName" +
-									" WHERE playerName = '"+pdata.getPlayerName()+"';");
+									" JOIN islands ON islands.playerName = players.playerName" +
+									" WHERE players.playerName = '"+pdata.getPlayerName()+"';");
 		if (rs.next() == false)
 			return true;
 
@@ -206,7 +205,7 @@ public class SQLInstructions {
 		if (rs.next() == false)
 			return true;
 
-		pdata.setOldLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("homeLocation")));
+		pdata.setOldLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("location")));
 		pdata.setOldInventory(ItemParser.StringToInventory(rs.getString("inventory"), 36));
 		pdata.setOldArmor(ItemParser.StringToInventory(rs.getString("armor"), 4));
 		pdata.setOldHealth(rs.getInt("health"));
@@ -229,7 +228,7 @@ public class SQLInstructions {
 		if (rs.next() == false)
 			return true;
 
-		pdata.setIslandLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("homeLocation")));
+		pdata.setIslandLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("location")));
 		pdata.setIslandInventory(ItemParser.StringToInventory(rs.getString("inventory"), 36));
 		pdata.setIslandArmor(ItemParser.StringToInventory(rs.getString("armor"), 4));
 		pdata.setIslandHealth(rs.getInt("health"));

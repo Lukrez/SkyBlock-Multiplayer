@@ -1,5 +1,6 @@
 package me.lukas.skyblockmultiplayer;
 
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +10,6 @@ public class ItemParser {
 	public static String parseItemStackToString(ItemStack item) {
 		if (item == null) {
 			return "";
-
 		}
 
 		String s = "";
@@ -36,7 +36,7 @@ public class ItemParser {
 
 		for (String thing : s.split(";")) {
 			String[] sp = thing.split(":");
-			if (sp.length != 2){
+			if (sp.length != 2) {
 				SkyBlockMultiplayer.getInstance().log.warning("error, wrong type size");
 				continue;
 			}
@@ -64,44 +64,50 @@ public class ItemParser {
 						x.addUnsafeEnchantment(Enchantment.getById(enchId), level);
 					}
 				}
-
 			} else {
 				SkyBlockMultiplayer.getInstance().log.warning("error, unknown itemvalue");
 			}
 		}
 		return x;
 	}
-	
-	public static String InventoryToString(ItemStack[] inv){
+
+	public static String InventoryToString(ItemStack[] inv) {
+		if (inv == null) {
+			return "";
+		}
 		String s = "";
-		for (int slotnr=0;slotnr < inv.length;slotnr++){
+		boolean first = true;
+		for (int slotnr = 0; slotnr < inv.length; slotnr++) {
 			ItemStack i = inv[slotnr];
-			if (slotnr == 0){
-				s += slotnr+"*"+ItemParser.parseItemStackToString(i);
+			if (i == null || i.getType() == Material.AIR)
+				continue;
+			if (first) {
+				s += slotnr + "," + ItemParser.parseItemStackToString(i);
+				first = false;
 			} else {
-				s += "|"+slotnr+"*"+ItemParser.parseItemStackToString(i);
+				s += "&" + slotnr + "," + ItemParser.parseItemStackToString(i);
 			}
 		}
 		return s;
 	}
-	
-	public static ItemStack[] StringToInventory(String s, int invsize){
+
+	public static ItemStack[] StringToInventory(String s, int invsize) {
 		ItemStack[] inv = new ItemStack[invsize];
-		if (s == null || s.equals("")){
+		if (s == null || s.equals("")) {
 			return inv;
 		}
-		for (String itemstring : s.split("|")) {
-			String[] sp = itemstring.split("*");
-			if (sp.length != 2){
+		for (String itemstring : s.split("&")) {
+			String[] sp = itemstring.split(",");
+			if (sp.length != 2) {
 				SkyBlockMultiplayer.getInstance().log.warning("error, wrong type size");
 				continue;
 			}
 			int slotnr = Integer.parseInt(sp[0]);
-			if (slotnr > invsize){
+			if (slotnr > invsize) {
 				SkyBlockMultiplayer.getInstance().log.warning("error, Inventorystring as larger slotnr than excpected.");
 				return inv;
 			}
-				
+
 			inv[slotnr] = ItemParser.getItemStackfromString(sp[1]);
 		}
 		return inv;

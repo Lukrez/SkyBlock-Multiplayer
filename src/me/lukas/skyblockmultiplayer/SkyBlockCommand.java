@@ -670,7 +670,8 @@ public class SkyBlockCommand implements CommandExecutor {
 
 		SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi); // bald weg :-)
 		//----------------  neuer Speicher -------------------//
-		this.loadOrCreatePlayer(player);
+		PlayerData pdata = this.loadOrCreatePlayer(player);
+		pdata.setOldWorldValues(player);
 		// ---------------------------------------------------//
 		
 		player.teleport(SkyBlockMultiplayer.getSkyBlockWorld().getSpawnLocation()); // teleport player to the spawn tower
