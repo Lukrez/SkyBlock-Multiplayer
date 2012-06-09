@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.bukkit.Location;
+
+
 public class SQLInstructions {
 	private static Connection conn;
 	private static Statement stat;
@@ -15,6 +18,7 @@ public class SQLInstructions {
 			return 1;
 		return 0;
 	}
+	
 	public static void initializeConnections() throws ClassNotFoundException {
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -46,9 +50,11 @@ public class SQLInstructions {
 						"homeLocation varchar);");
 		
 		stat.execute("CREATE TABLE IF NOT EXISTS islands (" +
-						"islandNumber integer,"+
-						"islandLocation varchar,"+
-						"playerName varchar UNIQUE);");
+					"islandNumber integer primary key AUTOINCREMENT,"+
+					"islandLocation varchar,"+
+					"x integer,"+
+					"z integer,"+
+					"playerName varchar);");
 		
 		stat.execute("CREATE TABLE IF NOT EXISTS oldWorld (" +
 						"playerName varchar primary key REFERENCES player(playerName),"+
@@ -77,9 +83,7 @@ public class SQLInstructions {
 		
 		
 	}
-	// @formatter:on
-
-
+	
 	public static boolean writePartialPlayerData(PlayerData player){
 		try {
 			stat.execute("INSERT OR REPLACE INTO players (" +
@@ -99,7 +103,6 @@ public class SQLInstructions {
 			return false;
 		}
 	}
-	
 	
 	public static boolean writeIslandData(PlayerData pdata){
 		try {
@@ -166,9 +169,7 @@ public class SQLInstructions {
 			return false;
 		}
 	}
-	
-
-	
+		
 	public static boolean loadPartialPlayerData(PlayerData pdata){
 		ResultSet rs;
 		try {
@@ -235,4 +236,47 @@ public class SQLInstructions {
 			return false;
 		}
 	}
+
+	public static boolean writeNewIsland(PlayerData pdata, CreateNewIsland island){
+		
+		try {
+			stat.execute("INSERT OR REPLACE INTO islands (" +
+					"islandLocation," +
+					"x," +
+					"z,"+
+					"playerName) VALUES ("+
+					"'"+SkyBlockMultiplayer.getInstance().LocationToString(island.Islandlocation)+"',"+
+					island.Islandlocation.getBlockX()+","+
+					island.Islandlocation.getBlockZ()+","+
+					"'"+pdata.getPlayerName()+"');");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} 
+	}
+	
+	public int getNearestIsland(Location click, int distance){
+		int xmin = click.getBlockX()-distance;
+		int xmax = click.getBlockX()+distance;
+		int zmin = click.getBlockZ()-distance;
+		int zmax = click.getBlockZ()+distance;
+		
+		try {
+			ResultSet rs = stat.executeQuery("SELECT islandNumber from islands " +
+												"WHERE x >= "+xmin+
+												"AND x <= "+xmax+
+												"AND z >= "+zmin+
+												"AND z <= "+zmax+";");
+			if (!rs.next())
+				return -1;
+			return rs.getInt("islandNumber");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	
+	}
+	// @formatter:on
 }

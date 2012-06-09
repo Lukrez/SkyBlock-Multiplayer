@@ -39,16 +39,19 @@ public class PlayerData {
 	private int islandLevel;
 
 	public PlayerData(Player player){
-		// Get Default Values
+		// Set Default Values
 		this.playerName = player.getName();
 		this.hasIsland= false;
 		this.isOnIsland = false;
 		this.isDead = false;
+		this.homeLocation = null;
 		this.livesLeft = Settings.pvp_livesPerIsland;
 		this.islandsLeft = Settings.pvp_islandsPerPlayer;
 	}
 	
-	
+	public void updateSQLPartialData(){
+		SQLInstructions.writePartialPlayerData(this);
+	}
 	
 	public void setOldWorldValues(Player player){
 		if (player.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()))
@@ -74,6 +77,7 @@ public class PlayerData {
 		this.islandLevel = player.getLevel();
 		SQLInstructions.writeIslandData(this);
 	}
+	
 	
 	
 	public void setHasIslandS(boolean b){

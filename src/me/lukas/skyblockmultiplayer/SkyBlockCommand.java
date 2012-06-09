@@ -743,16 +743,30 @@ public class SkyBlockCommand implements CommandExecutor {
 			}
 			Settings.players.put(player.getName(), pi);
 		}
+		
+		PlayerData pdata = this.loadOrCreatePlayer(player); // SQL
 
 		if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
-			if (!pi.getHasIsland() || pi.getIslandLocation() == null) {
+			if (!pi.getHasIsland() || pi.getIslandLocation() == null) { // Abfrage durch pdata ersetzen
 				// new player
 				CreateNewIsland isl = new CreateNewIsland(player);
-				pi.setIslandLocation(SkyBlockMultiplayer.getInstance().getYLocation(isl.Islandlocation));
+				Location islLocation = SkyBlockMultiplayer.getInstance().getYLocation(isl.Islandlocation);
+				pi.setIslandLocation(islLocation);
 				pi.setHomeLocation(null);
 				pi.setHasIsland(true);
 				pi.setDead(false);
-
+				
+				
+				// SQL
+				pdata.setIslandLocation(islLocation);
+				pdata.setHomeLocation(null);
+				pdata.setHasIslandS(true);
+				pdata.setDeathStatus(false);
+				pdata.updateSQLPartialData();
+				
+				// put island into SQL
+				SQLInstructions.writeNewIsland(pdata, isl);
+				
 				if (!Settings.allowContent) {
 					pi.setOldInventory(player.getInventory().getContents());
 					pi.setOldArmor(player.getInventory().getArmorContents());
@@ -764,7 +778,6 @@ public class SkyBlockCommand implements CommandExecutor {
 					// clear inventory
 					player.getInventory().clear();
 					SkyBlockMultiplayer.getInstance().clearArmorContents(player);
-
 					player.setExp(0);
 					player.setLevel(0);
 					player.setFoodLevel(20);
