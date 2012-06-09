@@ -103,13 +103,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			e.printStackTrace();
 		}
 
-		this.directoryPlayers = new File(this.getDataFolder() + File.separator + "players");
-		if (!this.directoryPlayers.exists()) {
-			this.directoryPlayers.mkdir();
-		} else {
-			this.loadPlayerFiles();
-		}
-
 		// load SQL
 		try {
 			SQLInstructions.initializeConnections();
@@ -276,67 +269,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 	}
 
-	/**
-	 * Load all informations from player who exists in folder players and who have a island.
-	 * 
-	 */
-	public void loadPlayerFiles() {
-		for (String f : new File(this.directoryPlayers.toString()).list()) {
-			if (new File(this.directoryPlayers, f).isFile()) {
-				PlayerInfo pi = this.readPlayerFile(f);
-				if (pi != null) {
-					// add player, if missing
-					String playerName = pi.getPlayerName();
 
-					Player playerOnline = this.getServer().getPlayer(playerName);
-					if (pi.getIslandLocation() == null) {
-						continue;
-					}
-
-					if (!Settings.lstPlayerInfo2.containsKey(playerName)) {
-						Settings.lstPlayerInfo2.put(playerName, new PlayerInfo2(playerName, pi.getIslandLocation()));
-						Settings.lstPlayerInfo2.get(playerName).setHomeLocation(pi.getHomeLocation());
-					} else {
-						Settings.lstPlayerInfo2.get(playerName).setIslandLocation(pi.getIslandLocation());
-						Settings.lstPlayerInfo2.get(playerName).setHomeLocation(pi.getHomeLocation());
-					}
-					PlayerInfo2 player = Settings.lstPlayerInfo2.get(playerName);
-
-					// Add friends
-					for (String friendName : pi.getFriends()) {
-						if (!Settings.lstPlayerInfo2.containsKey(friendName)) {
-							Settings.lstPlayerInfo2.put(friendName, new PlayerInfo2(friendName, null));
-						}
-						PlayerInfo2 friend = Settings.lstPlayerInfo2.get(friendName);
-						// Add Permissions
-						player.addFriendsToOwnIsland(friend);
-						friend.addOwnBuildPermission(player);
-					}
-
-					Settings.islandsAndOwners.put(pi.getPlayerName(), pi.getIslandLocation());
-					if (playerOnline == null || !playerOnline.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
-						continue;
-					}
-					Settings.players.put(playerName, pi);
-				}
-			}
-		}
-		
-		
-
-		/*System.out.println("Alle: " + all);
-		System.out.println("Not online: " + notOnline);
-		System.out.println("islandsAndOwners: " + Settings.islandsAndOwners.size());*/
-
-		/*// print friendslist
-		for (PlayerInfo2 player : Settings.lstPlayerInfo2.values()) {
-			System.out.println("Player: " + player.getName());
-			for (PlayerInfo2 friend : player.getFriends().values()) {
-				System.out.println("\t -" + friend.getName());
-			}
-		}*/
-	}
-	
 	public void loadOnlinePlayersFromDB(){
 		
 		// load all players parially
@@ -348,6 +281,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			PlayerData pdata = Settings.players.get(player.getName());
 			SQLInstructions.loadOldWorldData(pdata);
 			SQLInstructions.loadIslandData(pdata);
+			SQLInstructions.loadFriendList(pdata);
+
 		}
 	}
 
@@ -1240,20 +1175,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		return null;
 	}
 
-	public static boolean checkBuildPermission(PlayerInfo pi, Location l) {
-
-		if (l == null || pi == null) {
-			return false;
-		}
-
-		// get PlayerInfo2
-		if (!Settings.lstPlayerInfo2.containsKey(pi.getPlayerName()))
-			return false;
-		PlayerInfo2 player = Settings.lstPlayerInfo2.get(pi.getPlayerName());
-
-		return player.checkBuildPermission(l);
-	}
-
+	
 	/*public static boolean canPlayerDoThat(PlayerInfo pi, Location l) {
 		if (pi == null || pi.getIslandLocation() == null) {
 			return false;

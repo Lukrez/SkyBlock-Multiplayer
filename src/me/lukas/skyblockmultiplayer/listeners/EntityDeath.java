@@ -1,6 +1,8 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
 import me.lukas.skyblockmultiplayer.Permissions;
+import me.lukas.skyblockmultiplayer.PlayerData;
+import me.lukas.skyblockmultiplayer.SQLInstructions;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Language;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
@@ -25,42 +27,41 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Settings.players.get(player.getName());
-		if (pi == null) { // Check, if player is in playerlist
-			pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
-			if (pi == null) {
-				return;
-			}
-			Settings.players.put(player.getName(), pi);
+
+		PlayerData pdata = Settings.players.get(player.getName());
+		if (pdata == null) { // Check, if player is in playerlist
+			return;
 		}
 
 		if (SkyBlockMultiplayer.getInstance().playerIsOnTower(player)) {
-			pi.setOldInventory(player.getInventory().getContents());
-			pi.setOldArmor(player.getInventory().getArmorContents());
-			pi.setOldExp(player.getExp());
-			pi.setOldLevel(player.getLevel());
-			pi.setOldFood(player.getFoodLevel());
-			pi.setOldHealth(player.getMaxHealth());
+			pdata.setOldInventory(player.getInventory().getContents());
+			pdata.setOldArmor(player.getInventory().getArmorContents());
+			pdata.setOldExp(player.getExp());
+			pdata.setOldLevel(player.getLevel());
+			pdata.setOldFood(player.getFoodLevel());
+			pdata.setOldHealth(player.getMaxHealth());
 
 			event.getDrops().clear();
 			event.setDroppedExp(0);
+			
+			SQLInstructions.writeOldWorldData(pdata);
 
-			SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 			return;
 		}
 
 		if (Settings.gameModeSelected == Settings.GameMode.BUILD && Settings.build_respawnWithInventory) {
-			pi.setIslandInventory(player.getInventory().getContents());
-			pi.setIslandArmor(player.getInventory().getArmorContents());
-			pi.setIslandExp(player.getExp());
-			pi.setIslandLevel(player.getLevel());
-			pi.setIslandFood(player.getFoodLevel());
-			pi.setIslandHealth(player.getMaxHealth());
+			pdata.setIslandInventory(player.getInventory().getContents());
+			pdata.setIslandArmor(player.getInventory().getArmorContents());
+			pdata.setIslandExp(player.getExp());
+			pdata.setIslandLevel(player.getLevel());
+			pdata.setIslandFood(player.getFoodLevel());
+			pdata.setIslandHealth(player.getMaxHealth());
 
 			event.getDrops().clear();
 			event.setDroppedExp(0);
 
-			SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
+			SQLInstructions.writeIslandData(pdata);
+
 			return;
 		}
 
@@ -68,24 +69,13 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
-		pi.setDead(true);
-		if (!pi.getHasIsland()) {
-			return;
-		}
+		pdata.setDeathStatus(true);
+		pdata.setLivesLeft(pdata.getLivesLeft() - 1);
+		SQLInstructions.writePartialPlayerData(pdata);
 
-		pi.setLivesLeft(pi.getLivesLeft() - 1);
-		if (pi.getIslandsLeft() != 0 || pi.getLivesLeft() != 0) {
-			return;
-		}
-
-		SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
-
-		if (Settings.numbersPlayers < 1) {
-			return;
-		}
 		Settings.numbersPlayers--;
 
-		for (PlayerInfo pInfo : Settings.players.values()) {
+		for (PlayerData pInfo : Settings.players.values()) {
 			if (pInfo.getPlayer() != null) {
 				if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || (Permissions.SKYBLOCK_MESSAGES.has(pInfo.getPlayer()) && Settings.messagesOutside)) {
 					pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_DIED1.sentence + Settings.numbersPlayers + Language.MSGS_PLAYER_DIED2.sentence);
@@ -95,13 +85,13 @@ public class EntityDeath implements Listener {
 
 		if (Settings.numbersPlayers == 1) {
 			String winner = "";
-			for (PlayerInfo pinfo : Settings.players.values()) {
+			for (PlayerData pinfo : Settings.players.values()) {
 				if (pinfo.isDead() == false) {
 					winner = pinfo.getPlayer().getName();
 				}
 			}
 
-			for (PlayerInfo pInfo : Settings.players.values()) {
+			for (PlayerData pInfo : Settings.players.values()) {
 				if (pInfo.getPlayer() != null) {
 					if (pInfo.getPlayer().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) || (Permissions.SKYBLOCK_MESSAGES.has(pInfo.getPlayer()) && Settings.messagesOutside)) {
 						pInfo.getPlayer().sendMessage(Language.MSGS_PLAYER_WIN_BROADCAST1.sentence + winner + Language.MSGS_PLAYER_WIN_BROADCAST2.sentence);

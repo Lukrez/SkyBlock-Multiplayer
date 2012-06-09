@@ -1,5 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
+import me.lukas.skyblockmultiplayer.PlayerData;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Permissions;
@@ -43,12 +44,12 @@ public class PlayerUseBucketListener implements Listener {
 
 		if (Settings.gameModeSelected == Settings.GameMode.BUILD) {
 
-			PlayerInfo pi = Settings.players.get(player.getName());
-			if (pi == null) {
+			PlayerData pdata = Settings.players.get(player.getName());
+			if (pdata == null) {
 				return;
 			}
 
-			if (SkyBlockMultiplayer.checkBuildPermission(pi, b.getLocation())) {
+			if (pdata.checkBuildPermission(b.getLocation())) {
 				return;
 			}
 			event.setCancelled(true);

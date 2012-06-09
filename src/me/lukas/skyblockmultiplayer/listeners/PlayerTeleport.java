@@ -1,6 +1,7 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
 import me.lukas.skyblockmultiplayer.Language;
+import me.lukas.skyblockmultiplayer.PlayerData;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
@@ -39,14 +40,15 @@ public class PlayerTeleport implements Listener {
 			}
 		}
 
-		PlayerInfo pi = Settings.players.get(player.getName());
+		
 		if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
 			if (SkyBlockMultiplayer.getInstance().locationIsOnTower(event.getTo())) {
 				event.setCancelled(true);
 				return;
 			}
 			if (Settings.build_withProtectedArea) {
-				if (SkyBlockMultiplayer.checkBuildPermission(pi, event.getTo())) {
+				PlayerData pdata = Settings.players.get(player.getName());
+				if (pdata.checkBuildPermission(event.getTo())) {
 					return;
 				}
 				event.setCancelled(true);

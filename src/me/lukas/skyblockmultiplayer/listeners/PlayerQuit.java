@@ -1,5 +1,6 @@
 package me.lukas.skyblockmultiplayer.listeners;
 
+import me.lukas.skyblockmultiplayer.PlayerData;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
@@ -25,10 +26,19 @@ public class PlayerQuit implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Settings.players.get(player.getName());
+		PlayerData pdata = Settings.players.get(player.getName());
 
-		if (pi.getIslandLocation() == null) {
-			Settings.players.remove(player.getName());
+		if (pdata.getIslandLocation() == null) {
+			// check, if friends are online
+			boolean foundOnlineFriend = false;
+			for (Player online : SkyBlockMultiplayer.getInstance().getServer().getOnlinePlayers()){
+				if (pdata.getFriends().containsKey(online.getName())){
+					foundOnlineFriend = true;
+					break;
+				}
+			}
+			if (!foundOnlineFriend)
+				Settings.players.remove(player.getName());
 		}
 	}
 }

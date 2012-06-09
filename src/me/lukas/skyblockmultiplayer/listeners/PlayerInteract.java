@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import me.lukas.skyblockmultiplayer.CreateNewIsland;
 import me.lukas.skyblockmultiplayer.Language;
+import me.lukas.skyblockmultiplayer.PlayerData;
 import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.PlayerInfo2;
 import me.lukas.skyblockmultiplayer.Settings;
@@ -37,19 +38,16 @@ public class PlayerInteract implements Listener {
 			return;
 		}
 
-		PlayerInfo pi = Settings.players.get(player.getName());
-		if (pi == null) {
-			pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
-			if (pi == null) {
-				return;
-			}
+		PlayerData pdata = Settings.players.get(player.getName());
+		if (pdata == null) {
+			return;
 		}
 
 		boolean hasBuildPermission = false;
 		if (b == null) {
-			hasBuildPermission = SkyBlockMultiplayer.checkBuildPermission(pi, player.getLocation());
+			hasBuildPermission = pdata.checkBuildPermission(player.getLocation());
 		} else {
-			hasBuildPermission = SkyBlockMultiplayer.checkBuildPermission(pi, b.getLocation());
+			hasBuildPermission = pdata.checkBuildPermission(b.getLocation());
 		}
 
 		if (item != null) {
@@ -164,11 +162,11 @@ public class PlayerInteract implements Listener {
 			}
 
 			if (b == null) {
-				if (SkyBlockMultiplayer.checkBuildPermission(pi, player.getLocation())) {
+				if (pdata.checkBuildPermission(player.getLocation())) {
 					return;
 				}
 			} else {
-				if (SkyBlockMultiplayer.checkBuildPermission(pi, b.getLocation())) {
+				if (pdata.checkBuildPermission(b.getLocation())) {
 					return;
 				}
 			}
