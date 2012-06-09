@@ -1,18 +1,11 @@
 package me.lukas.skyblockmultiplayer;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import sun.security.krb5.Config;
 
 public class PlayerData {
 
@@ -43,17 +36,17 @@ public class PlayerData {
 	private float islandExp;
 	private int islandLevel;
 
-	public PlayerData(Player player) {
+	public PlayerData(String name) {
 		// Set Default Values
-		this.playerName = player.getName();
+		this.playerName = name;
 		this.hasIsland = false;
 		this.isOnIsland = false;
 		this.isDead = false;
 		this.homeLocation = null;
 		this.livesLeft = Settings.pvp_livesPerIsland;
 		this.islandsLeft = Settings.pvp_islandsPerPlayer;
-		this.oldHealth = player.getMaxHealth();
-		this.islandHealth = player.getMaxHealth();
+		this.oldHealth = 20;
+		this.islandHealth = 20;
 		this.oldFood = 20;
 		this.islandFood = 20;
 		this.canBuildByFriends = new HashMap<String, PlayerData>();

@@ -10,7 +10,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -718,7 +717,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		// check PlayerInfo2, also with offline players
 		amount = 0;
 		pName = "";
-		for (String playerName : Settings.lstPlayerInfo2.keySet()) {
+		for (String playerName : Settings.players.keySet()) {
 			if (playerName.toLowerCase().startsWith(partName.toLowerCase())) {
 				amount++;
 				pName = playerName;
@@ -1123,81 +1122,6 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	public static String getOwner(Location l) {
-		/*for (PlayerInfo pi : Settings.players.values()) {
-			if (pi != null) {
-				if (pi.getIslandLocation() != null) {
-					int islandX = pi.getIslandLocation().getBlockX();
-					int islandZ = pi.getIslandLocation().getBlockZ();
-
-					int blockX = l.getBlockX();
-					int blockZ = l.getBlockZ();
-
-					int dist = 0;
-					if (Settings.build_withProtectedBorder) {
-						dist = (Settings.distanceIslands / 2) - 3;
-					} else {
-						dist = Settings.distanceIslands / 2;
-					}
-
-					if (islandX + dist >= blockX && islandX - dist <= blockX) {
-						if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
-							return pi;
-						}
-					}
-				}
-			}
-		}
-		return null;*/
-
-		for (String owner : Settings.islandsAndOwners.keySet()) {
-			Location locIsland = Settings.islandsAndOwners.get(owner);
-			if (locIsland != null) {
-				int islandX = locIsland.getBlockX();
-				int islandZ = locIsland.getBlockZ();
-
-				int blockX = l.getBlockX();
-				int blockZ = l.getBlockZ();
-
-				int dist = 0;
-				if (Settings.build_withProtectedBorder) {
-					dist = (Settings.distanceIslands / 2) - 3;
-				} else {
-					dist = Settings.distanceIslands / 2;
-				}
-
-				if (islandX + dist >= blockX && islandX - dist <= blockX) {
-					if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
-						return owner;
-					}
-				}
-			}
-		}
-		return null;
+		return SQLInstructions.getOwner(l, Settings.distanceIslands);
 	}
-
-	
-	/*public static boolean canPlayerDoThat(PlayerInfo pi, Location l) {
-		if (pi == null || pi.getIslandLocation() == null) {
-			return false;
-		}
-		int islandX = pi.getIslandLocation().getBlockX();
-		int islandZ = pi.getIslandLocation().getBlockZ();
-
-		int blockX = l.getBlockX();
-		int blockZ = l.getBlockZ();
-
-		int dist = 0;
-		if (Settings.build_withProtectedBorder) {
-			dist = (Settings.distanceIslands / 2) - 3;
-		} else {
-			dist = Settings.distanceIslands / 2;
-		}
-
-		if (islandX + dist >= blockX && islandX - dist <= blockX) {
-			if (islandZ + dist >= blockZ && islandZ - dist <= blockZ) {
-				return true;
-			}
-		}
-		return false;
-	}*/
 }

@@ -7,8 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
 
 
 public class SQLInstructions {
@@ -292,28 +294,30 @@ public class SQLInstructions {
 		} 
 	}
 	
-	public int getNearestIsland(Location click, int distance){
+	public static String getOwner(Location click, int distance){
 		int xmin = click.getBlockX()-distance;
 		int xmax = click.getBlockX()+distance;
 		int zmin = click.getBlockZ()-distance;
 		int zmax = click.getBlockZ()+distance;
 		
 		try {
-			ResultSet rs = stat.executeQuery("SELECT islandNumber from islands " +
+			ResultSet rs = stat.executeQuery("SELECT playerName from islands " +
 												"WHERE x >= "+xmin+
 												"AND x <= "+xmax+
 												"AND z >= "+zmin+
 												"AND z <= "+zmax+";");
 			if (!rs.next())
-				return -1;
-			return rs.getInt("islandNumber");
+				return null;
+			return rs.getString("playerName");
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return -1;
+			return null;
 		}
 	
 	}
+	
+
 	
 	public static boolean loadFriendList(PlayerData pdata){
 		try {
@@ -331,7 +335,6 @@ public class SQLInstructions {
 			}
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -339,24 +342,31 @@ public class SQLInstructions {
 	
 	// @formatter:on
 	
-	public static PlayerData loadOrCreatePlayer(Player player) {
-		boolean inList = Settings.players.containsKey(player.getName());
-		boolean inDB = SQLInstructions.existsPlayer(player.getName());
+	public static PlayerData loadOrCreatePlayer(String playername) {
+		boolean inList = Settings.players.containsKey(playername);
+		boolean inDB = SQLInstructions.existsPlayer(playername);
 		if (inList && inDB) {
-			return Settings.players.get(player.getName());
+			return Settings.players.get(playername);
 		}
 		if (!inList && !inDB) {
 			// player exists nowhere, thus create
-			PlayerData pdata = new PlayerData(player);
+			PlayerData pdata = new PlayerData(playername);
 			// check if a playerfile exists
-			PlayerInfo pi = SkyBlockMultiplayer.getInstance().readPlayerFile(player.getName());
-			if (pi != null){ // load existing playerinfo
+			PlayerInfo pi = SkyBlockMultiplayer.getInstance().readPlayerFile(playername);
+			Player player = Bukkit.getPlayer(playername);
+			if (pi != null && player != null ){ // load existing playerinfo only if player is online
 				pdata.setDeathStatus(pi.isDead());
 				pdata.setHasIsland(pi.getHasIsland());
 				pdata.setHomeLocation(pi.getHomeLocation());
 				pdata.setIslandsLeft(pi.getIslandsLeft());
 				pdata.setLivesLeft(pi.getLivesLeft());
-				//pdata.setIsOnIslandStatus(!SkyBlockMultiplayer.getInstance().playerIsOnTower(player));
+				
+				// check isOnIslandVariable
+				if (player.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName()) &&  !SkyBlockMultiplayer.getInstance().playerIsOnTower(player)){
+					pdata.setIsOnIslandStatus(true);
+				} else {
+					pdata.setIsOnIslandStatus(false);
+				}
 				
 				pdata.setIslandArmor(pi.getIslandArmor());
 				pdata.setIslandExp(pi.getIslandExp());
@@ -375,20 +385,24 @@ public class SQLInstructions {
 				pdata.setOldLocation(pi.getOldLocation());
 
 			}
-			SQLInstructions.writePartialPlayerData(pdata);
+			if (player != null){
+				SQLInstructions.writePartialPlayerData(pdata);
+				Settings.players.put(playername, pdata);
+			}
+			
 			return pdata;
 		}
 		if (!inList) { // player is missing in list but exists in DB
-			PlayerData pdata = new PlayerData(player);
+			PlayerData pdata = new PlayerData(playername);
 			SQLInstructions.loadPartialPlayerData(pdata);
 			SQLInstructions.loadOldWorldData(pdata);
 			SQLInstructions.loadIslandData(pdata);
 			SQLInstructions.loadFriendList(pdata);
-			Settings.players.put(player.getName(), pdata);
+			Settings.players.put(playername, pdata);
 			return pdata;
 		}
 		// player exists in list, but is missing in DB
-		PlayerData pdata = Settings.players.get(player.getName());
+		PlayerData pdata = Settings.players.get(playername);
 		SQLInstructions.writePartialPlayerData(pdata);
 		SQLInstructions.writeOldWorldData(pdata);
 		SQLInstructions.writeIslandData(pdata);

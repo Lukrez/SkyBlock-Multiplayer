@@ -5,8 +5,6 @@ import java.util.HashMap;
 import me.lukas.skyblockmultiplayer.CreateNewIsland;
 import me.lukas.skyblockmultiplayer.Language;
 import me.lukas.skyblockmultiplayer.PlayerData;
-import me.lukas.skyblockmultiplayer.PlayerInfo;
-import me.lukas.skyblockmultiplayer.PlayerInfo2;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Permissions;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
@@ -117,11 +115,11 @@ public class PlayerInteract implements Listener {
 
 					player.sendMessage("Owner: " + owner);
 					// get friends
-					if (!Settings.lstPlayerInfo2.containsKey(owner)) {
+					if (!Settings.players.containsKey(owner)) {
 						return;
 					}
 					String list = "";
-					HashMap<String, PlayerInfo2> friends = Settings.lstPlayerInfo2.get(owner).getFriends();
+					HashMap<String, PlayerData> friends = Settings.players.get(owner).getFriends();
 					int counter = 0;
 					for (String name : friends.keySet()) {
 						if (counter != 0) {

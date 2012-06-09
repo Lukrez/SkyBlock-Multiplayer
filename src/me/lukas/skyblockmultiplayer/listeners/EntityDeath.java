@@ -5,7 +5,6 @@ import me.lukas.skyblockmultiplayer.PlayerData;
 import me.lukas.skyblockmultiplayer.SQLInstructions;
 import me.lukas.skyblockmultiplayer.Settings;
 import me.lukas.skyblockmultiplayer.Language;
-import me.lukas.skyblockmultiplayer.PlayerInfo;
 import me.lukas.skyblockmultiplayer.SkyBlockMultiplayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
