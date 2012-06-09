@@ -23,10 +23,10 @@ public class PlayerData {
 	private int livesLeft;
 	private int islandsLeft;
 	private Location homeLocation;
-	
+
 	private Map<String, PlayerData> canBuildByFriends;
 	private Map<String, PlayerData> friendsCanBuildHere;
-	
+
 	private Location oldLocation;
 	private ItemStack[] oldInventory;
 	private ItemStack[] oldArmor;
@@ -34,7 +34,7 @@ public class PlayerData {
 	private int oldHealth;
 	private float oldExp;
 	private int oldLevel;
-	
+
 	private Location islandLocation;
 	private ItemStack[] islandInventory;
 	private ItemStack[] islandArmor;
@@ -42,13 +42,11 @@ public class PlayerData {
 	private int islandHealth;
 	private float islandExp;
 	private int islandLevel;
-	
 
-
-	public PlayerData(Player player){
+	public PlayerData(Player player) {
 		// Set Default Values
 		this.playerName = player.getName();
-		this.hasIsland= false;
+		this.hasIsland = false;
 		this.isOnIsland = false;
 		this.isDead = false;
 		this.homeLocation = null;
@@ -65,14 +63,15 @@ public class PlayerData {
 		this.islandArmor = new ItemStack[4];
 		this.oldArmor = new ItemStack[4];
 	}
-	
-	public PlayerData(){};
-	
-	public void updateSQLPartialData(){
+
+	public PlayerData() {
+	};
+
+	public void updateSQLPartialData() {
 		SQLInstructions.writePartialPlayerData(this);
 	}
-	
-	public void setOldWorldValues(Player player){
+
+	public void setOldWorldValues(Player player) {
 		if (player.getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()))
 			return;
 		this.oldLocation = player.getLocation();
@@ -85,9 +84,9 @@ public class PlayerData {
 		SQLInstructions.writeOldWorldData(this);
 
 	}
-	
-	public void setIslandValues(Player player){
-		this.islandLocation = player.getLocation();
+
+	public void setIslandValues(Player player) {
+		// this.islandLocation = player.getLocation();
 		this.islandInventory = player.getInventory().getContents();
 		this.islandArmor = player.getInventory().getArmorContents();
 		this.islandFood = player.getFoodLevel();
@@ -96,33 +95,32 @@ public class PlayerData {
 		this.islandLevel = player.getLevel();
 		SQLInstructions.writeIslandData(this);
 	}
-	
 
-	public void setPlayerName(String name){
+	public void setPlayerName(String name) {
 		this.playerName = name;
 	}
-	
-	public void setHasIsland(boolean b){
+
+	public void setHasIsland(boolean b) {
 		this.hasIsland = b;
 	}
-	
-	public void setDeathStatus(boolean isDead){
+
+	public void setDeathStatus(boolean isDead) {
 		this.isDead = isDead;
 	}
-	
-	public void setIsOnIslandStatus(boolean isOnIsland){
+
+	public void setIsOnIslandStatus(boolean isOnIsland) {
 		this.isOnIsland = isOnIsland;
 	}
-	
-	public void setLivesLeft(int livesLeft){
+
+	public void setLivesLeft(int livesLeft) {
 		this.livesLeft = livesLeft;
 	}
-	
-	public void setIslandsLeft(int islandsLeft){
+
+	public void setIslandsLeft(int islandsLeft) {
 		this.islandsLeft = islandsLeft;
 	}
-	
-	public void setHomeLocation(Location home){
+
+	public void setHomeLocation(Location home) {
 		this.homeLocation = home;
 	}
 
@@ -133,14 +131,15 @@ public class PlayerData {
 	public String getPlayerName() {
 		return this.playerName;
 	}
-	
-	public boolean getHasIsland(){
+
+	public boolean getHasIsland() {
 		return this.hasIsland;
 	}
-	
-	public boolean isOnIsland(){
+
+	public boolean isOnIsland() {
 		return this.isOnIsland;
 	}
+
 	public boolean isDead() {
 		return this.isDead;
 	}
@@ -164,20 +163,20 @@ public class PlayerData {
 	public Location getOldLocation() {
 		return this.oldLocation;
 	}
-	
-	public ItemStack[] getOldInventory(){
+
+	public ItemStack[] getOldInventory() {
 		return this.oldInventory;
 	}
-	
-	public ItemStack[] getOldArmor(){
+
+	public ItemStack[] getOldArmor() {
 		return this.oldArmor;
 	}
-	
-	public ItemStack[] getIslandInventory(){
+
+	public ItemStack[] getIslandInventory() {
 		return this.islandInventory;
 	}
-	
-	public ItemStack[] getIslandArmor(){
+
+	public ItemStack[] getIslandArmor() {
 		return this.islandArmor;
 	}
 
@@ -212,64 +211,69 @@ public class PlayerData {
 	public int getOldHealth() {
 		return this.oldHealth;
 	}
-	
-	
-	public void setOldLocation(Location l){
+
+	public void setOldLocation(Location l) {
 		this.oldLocation = l;
 	}
-	
-	public void setOldInventory(ItemStack[] i){
+
+	public void setOldInventory(ItemStack[] i) {
 		this.oldInventory = i;
 	}
-	
-	public void setOldArmor(ItemStack[] i){
+
+	public void setOldArmor(ItemStack[] i) {
 		this.oldArmor = i;
 	}
 
-	public void setOldFood(int x){
+	public void setOldFood(int x) {
 		this.oldFood = x;
 	}
-	public void setOldHealth(int x){
+
+	public void setOldHealth(int x) {
 		this.oldHealth = x;
 	}
-	public void setOldExp(float x){
+
+	public void setOldExp(float x) {
 		this.oldExp = x;
 	}
-	public void setOldLevel(int x){
+
+	public void setOldLevel(int x) {
 		this.oldLevel = x;
 	}
 
-	public void setIslandLocation(Location l){
+	public void setIslandLocation(Location l) {
 		this.islandLocation = l;
 	}
-	
-	public void setIslandInventory(ItemStack[] i){
+
+	public void setIslandInventory(ItemStack[] i) {
 		this.islandInventory = i;
 	}
-	
-	public void setIslandArmor(ItemStack[] i){
+
+	public void setIslandArmor(ItemStack[] i) {
 		this.islandArmor = i;
 	}
 
-	public void setIslandFood(int x){
+	public void setIslandFood(int x) {
 		this.islandFood = x;
 	}
-	public void setIslandHealth(int x){
+
+	public void setIslandHealth(int x) {
 		this.islandHealth = x;
 	}
-	public void setIslandExp(float x){
+
+	public void setIslandExp(float x) {
 		this.islandExp = x;
 	}
-	public void setIslandLevel(int x){
+
+	public void setIslandLevel(int x) {
 		this.islandLevel = x;
 	}
-	
+
 	// ----------- friend methods ----------------------------- //
-	
+
 	public HashMap<String, PlayerData> getFriends() {
 		return (HashMap<String, PlayerData>) this.friendsCanBuildHere;
 	}
-	
+
 	public void addFriendsToOwnIsland(PlayerData friend) {
 		// check if friend is already added
 		if (this.friendsCanBuildHere.containsKey(friend.getPlayerName()))
@@ -341,6 +345,5 @@ public class PlayerData {
 		}
 		return false;
 	}
-	
-	
+
 }

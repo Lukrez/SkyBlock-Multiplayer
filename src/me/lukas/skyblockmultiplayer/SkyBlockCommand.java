@@ -1116,8 +1116,6 @@ public class SkyBlockCommand implements CommandExecutor {
 
 	
 		PlayerData pdata = SQLInstructions.loadOrCreatePlayer(player);
-		player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_BACK_ON_TOWER.sentence);
-
 	
 		if (!Settings.allowContent) {
 			pdata.setIslandValues(player);
