@@ -2,7 +2,6 @@ package me.lukas.skyblockmultiplayer;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -37,9 +36,15 @@ public class SkyBlockCommand implements CommandExecutor {
 
 			if (args[0].equalsIgnoreCase("help")) {
 				if (args.length == 1) {
-					return this.getListCommands(sender, "1");
+					return SkyBlockMultiplayer.getInstance().sendHelpPage(sender, 1);
 				} else {
-					return this.getListCommands(sender, args[1]);
+					int page = 1;
+					try {
+						page = Integer.parseInt(args[1]);
+						return SkyBlockMultiplayer.getInstance().sendHelpPage(sender, page);
+					} catch (Exception e) {
+						return SkyBlockMultiplayer.getInstance().sendHelpPage(sender, page);
+					}
 				}
 			}
 
@@ -638,7 +643,7 @@ public class SkyBlockCommand implements CommandExecutor {
 	private boolean playerJoin(Player player) {
 		if (!Settings.skyBlockOnline) {
 			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_IS_OFFLINE.sentence);
-			
+
 			return true;
 		}
 
@@ -673,25 +678,25 @@ public class SkyBlockCommand implements CommandExecutor {
 		PlayerData pdata = this.loadOrCreatePlayer(player);
 		pdata.setOldWorldValues(player);
 		// ---------------------------------------------------//
-		
+
 		player.teleport(SkyBlockMultiplayer.getSkyBlockWorld().getSpawnLocation()); // teleport player to the spawn tower
 		player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_WELCOME1.sentence + islands + Language.MSGS_WELCOME2.sentence + Settings.numbersPlayers + Language.MSGS_WELCOME3.sentence);
 		return true;
 	}
-	
-	public PlayerData loadOrCreatePlayer(Player player){
+
+	public PlayerData loadOrCreatePlayer(Player player) {
 		boolean inList = Settings.onlinePlayers.containsKey(player.getName());
 		boolean inDB = SQLInstructions.existsPlayer(player.getName());
-		if (inList && inDB){
+		if (inList && inDB) {
 			return Settings.onlinePlayers.get(player.getName());
 		}
-		if (!inList && !inDB){
+		if (!inList && !inDB) {
 			// player exists nowhere, thus create
 			PlayerData pdata = new PlayerData(player);
 			SQLInstructions.writePartialPlayerData(pdata);
 			return pdata;
 		}
-		if (!inList){ // player is missing in list but exists in DB
+		if (!inList) { // player is missing in list but exists in DB
 			PlayerData pdata = new PlayerData(player);
 			SQLInstructions.loadPartialPlayerData(pdata);
 			SQLInstructions.loadOldWorldData(pdata);
@@ -1509,7 +1514,6 @@ public class SkyBlockCommand implements CommandExecutor {
 		if (pTarget == null) {
 			return true;
 		}
-
 
 		if (!pTarget.getFriends().containsKey(player.getName())) {
 			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_NOT_FRIEND_FROM_YOU.sentence);

@@ -2,16 +2,9 @@ package me.lukas.skyblockmultiplayer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-
-import me.lukas.skyblockmultiplayer.*;
-
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 public class SQLInstructions {
 	private static Connection conn;
@@ -41,21 +34,21 @@ public class SQLInstructions {
 	public static void createTables() throws SQLException {
 
 		stat.execute("CREATE TABLE IF NOT EXISTS metadata (" +
-				"version integer, "+
-				"info varchar);");
+						"version integer, "+
+						"info varchar);");
 	
 		stat.execute("CREATE TABLE IF NOT EXISTS players (" +
-					"playerName varchar primary key,"+
-					"isOnIsland integer,"+
-					"isDead integer,"+
-					"livesLeft integer,"+
-					"islandsLeft integer," +
-					"homeLocation varchar);");
+						"playerName varchar primary key,"+
+						"isOnIsland integer,"+
+						"isDead integer,"+
+						"livesLeft integer,"+
+						"islandsLeft integer," +
+						"homeLocation varchar);");
 		
 		stat.execute("CREATE TABLE IF NOT EXISTS islands (" +
-					"islandNumber integer,"+
-					"islandLocation varchar,"+
-					"playerName varchar UNIQUE);");
+						"islandNumber integer,"+
+						"islandLocation varchar,"+
+						"playerName varchar UNIQUE);");
 		
 		stat.execute("CREATE TABLE IF NOT EXISTS oldWorld (" +
 						"playerName varchar primary key REFERENCES player(playerName),"+

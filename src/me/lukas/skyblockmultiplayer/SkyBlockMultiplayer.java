@@ -35,6 +35,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -64,6 +65,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	private File directoryPlayers;
 
 	public String pName;
+	private String[] helpMap;
 
 	@Override
 	public void onDisable() {
@@ -106,7 +108,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		} else {
 			this.loadPlayerFiles();
 		}
-		
+
 		// load SQL
 		try {
 			SQLInstructions.initializeConnections();
@@ -420,6 +422,106 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 			}
 		}
 		SkyBlockMultiplayer.getSkyBlockWorld();
+		this.createHelpMap();
+	}
+
+	private void createHelpMap() {
+		String sb_join = Language.MSGS_COMMAND_JOIN.sentence + "\n";
+		String sb_start = Language.MSGS_COMMAND_START.sentence + "\n";
+		String sb_tower = Language.MSGS_COMMAND_TOWER.sentence + "\n";
+		String sb_leave = Language.MSGS_COMMAND_LEAVE.sentence + "\n";
+		String sb_status = Language.MSGS_COMMAND_STATUS.sentence + "\n";
+		String sb_home = Language.MSGS_COMMAND_HOME.sentence + "\n";
+		String sb_home_add = Language.MSGS_COMMAND_HOME_ADD.sentence + "\n";
+		String sb_home_remove = Language.MSGS_COMMAND_HOME_REMOVE.sentence + "\n";
+		String sb_home_join = Language.MSGS_COMMAND_HOME_JOIN.sentence + "\n";
+		String sb_home_list = Language.MSGS_COMMAND_HOME_LIST.sentence + "\n";
+		String sb_home_set = Language.MSGS_COMMAND_HOME_SET.sentence + "\n";
+
+		String sb_newIsland = Language.MSGS_COMMAND_NEW_ISLAND.sentence + "\n";
+		String sb_closed = Language.MSGS_COMMAND_SET_CLOSED.sentence + "\n";
+		String sb_opened = Language.MSGS_COMMAND_SET_OPENED.sentence + "\n";
+		String sb_setOffline = Language.MSGS_COMMAND_SET_OFFLINE.sentence + "\n";
+		String sb_setOnline = Language.MSGS_COMMAND_SET_ONLINE.sentence + "\n";
+		String sb_tower_recreate = Language.MSGS_COMMAND_TOWER_RECREATE.sentence + "\n";
+		String sb_setLanguage = Language.MSGS_COMMAND_SET_LANGUAGE.sentence + "\n";
+		String sb_setGameMode = Language.MSGS_COMMAND_SET_GAMEMODE.sentence + "\n";
+		String sb_removeIsland = "§6/skyblock remove §c<island number>§7 - remove island with given number\n";
+		String sb_setOwner = Language.MSGS_COMMAND_SET_OWNER.sentence + "\n";
+		String sb_reset = Language.MSGS_COMMAND_RESET.sentence + "\n";
+		String sb_reload_config = Language.MSGS_COMMAND_RELOAD_CONFIG.sentence + "\n";
+		String sb_reload_language = Language.MSGS_COMMAND_RELOAD_LANGUAGE.sentence + "\n";
+
+		// String top = ChatColor.GOLD + "----- " + this.pName + " help index (1/2) " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
+		String allCmds = sb_join + sb_start + sb_tower + sb_leave + sb_status + sb_home + sb_home_add + sb_home_remove + sb_home_join + sb_home_list + sb_home_set + sb_newIsland + sb_closed + sb_opened + sb_setOffline + sb_setOnline + sb_tower_recreate + sb_setLanguage + sb_setGameMode + sb_removeIsland + sb_setOwner + sb_reset + sb_reload_config + sb_reload_language;
+
+		int maxLines = this.countCharacters(allCmds, '\n');
+		int amountPages = maxLines / 10 + 1;
+
+		this.helpMap = new String[amountPages];
+
+		int amountLines = 0;
+		int page = 0;
+		for (String cmd : allCmds.split("\n")) {
+			if (this.helpMap[page] == null) {
+				this.helpMap[page] = "";
+			}
+
+			if (cmd.equalsIgnoreCase("")) {
+				continue;
+			}
+
+			this.helpMap[page] = this.helpMap[page] + "\n" + cmd;
+			if (amountLines == 10) {
+				amountLines = 0;
+				page++;
+			} else
+				amountLines++;
+		}
+	}
+
+	private int countCharacters(String s, char toCount) {
+		int amount = 0;
+		for (char c : s.toCharArray()) {
+			if (c == toCount) {
+				amount++;
+			}
+		}
+		return amount;
+	}
+
+	public boolean sendHelpPage(CommandSender sender, int page) {
+		if (page <= 0) {
+			String top = ChatColor.GOLD + "----- " + this.pName + " help index (" + 1 + "/" + this.helpMap.length + ") " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
+			sender.sendMessage(top);
+			
+			for (String cmd : this.helpMap[0].split("\n")) {
+				if (!cmd.equalsIgnoreCase("")) {
+					sender.sendMessage(cmd);
+				}
+			}
+			return true;
+		}
+		if (page > this.helpMap.length) {
+			String top = ChatColor.GOLD + "----- " + this.pName + " help index (" + this.helpMap.length + "/" + this.helpMap.length + ") " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
+			sender.sendMessage(top);
+			
+			for (String cmd : this.helpMap[this.helpMap.length - 1].split("\n")) {
+				if (!cmd.equalsIgnoreCase("")) {
+					sender.sendMessage(cmd);
+				}
+			}
+			return true;
+		}
+		String top = ChatColor.GOLD + "----- " + this.pName + " help index (" + page + "/" + this.helpMap.length + ") " + ChatColor.GOLD + " -----\n" + ChatColor.WHITE;
+		sender.sendMessage(top);
+		
+		for (String cmd : this.helpMap[page - 1].split("\n")) {
+			if (!cmd.equalsIgnoreCase("")) {
+				sender.sendMessage(cmd);
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -468,13 +570,8 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		if (l == null) {
 			return "";
 		}
-		return 	l.getWorld().getName() + ":" +
-				l.getBlockX() + ":" +
-				l.getBlockY() + ":" +
-				l.getBlockZ() + ":" +
-				l.getYaw()+ ":"+
-				l.getPitch();
-		
+		return l.getWorld().getName() + ":" + l.getBlockX() + ":" + l.getBlockY() + ":" + l.getBlockZ() + ":" + l.getYaw() + ":" + l.getPitch();
+
 	}
 
 	/**
