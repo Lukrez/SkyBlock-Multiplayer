@@ -87,6 +87,9 @@ public class ItemParser {
 	
 	public static ItemStack[] StringToInventory(String s, int invsize){
 		ItemStack[] inv = new ItemStack[invsize];
+		if (s == null || s.equals("")){
+			return inv;
+		}
 		for (String itemstring : s.split("|")) {
 			String[] sp = itemstring.split("*");
 			if (sp.length != 2){

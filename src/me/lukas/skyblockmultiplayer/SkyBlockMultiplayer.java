@@ -441,17 +441,19 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * @param s 
 	 * @return location or null
 	 */
-	public Location getLocationString(String s) {
+	public Location StringToLocation(String s) {
 		if (s == null || s.trim() == "") {
 			return null;
 		}
 		String[] parts = s.split(":");
-		if (parts.length == 4) {
+		if (parts.length == 6) {
 			World w = this.getServer().getWorld(parts[0]);
 			int x = Integer.parseInt(parts[1]);
 			int y = Integer.parseInt(parts[2]);
 			int z = Integer.parseInt(parts[3]);
-			return new Location(w, x, y, z);
+			float yaw = Float.parseFloat(parts[4]);
+			float pitch = Float.parseFloat(parts[5]);
+			return new Location(w, x, y, z, yaw, pitch);
 		}
 		return null;
 	}
@@ -462,11 +464,17 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * @param l get a string of it.
 	 * @return string.
 	 */
-	public String getStringLocation(Location l) {
+	public String LocationToString(Location l) {
 		if (l == null) {
 			return "";
 		}
-		return l.getWorld().getName() + ":" + l.getBlockX() + ":" + l.getBlockY() + ":" + l.getBlockZ();
+		return 	l.getWorld().getName() + ":" +
+				l.getBlockX() + ":" +
+				l.getBlockY() + ":" +
+				l.getBlockZ() + ":" +
+				l.getYaw()+ ":"+
+				l.getPitch();
+		
 	}
 
 	/**

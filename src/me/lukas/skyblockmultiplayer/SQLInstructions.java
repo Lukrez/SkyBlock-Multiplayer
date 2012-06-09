@@ -17,6 +17,11 @@ public class SQLInstructions {
 	private static Connection conn;
 	private static Statement stat;
 
+	public static int bool2int(boolean b){
+		if (b)
+			return 1;
+		return 0;
+	}
 	public static void initializeConnections() throws ClassNotFoundException {
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -82,80 +87,160 @@ public class SQLInstructions {
 	// @formatter:on
 
 
-	public static void writeNewPlayerData(Player player) throws SQLException{
-		stat.execute("INSERT OR REPLACE INTO players (" +
-				"playerName," +
-				"isOnIsland," +
-				"isDead," +
-				"livesLeft," +
-				"islandsLeft) VALUES (" +
-				"'"+player.getName()+"',"+
-				"0,"+
-				"0,"+
-				Settings.pvp_livesPerIsland+"," +
-				Settings.pvp_islandsPerPlayer + ");");
+	public static boolean writePartialPlayerData(PlayerData player){
+		try {
+			stat.execute("INSERT OR REPLACE INTO players (" +
+					"playerName," +
+					"isOnIsland," +
+					"isDead," +
+					"livesLeft," +
+					"islandsLeft) VALUES (" +
+					"'"+player.getPlayerName()+"',"+
+					SQLInstructions.bool2int(player.isOnIsland())+","+
+					SQLInstructions.bool2int(player.isDead())+","+
+					player.getLivesLeft()+","+
+					player.getIslandsLeft()+","+
+					Settings.pvp_livesPerIsland+");");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	
-	
-	public static ResultSet loadSkyWorldData(String playername) throws SQLException{
-		return stat.executeQuery("SELECT * FROM skyblockWorld " +
-				"WHERE playerName = '" + playername + "';");
+	public static boolean writeIslandData(PlayerData pdata){
+		try {
+			stat.execute("INSERT OR REPLACE INTO skyblockWorld (" +
+					"playerName,"+
+					"location,"+
+					"inventory,"+
+					"armor,"+
+					"health,"+
+					"food,"+
+					"exp,"+
+					"level) VALUES ("+
+					"'"+pdata.getPlayerName()+"',"+
+					"'"+SkyBlockMultiplayer.getInstance().LocationToString(pdata.getIslandLocation())+"',"+
+					"'"+ItemParser.InventoryToString(pdata.getIslandInventory())+"',"+
+					"'"+ItemParser.InventoryToString(pdata.getIslandArmor())+"',"+
+					pdata.getIslandHealth()+","+
+					pdata.getIslandFood()+","+
+					pdata.getIslandExp()+","+
+					pdata.getIslandLevel()+");");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
+	
+	public static boolean writeOldWorldData(PlayerData pdata){
+		try {
+			stat.execute("INSERT OR REPLACE INTO oldWorld (" +
+					"playerName,"+
+					"location,"+
+					"inventory,"+
+					"armor,"+
+					"health,"+
+					"food,"+
+					"exp,"+
+					"level) VALUES ("+
+					"'"+pdata.getPlayerName()+"',"+
+					"'"+SkyBlockMultiplayer.getInstance().LocationToString(pdata.getOldLocation())+"',"+
+					"'"+ItemParser.InventoryToString(pdata.getOldInventory())+"',"+
+					"'"+ItemParser.InventoryToString(pdata.getOldArmor())+"',"+
+					pdata.getOldHealth()+","+
+					pdata.getOldFood()+","+
+					pdata.getOldExp()+","+
+					pdata.getOldLevel()+");");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static boolean existsPlayer(String playerName){
+		ResultSet rs;
+		try {
+			rs = stat.executeQuery("SELECT COUNT(*) FROM players WHERE playerName = '"+playerName+"';");
+		rs.next();
+		if (rs.getInt(0) == 0)
+			return false;
+		return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 
-	public static ResultSet loadFriendData(String playername) throws SQLException{
-		return stat.executeQuery("SELECT friendName FROM friends " +
-				"WHERE playerName = '" + playername + "';");
+	
+	public static boolean loadPartialPlayerData(PlayerData pdata){
+		ResultSet rs;
+		try {
+			rs = stat.executeQuery("SELECT * FROM players" +
+									"JOIN islands ON (island.playerName = players.playerName" +
+									" WHERE playerName = '"+pdata.getPlayerName()+"';");
+		if (rs.next() == false)
+			return true;
+
+		pdata.setHasIslandS(rs.getBoolean("islandNumber"));
+		pdata.setDeathStatus(rs.getBoolean("isDead"));
+		pdata.setIslandsLeft(rs.getInt("islandsLeft"));
+		pdata.setLivesLeft(rs.getInt("livesLeft"));
+		pdata.setHomeLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("homeLocation")));
+		return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
-	public static ResultSet loadOnlinePlayerData(String playername) throws SQLException{
-		return stat.executeQuery("SELECT * FROM players " +
-				"JOIN islands ON players.playerName = islands.playerName "+
-				"JOIN oldWorld ON players.playerName = oldWorld.playerName "+
-				"JOIN skyblockWorld ON players.playerName = skyblockWorld.playerName "+
-				"WHERE playerName = '" + playername + "';");
-	}
+	public static boolean loadOldWorldData(PlayerData pdata){
+		ResultSet rs;	
+		try {
+			rs = stat.executeQuery("SELECT * FROM oldWorld " +
+					"WHERE playerName = '"+pdata.getPlayerName()+"';");
+		if (rs.next() == false)
+			return true;
+
+		pdata.setOldLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("homeLocation")));
+		pdata.setOldInventory(ItemParser.StringToInventory(rs.getString("inventory"), 36));
+		pdata.setOldArmor(ItemParser.StringToInventory(rs.getString("armor"), 4));
+		pdata.setOldHealth(rs.getInt("health"));
+		pdata.setOldFood(rs.getInt("food"));
+		pdata.setOldExp(rs.getInt("exp"));
+		pdata.setOldLevel(rs.getInt("level"));
 		
-
-	/*public static void updatePlayerData(PlayerInfo pi) throws SQLException {
-		if (!SQLInstructions.existsUserAlready(pi.getPlayerName())) {
-			PreparedStatement addPlayer = conn.prepareStatement("insert into players values (?,?)");
-			addPlayer.setString(2, pi.getPlayerName());
-			addPlayer.addBatch();
-
-			conn.setAutoCommit(false);
-			addPlayer.executeBatch();
-			conn.setAutoCommit(true);
+		return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
-		.setFieldValue(pi.getPlayerName(), "placed", AchievementField.PLACED, SQLInstructions.getStringList(pi.getPlacedList()));
-		SQLInstructions.setFieldValue(pi.getPlayerName(), "breaked", AchievementField.BREAKED, SQLInstructions.getStringList(pi.getBreakedList()));
-		SQLInstructions.setFieldValue(pi.getPlayerName(), "collected", AchievementField.COLLECTED, SQLInstructions.getStringList(pi.getCollectedList()));
-		SQLInstructions.setFieldValue(pi.getPlayerName(), "crafted", AchievementField.CRAFTED, SQLInstructions.getStringList(pi.getCraftedList()));
-		SQLInstructions.setFieldValue(pi.getPlayerName(), "furnace", AchievementField.FURNACE, SQLInstructions.getStringList(pi.getFurnaceList()));
 	}
+	
+	public static boolean loadIslandData(PlayerData pdata){
+		ResultSet rs;	
+		try {
+			rs = stat.executeQuery("SELECT * FROM skyblockWorld " +
+					"WHERE playerName = '"+pdata.getPlayerName()+"';");
+		if (rs.next() == false)
+			return true;
 
-	public static PlayerInfo getPlayerData(String playerName) throws SQLException {
-		PlayerInfo pi = new PlayerInfo(playerName);
-		ResultSet rs = stat.executeQuery("SELECT playerId FROM players WHERE playerName = '" + playerName + "';");
-		if (rs.next() == false) {
-			return null;
+		pdata.setIslandLocation(SkyBlockMultiplayer.getInstance().StringToLocation(rs.getString("homeLocation")));
+		pdata.setIslandInventory(ItemParser.StringToInventory(rs.getString("inventory"), 36));
+		pdata.setIslandArmor(ItemParser.StringToInventory(rs.getString("armor"), 4));
+		pdata.setIslandHealth(rs.getInt("health"));
+		pdata.setIslandFood(rs.getInt("food"));
+		pdata.setIslandExp(rs.getInt("exp"));
+		pdata.setIslandLevel(rs.getInt("level"));
+		
+		return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
-		int playerId = rs.getInt("playerId");
-
-		/*rs = stat.executeQuery("SELECT * FROM placed WHERE playerId = " + playerId + ";");
-		pi.setPlacedList(SQLInstructions.getItemList(rs.getString("placed")));
-
-		rs = stat.executeQuery("SELECT * FROM breaked WHERE playerId = " + playerId + ";");
-		pi.setBreakedList(SQLInstructions.getItemList(rs.getString("breaked")));
-
-		rs = stat.executeQuery("SELECT * FROM collected WHERE playerId = " + playerId + ";");
-		pi.setCollectedList(SQLInstructions.getItemList(rs.getString("collected")));
-
-		rs = stat.executeQuery("SELECT * FROM crafted WHERE playerId = " + playerId + ";");
-		pi.setCraftedList(SQLInstructions.getItemList(rs.getString("crafted")));
-
-		rs = stat.executeQuery("SELECT * FROM furnace WHERE playerId = " + playerId + ";");
-		pi.setFurnaceList(SQLInstructions.getItemList(rs.getString("furnace")));
-		return pi;
-	}*/
+	}
 }

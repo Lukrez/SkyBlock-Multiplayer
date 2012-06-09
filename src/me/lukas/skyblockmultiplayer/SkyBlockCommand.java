@@ -668,18 +668,42 @@ public class SkyBlockCommand implements CommandExecutor {
 
 		int islands = CreateNewIsland.getAmountOfIslands();
 
-		SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
-
-		// write SQL
-		try {
-			SQLInstructions.writeNewPlayerData(player);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi); // bald weg :-)
+		//----------------  neuer Speicher -------------------//
+		this.loadOrCreatePlayer(player);
+		// ---------------------------------------------------//
 		
 		player.teleport(SkyBlockMultiplayer.getSkyBlockWorld().getSpawnLocation()); // teleport player to the spawn tower
 		player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_WELCOME1.sentence + islands + Language.MSGS_WELCOME2.sentence + Settings.numbersPlayers + Language.MSGS_WELCOME3.sentence);
 		return true;
+	}
+	
+	public PlayerData loadOrCreatePlayer(Player player){
+		boolean inList = Settings.onlinePlayers.containsKey(player.getName());
+		boolean inDB = SQLInstructions.existsPlayer(player.getName());
+		if (inList && inDB){
+			return Settings.onlinePlayers.get(player.getName());
+		}
+		if (!inList && !inDB){
+			// player exists nowhere, thus create
+			PlayerData pdata = new PlayerData(player);
+			SQLInstructions.writePartialPlayerData(pdata);
+			return pdata;
+		}
+		if (!inList){ // player is missing in list but exists in DB
+			PlayerData pdata = new PlayerData(player);
+			SQLInstructions.loadPartialPlayerData(pdata);
+			SQLInstructions.loadOldWorldData(pdata);
+			SQLInstructions.loadIslandData(pdata);
+			Settings.onlinePlayers.put(player.getName(), pdata);
+			return pdata;
+		}
+		// player exists in list, but is missing in DB
+		PlayerData pdata = Settings.onlinePlayers.get(player.getName());
+		SQLInstructions.writePartialPlayerData(pdata);
+		SQLInstructions.writeOldWorldData(pdata);
+		SQLInstructions.writeIslandData(pdata);
+		return pdata;
 	}
 
 	/**
