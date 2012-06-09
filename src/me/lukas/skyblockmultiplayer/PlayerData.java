@@ -60,7 +60,10 @@ public class PlayerData {
 		this.islandFood = 20;
 		this.canBuildByFriends = new HashMap<String, PlayerData>();
 		this.friendsCanBuildHere = new HashMap<String, PlayerData>();
-		
+		this.islandInventory = new ItemStack[36];
+		this.oldInventory = new ItemStack[36];
+		this.islandArmor = new ItemStack[4];
+		this.oldArmor = new ItemStack[4];
 	}
 	
 	public PlayerData(){};
