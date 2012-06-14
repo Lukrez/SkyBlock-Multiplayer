@@ -14,12 +14,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PlayerPlaceBlockListener implements Listener {
 
-	SkyBlockMultiplayer plugin;
-
-	public PlayerPlaceBlockListener(SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-	}
-
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();

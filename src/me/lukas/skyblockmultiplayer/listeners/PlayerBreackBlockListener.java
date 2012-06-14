@@ -12,12 +12,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class PlayerBreackBlockListener implements Listener {
 
-	SkyBlockMultiplayer plugin;
-
-	public PlayerBreackBlockListener(SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-	}
-
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();

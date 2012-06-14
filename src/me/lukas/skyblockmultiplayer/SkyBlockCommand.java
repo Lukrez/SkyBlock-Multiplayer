@@ -1400,6 +1400,8 @@ public class SkyBlockCommand implements CommandExecutor {
 
 		if (SkyBlockMultiplayer.checkBuildPermission(pi, player.getLocation())) {
 			pi.setHomeLocation(player.getLocation());
+			PlayerInfo2 pi2 = Settings.lstPlayerInfo2.get(player.getName());
+			pi2.setHomeLocation(player.getLocation());
 			SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_SPAWN_LOCATION_CHANGED.sentence);
 			return true;
@@ -1479,6 +1481,7 @@ public class SkyBlockCommand implements CommandExecutor {
 
 		if (!pTarget.getFriends().containsKey(player.getName())) {
 			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_NOT_FRIEND_FROM_YOU.sentence);
+			return true;
 		}
 
 		if (SkyBlockMultiplayer.getInstance().playerIsOnTower(player)) {

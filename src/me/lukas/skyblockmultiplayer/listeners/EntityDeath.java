@@ -12,13 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class EntityDeath implements Listener {
-
-	SkyBlockMultiplayer plugin;
-
-	public EntityDeath(SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-	}
-
+	
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		Entity ent = event.getEntity();
@@ -40,7 +34,7 @@ public class EntityDeath implements Listener {
 			Settings.players.put(player.getName(), pi);
 		}
 
-		if (this.plugin.playerIsOnTower(player)) {
+		if (SkyBlockMultiplayer.getInstance().playerIsOnTower(player)) {
 			pi.setOldInventory(player.getInventory().getContents());
 			pi.setOldArmor(player.getInventory().getArmorContents());
 			pi.setOldExp(player.getExp());
@@ -51,7 +45,7 @@ public class EntityDeath implements Listener {
 			event.getDrops().clear();
 			event.setDroppedExp(0);
 
-			this.plugin.writePlayerFile(player.getName(), pi);
+			SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 			return;
 		}
 
@@ -66,7 +60,7 @@ public class EntityDeath implements Listener {
 			event.getDrops().clear();
 			event.setDroppedExp(0);
 
-			this.plugin.writePlayerFile(player.getName(), pi);
+			SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 			return;
 		}
 
@@ -84,7 +78,7 @@ public class EntityDeath implements Listener {
 			return;
 		}
 
-		this.plugin.writePlayerFile(player.getName(), pi);
+		SkyBlockMultiplayer.getInstance().writePlayerFile(player.getName(), pi);
 
 		if (Settings.numbersPlayers < 1) {
 			return;

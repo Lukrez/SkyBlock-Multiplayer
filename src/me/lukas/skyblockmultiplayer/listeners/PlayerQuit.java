@@ -11,12 +11,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerQuit implements Listener {
 
-	private SkyBlockMultiplayer plugin;
-
-	public PlayerQuit(SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-	}
-
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();

@@ -13,11 +13,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class PlayerTeleport implements Listener {
-	private SkyBlockMultiplayer plugin;
-
-	public PlayerTeleport(SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
@@ -36,7 +31,6 @@ public class PlayerTeleport implements Listener {
 		if (!event.getFrom().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
 			if (event.getTo().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
 				if (!SkyBlockMultiplayer.getInstance().locationIsOnTower(event.getTo())) {
-					System.out.println("PlayerTeleport.onPlayerTeleport()");
 					event.setCancelled(true);
 					player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_ONLY_INSIDE_OF_SB.sentence);
 					return;
@@ -46,7 +40,7 @@ public class PlayerTeleport implements Listener {
 
 		PlayerInfo pi = Settings.players.get(player.getName());
 		if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
-			if (this.plugin.locationIsOnTower(event.getTo())) {
+			if (SkyBlockMultiplayer.getInstance().locationIsOnTower(event.getTo())) {
 				event.setCancelled(true);
 				return;
 			}
@@ -59,9 +53,9 @@ public class PlayerTeleport implements Listener {
 			}
 		}
 
-		if (event.getFrom().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) && !event.getTo().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) && !this.plugin.playerIsOnTower(player)) {
+		if (event.getFrom().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) && !event.getTo().getWorld().getName().equalsIgnoreCase(SkyBlockMultiplayer.getSkyBlockWorld().getName()) && !SkyBlockMultiplayer.getInstance().playerIsOnTower(player)) {
 			event.setCancelled(true);
-			player.sendMessage(this.plugin.pName + Language.MSGS_ONLY_ON_TOWER.sentence);
+			player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_ONLY_ON_TOWER.sentence);
 		}
 	}
 }
