@@ -260,7 +260,7 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	/**
-	 * Load all informations from player who exists in folder players and who have a island.
+	 * Load axll informations from player who exists in folder players and who have a island.
 	 * 
 	 */
 	public void loadPlayerFiles() {
@@ -397,14 +397,14 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	/**
-	 * This replace §0-§f with ChatColor.
+	 * This replace ï¿½0-ï¿½f with ChatColor.
 	 * 
 	 * @param s the given String
 	 * @return string with ChatColor.
 	 */
 	private String replaceColor(String s) {
 		for (ChatColor c : ChatColor.values()) {
-			s = s.replaceAll("§" + c.getChar(), "" + ChatColor.getByChar(c.getChar()));
+			s = s.replaceAll("ï¿½" + c.getChar(), "" + ChatColor.getByChar(c.getChar()));
 		}
 		return s;
 	}

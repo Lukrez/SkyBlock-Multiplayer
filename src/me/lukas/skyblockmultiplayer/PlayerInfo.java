@@ -9,9 +9,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerInfo implements Serializable {
+public class PlayerInfo{
 
-	private static final long serialVersionUID = 1L;
 
 	private String playerName;
 
@@ -46,6 +45,9 @@ public class PlayerInfo implements Serializable {
 	private int oldLevel;
 
 	public PlayerInfo(String playerName) {
+		
+		// checke, ob playerfile existiert, ansonsten neu erstellen
+		
 		this.playerName = playerName;
 
 		this.hasIsland = false;
