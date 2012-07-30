@@ -22,12 +22,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlayerInteract implements Listener {
 
-	SkyBlockMultiplayer plugin;
-
-	public PlayerInteract(SkyBlockMultiplayer instance) {
-		this.plugin = instance;
-	}
-
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -94,8 +88,8 @@ public class PlayerInteract implements Listener {
 						}
 
 						if (i == 0) {
-							if (this.plugin.locationIsOnTower(player.getLocation())) {
-								player.sendMessage(this.plugin.pName + Language.MSGS_AREA_OF_SPAWN_TOWER.sentence);
+							if (SkyBlockMultiplayer.getInstance().locationIsOnTower(player.getLocation())) {
+								player.sendMessage(SkyBlockMultiplayer.getInstance().pName + Language.MSGS_AREA_OF_SPAWN_TOWER.sentence);
 								event.setCancelled(true);
 								return;
 							}

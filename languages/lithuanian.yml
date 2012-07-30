@@ -1,0 +1,95 @@
+msgs:
+  skyblock: Parasykite "/skyblock help" del issamesnes informacijos.
+  stopping: Sustabdomas SkyBlock...
+  playersInSb: SkyBlock negali buti isjungtas, nes jame yra zaideju!
+  isNowOffline: SkyBlock dabar yra isjungtas.
+  isOffline: SkyBlock yra isjungtas.
+  errorOccured: Ivyko klaida.
+  starting: Ijungiamas SkyBlock...
+  isNowOnline: SkyBlock dabar yra ijungtas.
+  mustBeOffline: SkyBlock turi buti isjungtas, kad galetumete perkrauti ji.
+  reseting: Perkraunamas SkyBlock...
+  isNowReseted: SkyBlock buvo perkrautas.
+  configReloaded: Nustatymai (config) buvo perkrauti.
+  languageReloaded: Kalba buvo perkrauta.
+  languageChanged: Kalba buvo pakeista.
+  languageNotChanged: Kalba nebuvo pakeista.
+  languageFileNotExists: Kalbos failas neegzistuoja
+  notAuthorized: Jus ne autorizuotas!
+  statusOffline: Yra atsijunges.
+  statusOnline: Yra prisijunges.
+  numberOfIslands: 'Salu skaicius: '
+  numberOfPlayers: 'Zaideju skaicius: '
+  commands:
+    join: §6/skyblock join§7 - prisijungti prie SkyBlock
+    start: §6/skyblock start§7 - gauti nauja sala
+    leave: §6/skyblock leave§7 - palikti SkyBlock
+    tower: §6/skyblock tower§7 - nusiteleportuoti i apzvalgos boksta
+    newIsland: §6/skyblock newIsland §a[player]§7 - duoti sau/kitam nauja sala
+    setOffline: §6/skyblock set offline§7 - isjungti SkyBlock
+    setOnline: §6/skyblock set online§7 - ijungti SkyBlock
+    towerReCreate: §6/skyblock tower recreate§7 - atkurti boksta
+    setLanguage: §6/skyblock set language §c<language>§7 - pakeisti kalba
+    setGameMode: §6/skyblock set gamemode §c<option>§7 - <build> arba <pvp>
+    setClosed: §6/skyblock set closed§7 - uzdaryti SkyBlock naujiems zaidejams
+    setOpened: §6/skyblock set opened§7 - leisti prisijungineti kitiems prie SkyBlock
+    setOwner: §6/skyblock setOwner §c<island number> <player>§7 - pakeisti salos savininka
+    reset: §6/skyblock reset§7 - perkrauti SkyBlock
+    reloadConfig: §6/skyblock reload config§7 - perkrauti nustatymus (config)
+    reloadLanguage: §6/skyblock reload language§7 - perkrauti kalba
+    status: §6/skyblock status§7 - parodyti busena
+    home: §6/skyblock home§7 - nusiteleportuoti i savo sala
+    homeAdd: §6/skyblock home add §c<player>§7 - prideti zaideja prie draugu saraso
+    homeRemove: §6/skyblock home remove §c<player>§7 - ismesti zaideja is draugu saraso
+    homeJoin: §6/skyblock home join §c<player>§7 - nusiteleportuoti i draugo sala
+    homeList: §6/skyblock home list§7 - parodyti visa jusu draugu sarasa
+    homeSet: §6/skyblock home set§7 - pakeisti jusu salos Spawn vieta
+  wrongArgs: Klaidingi arba is viso nera argumentu
+  welcome1: 'Sveiki atvyke i SkyBlock Multiplayer pasauli! Siuo metu cia yra '
+  welcome2: ' salu ir '
+  welcome3: ' zaideju. Parasykite "/skyblock start", noredami pradeti zaidima.'
+  welcomeBack: 'Sveiki sugrize '
+  welcomeBroadcast1: 'Zaidejas '
+  welcomeBroadcast2: ' prisijunge prie SkyBlock zaidimo.'
+  toNewPlayer: Nenukriskite ir nepaverskite paskutines lavos obsidianu :).
+  showIslandNumber: 'Jus esate ant salos nr. '
+  leftSkyblock: Jus palikote SkyBlock.
+  wrongPlayerName: Cia nera jokio zaideju su tokiu vardu.
+  newIslandPlayer1: 'Zaidejas '
+  newIslandPlayer2: ' gavo nauja sala.'
+  gotNewIsland1: 'Zaidejas '
+  gotNewIsland2: ' dave jums nauja sala.'
+  sign1Line1: Sveiki atvyke i
+  sign1Line2: SkyBlock-
+  sign1Line3: Multiplayer
+  sign2Line1: Del issamesnes
+  sign2Line2: informacijos naudokite
+  sign2Line3: /skyblock help
+  sign2Line4: Sekmes!
+  playerDied1: 'Vienas zaidejas mire. Dar liko '
+  playerDied2: ' zaidejai.'
+  playerWinBroadcast1: 'Zaidejas '
+  playerWinBroadcast2: ' laimejo zaidima. Sveikiname!'
+  betterSpecify: Yra daugiau nei 1 zaidejas su tokiu vardu.
+  gameModeChanged: Zaidimo rezimas buvo pakeistas.
+  friendRemoved: Draugas pasalintas
+  friendAdded: Draugas pridetas
+  notFriendFromYou: Negalima, nes jus neesate to zaidejo draugas!
+  playerAddedYou: ' pridejo jus prie savo draugu saraso.'
+  isNowClosed: SkyBlock dabar yra uzdarytas.
+  isNowOpened: SkyBlock dabar yra atidarytas.
+  isClosed: SkyBlock yra uzdarytas.
+  areaBorders: Apsaugota zona ir krastai.
+  onlyInBuildMode: Sitai veikia tik per Build rezima!
+  backOnTower: Jus dabar vel grizote i apzvalgos boksta.
+  spawnTowerReCreated: Apzvalgos bokstas buvo atkurtas.
+  noMoreLivesAndIslands: ZAIDIMO PABAIGA! Nebeliko nei salu, nei gyvybiu!
+  invalidIslandNumber: Neteisingas salos numeris!
+  changedOwnerTo: 'Salos savininkas dabar yra '
+  spawnLocationChanged: Jusu Spawn taskas yra pakeistas.
+  changeOfHomeLocationOnlyInOwnArea: Jus savo Spawn taska galite padaryti tik savo zonoje.
+  noIslandTeleportImpossible: Jus neturite savo salos, negalite nusiteleportuoti i draugo sala.
+  areaOfSpawnTower: Apzvalgos boksto zona.
+  onlyOnTower: Si komanda veikia tik esant apzvalgos bokste.
+  onlyOutsideOfSb: Si komanda veikia nesant SkyBlock pasaulyje.
+  onlyInsideOfSb: Si komanda veikia tik esant SkyBlock pasaulyje.

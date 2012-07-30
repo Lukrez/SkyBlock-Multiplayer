@@ -119,13 +119,13 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 */
 	public void registerEvents() {
 		PluginManager manager = this.getServer().getPluginManager();
-		manager.registerEvents(new PlayerPlaceBlockListener(this), this);
-		manager.registerEvents(new PlayerBreackBlockListener(this), this);
-		manager.registerEvents(new PlayerUseBucketListener(this), this);
-		manager.registerEvents(new EntityDeath(this), this);
-		manager.registerEvents(new PlayerRespawn(this), this);
-		manager.registerEvents(new PlayerInteract(this), this);
-		manager.registerEvents(new PlayerTeleport(this), this);
+		manager.registerEvents(new PlayerPlaceBlockListener(), this);
+		manager.registerEvents(new PlayerBreackBlockListener(), this);
+		manager.registerEvents(new PlayerUseBucketListener(), this);
+		manager.registerEvents(new EntityDeath(), this);
+		manager.registerEvents(new PlayerRespawn(), this);
+		manager.registerEvents(new PlayerInteract(), this);
+		manager.registerEvents(new PlayerTeleport(), this);
 	}
 
 	/**
@@ -264,13 +264,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	 * 
 	 */
 	public void loadPlayerFiles() {
-		int all = 0;
-		int notOnline = 0;
 		for (String f : new File(this.directoryPlayers.toString()).list()) {
 			if (new File(this.directoryPlayers, f).isFile()) {
 				PlayerInfo pi = this.readPlayerFile(f);
 				if (pi != null) {
-					all++;
 					// add player, if missing
 					String playerName = pi.getPlayerName();
 
@@ -301,25 +298,12 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 
 					Settings.islandsAndOwners.put(pi.getPlayerName(), pi.getIslandLocation());
 					if (playerOnline == null || !playerOnline.getWorld().getName().equals(SkyBlockMultiplayer.getSkyBlockWorld().getName())) {
-						notOnline++;
 						continue;
 					}
 					Settings.players.put(playerName, pi);
 				}
 			}
 		}
-
-		System.out.println("Alle: " + all);
-		System.out.println("Not online: " + notOnline);
-		System.out.println("islandsAndOwners: " + Settings.islandsAndOwners.size());
-
-		/*// print friendslist
-		for (PlayerInfo2 player : Settings.lstPlayerInfo2.values()) {
-			System.out.println("Player: " + player.getName());
-			for (PlayerInfo2 friend : player.getFriends().values()) {
-				System.out.println("\t -" + friend.getName());
-			}
-		}*/
 	}
 
 	public PlayerInfo readPlayerFile(String playerName) {
@@ -731,11 +715,11 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 		}
 		return null;
 	}
-	
+
 	public Location getSafeHomeLocation(PlayerInfo2 p) {
 		// a) check original location
 		Location home = null;
-		if (p.getIslandLocation() == null) {
+		if (p.getHomeLocation() == null) {
 			home = p.getIslandLocation();
 		} else {
 			home = p.getHomeLocation();
@@ -780,10 +764,10 @@ public class SkyBlockMultiplayer extends JavaPlugin {
 	}
 
 	public boolean isSafeLocation(Location l) {
-		if(l == null) {
+		if (l == null) {
 			return false;
 		}
-		
+
 		Block ground = l.getBlock().getRelative(BlockFace.DOWN);
 		Block air1 = l.getBlock();
 		Block air2 = l.getBlock().getRelative(BlockFace.UP);

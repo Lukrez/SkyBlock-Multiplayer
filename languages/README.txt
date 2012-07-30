@@ -12,3 +12,4 @@ deusch.yml - updated
 
 nederlands.yml - updated : This file has been written from jackkiej.
 portuguese - updated : This file has been written from JotaFaD.
+lithuanian - updated : This file has been written from Tazkazz.
