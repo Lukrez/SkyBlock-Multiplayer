@@ -1,0 +1,95 @@
+msgs:
+  skyblock: 使用 "/skyblock help" 命令获取更多信息.
+  stopping: 正在停止 SkyBlock...
+  playersInSb: 仍有玩家在 Skyblock 中. SkyBlock 现在不能被禁用!
+  isNowOffline: SkyBlock 现已离线.
+  isOffline: SkyBlock 已离线.
+  errorOccured: 发生错误.
+  starting: 启动 SkyBlock...
+  isNowOnline: SkyBlock 现已启动.
+  mustBeOffline: 必须先使 SkyBlock 离线才能重设设定.
+  reseting: 正在重设 SkyBlock...
+  isNowReseted: SkyBlock 已被重设.
+  configReloaded: 配置已重载.
+  languageReloaded: 语言已重载.
+  languageChanged: 语言已更改.
+  languageNotChanged: 语言未更改.
+  languageFileNotExists: 语言文件不存在.
+  notAuthorized: 您尚未被授权!
+  statusOffline: 离线.
+  statusOnline: 在线.
+  numberOfIslands: '岛屿数: '
+  numberOfPlayers: '玩家数: '
+  commands:
+    join: §6/skyblock join§7 - 加入 SkyBlock
+    start: §6/skyblock start§7 - 获取岛屿
+    leave: §6/skyblock leave§7 - 离开 SkyBlock
+    tower: §6/skyblock tower§7 - 传送回出生塔
+    newIsland: §6/skyblock newIsland §a[player]§7 - 给你自己或其他玩家一个新空岛
+    setOffline: §6/skyblock set offline§7 - 冻结 SkyBlock
+    setOnline: §6/skyblock set online§7 - 激活 SkyBlock
+    towerReCreate: §6/skyblock tower recreate§7 - 重新创建出生塔
+    setLanguage: §6/skyblock set language §c<language>§7 - 更改语言(change the languange)
+    setGameMode: §6/skyblock set gamemode §c<option>§7 - <build> 或 <pvp>
+    setClosed: §6/skyblock set closed§7 - 关闭 SkyBlock 以阻止玩家加入
+    setOpened: §6/skyblock set opened§7 - 打开 SkyBlock 以允许玩家加入
+    setOwner: §6/skyblock setOwner §c<island number> <player>§7 - 转移岛屿所有权
+    reset: §6/skyblock reset§7 - 重置 SkyBlock
+    reloadConfig: §6/skyblock reload config§7 - 重载配置
+    reloadLanguage: §6/skyblock reload language§7 - 重载语言
+    status: §6/skyblock status§7 - 显示状态
+    home: §6/skyblock home§7 - 传送回您的岛屿
+    homeAdd: §6/skyblock home add §c<player>§7 - 将一位玩家加为好友
+    homeRemove: §6/skyblock home remove §c<player>§7 - 从好友列表中删除玩家
+    homeJoin: §6/skyblock home join §c<player>§7 - 传送到朋友的岛屿
+    homeList: §6/skyblock home list§7 - 显示您(可以传送到)的好友列表
+    homeSet: §6/skyblock home set§7 - 更改您的岛屿出生点位置
+  wrongArgs: 参数错误或缺失
+  welcome1: '欢迎来到 SkyBlock 多人服务器! 现有 '
+  welcome2: ' 个岛屿与  '
+  welcome3: ' 个玩家. 请用 "/skyblock start" 命令得到一个自己的岛屿.'
+  welcomeBack: '欢迎回来 '
+  welcomeBroadcast1: '玩家 '
+  welcomeBroadcast2: ' 加入了 SkyBlock 游戏.'
+  toNewPlayer: 别摔进虚空, 别把岩浆不小心弄成黑曜石! :-).
+  showIslandNumber: '你所在的岛屿编号 '
+  leftSkyblock: 你离开了 SkyBlock.
+  wrongPlayerName: 没有这个玩家.
+  newIslandPlayer1: '玩家 '
+  newIslandPlayer2: ' 得到了一个新的空岛.'
+  gotNewIsland1: '玩家 '
+  gotNewIsland2: ' 给你了一个新的空岛.'
+  sign1Line1: 欢迎来到
+  sign1Line2: SkyBlock
+  sign1Line3: 多人游戏
+  sign2Line1: 获取更多信息
+  sign2Line2: 请输入指令
+  sign2Line3: /skyblock help
+  sign2Line4: 祝你好运!
+  playerDied1: '有一个玩家死了. 还剩 '
+  playerDied2: ' 个玩家.'
+  playerWinBroadcast1: '玩家 '
+  playerWinBroadcast2: ' 获胜. 恭喜!'
+  betterSpecify: 以此开头的玩家ID有很多, 请详细一些.
+  gameModeChanged: 游戏模式已更改.
+  friendRemoved: 朋友已移除
+  friendAdded: 朋友已添加
+  notFriendFromYou: 不可以的, 你不是他好友!
+  playerAddedYou: ' 把你加到了他的好友列表.'
+  isNowClosed: SkyBlock 现已关闭.
+  isNowOpened: SkyBlock 现已开放.
+  isClosed: SkyBlock 正关闭.
+  areaBorders: 保护区域或边界.
+  onlyInBuildMode: 仅用于建造模式!
+  backOnTower: 你现在回到了出生塔.
+  spawnTowerReCreated: 出生塔已被重新创建.
+  noMoreLivesAndIslands: 你挂了! 没有更多的生命和岛屿了! 
+  invalidIslandNumber: 无效岛屿编号!
+  changedOwnerTo: '当前岛屿的拥有者为 '
+  spawnLocationChanged: 已更改出生点.
+  changeOfHomeLocationOnlyInOwnArea: 你只能在自己的地盘上更改出生点.
+  noIslandTeleportImpossible: 你没有岛屿, 不能传送到朋友的岛屿.
+  areaOfSpawnTower: 出生塔区域.
+  onlyOnTower: 命令仅在出生塔内有效.
+  onlyOutsideOfSb: 命令仅在 SkyBlock 外有效.
+  onlyInsideOfSb: 命令仅在 SkyBlock 内有效.
